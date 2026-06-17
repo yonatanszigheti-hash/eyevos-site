@@ -83,21 +83,53 @@ body{font-family:'Heebo',system-ui,sans-serif}
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.25.9/babel.min.js"></script>
 <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef } = React;
 const SB = window.supabase.createClient("https://nsnbdgudqtygxaalhjsn.supabase.co", "sb_publishable_C6Z1uW15YbRH2kKQzSxTOA_Zb4w4nNc",
   { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 const REDIRECT = location.origin + location.pathname;
 
-const SUBJECTS = { sport:"ספורט", screen:"מסך", reality:"ריאליטי", weather:"מזג אוויר", news:"אקטואליה", food:"אוכל", family:"משפחה", life:"חיים" };
-const SEMO = { sport:"⚽", screen:"🎬", reality:"📺", weather:"🌦️", news:"📰", food:"🍔", family:"👨‍👩‍👧", life:"🎯" };
-const slabel = (k)=>SEMO[k]+" "+SUBJECTS[k];
-const SK = Object.keys(SUBJECTS);
-const SC = { sport:"#FF8A4D", screen:"#9D7BFF", reality:"#FF4D9D", weather:"#5BC8FF", news:"#FFC23C", food:"#A78BFF", family:"#36D69B", life:"#8A6BFF" };
-const pct = (a,b)=>(a+b===0?50:Math.round(a/(a+b)*100));
-const lvl = (t)=>Math.floor(t/50)+1;
-const AVATARS = ["😎","🦊","🐯","🦁","🐼","🦄","🐲","🦅","🐺","🐙","🎯","🔥","👑","⚡","🎲","🏆","🌟","💎","🚀","🍀"];
+/* ===================== i18n ===================== */
+const LANGS=[{c:"he",n:"עברית",d:"rtl"},{c:"en",n:"English",d:"ltr"},{c:"ar",n:"العربية",d:"rtl"},{c:"es",n:"Español",d:"ltr"},{c:"fr",n:"Français",d:"ltr"},{c:"pt",n:"Português",d:"ltr"},{c:"ru",n:"Русский",d:"ltr"},{c:"de",n:"Deutsch",d:"ltr"},{c:"hi",n:"हिन्दी",d:"ltr"},{c:"zh",n:"中文",d:"ltr"}];
+const STR={
+he:{live:"LIVE",liveBadge:"חי · בזמן אמת",heroT1:"תהמר. תצדק.",heroT2:"תשלוט בקבוצה.",heroSub:"נחש לפני כולם, תפוס את הצד החזק, ותטפס לראש. כל יום הימור חדש — והניצחון נשאר רשום.",stFree:"0 ₪",stFreeL:"תמיד",stAges:"10–90",stAgesL:"כל גיל",stBets:"∞",stBetsL:"הימורים",signinCard:"היכנס ותתחיל להמר 🎰",continueGoogle:"המשך עם Google",orEmail:"או עם מייל",emailPh:"המייל שלך",sendLink:"📧 שלח לי קישור כניסה",sending:"שולח…",staysLogged:"🔒 מתחברים פעם אחת — ונשארים מחוברים תמיד",linkSentT:"הקישור בדרך אליך!",linkSentB:"פתח את המייל ל‑{email} ולחץ על הקישור — ותיכנס ישר פנימה.",resend:"שליחה שוב / מייל אחר",whyTitle:"למה אי אפשר להפסיק",why1t:"הרגע שלפני התוצאה",why1b:"אתה נועל ניחוש — ועוצר נשימה עד שזה נסגר",why2t:"צודק כשכולם טעו",why2b:"ניחוש נכון במיעוט שווה יותר נקודות",why3t:"לטפס בראש הקבוצה",why3b:"רצף ניצחונות בונה אגדה — וכולם זוכרים",footerNote:"נקודות בלבד · אף פעם לא כסף אמיתי · לכל הגילאים",googleOff:"Google עדיין לא הופעל. היכנס עם מייל למעלה — זה עובד מיד 👆",navFeed:"פיד",navBoard:"דירוג",navRules:"חוקים",navProfile:"אני",tbBet:"תהמר. תנצח.",tbFor:"על",boardH:"מי שולט בקבוצה? 👑",rulesH:"חוקים",profileH:"הפרופיל שלי",newBet:"🎰 הימור חדש",allCat:"🎲 הכל",emptyFeed:"🎲 עוד אין הימורים כאן. תהיה הראשון!",locking:"נועל את ההימור…",betsN:"{n} הימרו",locked:"ננעל",pickSide:"בחר צד — ונעל",closesIn:"נסגר בעוד",closedW:"נסגר",minPays:"מיעוט משלם יותר",minOpens:"בונוס מיעוט מ‑6 מהמרים",hotNow:"🔥 הכי חם עכשיו",autoTag:"אוטומטי",resolveBtn:"⚖️ הכרע עכשיו",wonB:"✅ צדקת! הנקודות נכנסו לך",lostB:"❌ לא הפעם — מחכה לך הימור הבא",yes:"כן",no:"לא",back:"‹ חזרה",newBetT:"הימור חדש 🎰",qPh:"הקבוצה שלנו תנצח בשבת?",subjectL:"נושא",whenClose:"מתי נסגר?",d1h:"שעה",d6h:"6 שעות",d1d:"יום",d3d:"3 ימים",d1w:"שבוע",placeBet:"🎰 שים את ההימור",totalCat:"🏆 סך הכל",emptyRanks:"🏆 עוד אין נקודות. שים הימור ותתחיל לטפס 🚀",levelL:"רמה",totalPts:"סך הנקודות",toNext:"עוד {n} נקודות לרמה {l}",ptsBySub:"ניקוד לפי נושא",editBtn:"✏️ ערוך",signOut:"התנתק",editProfile:"עריכת פרופיל",nameL:"שם",pickAvatar:"בחר אווטאר",orUrl:"או הדבק קישור לתמונה (לא חובה)",urlHint:"הקישור צריך להתחיל ב‑http:// או https:// — אחרת נשתמש באווטאר שבחרת",saveBtn:"💾 שמור שינויים",savingW:"שומר…",nameMin:"שם חייב להיות לפחות 2 תווים",saveBlocked:"השמירה נחסמה ע\"י ה‑DB — צריך להריץ פקודת הרשאה קצרה.",howEarn:"🎰 איך צוברים",rCorrect:"ניחוש נכון",rMin:"נכון ובמיעוט",r3:"3 ברצף",r5:"5 ברצף",rWrong:"טעות",seasonReset:"לכל קבוצה עונה של 30 יום, ואז איפוס",allowedT:"✓ מותר",al1:"הימורים על אירועים שאפשר לאמת",al2:"הימור על אדם — רק באישורו",al3:"עד 40 בקבוצה, אתם בוחרים מתי נסגר",forbidT:"✕ אסור",fo1:"תוכן משפיל / קללות",fo2:"הצבעה על הימור שהוא עליך",fo3:"כסף אמיתי — אין כזה, אף פעם",groupsT:"קבוצות",createGroup:"+ צור קבוצה",joinWithCode:"הצטרף עם קוד",groupNamePh:"שם הקבוצה",createBtn:"צור קבוצה",joinBtn:"הצטרף",groupCreated:"הקבוצה נוצרה!",inviteWa:"הזמן בוואטסאפ",enterGroup:"כניסה לקבוצה",noGroupT:"אין לך עדיין קבוצה",noGroupB:"צור קבוצה או הצטרף עם קוד כדי להתחיל להמר.",createOrJoin:"+ צור / הצטרף לקבוצה",inviteText:"בוא לקבוצה \"{name}\" ב‑Eyevos! קוד: {code}. {url}",shareBtn:"📤 שתף",shareWin:"ניצחתי בהימור \"{q}\" ב‑Eyevos 🏆 בוא תנסה לנצח אותי: {url}",shareBet:"הימור חדש ב‑Eyevos: \"{q}\" — כן או לא? {url}",connecting:"מתחבר…",loadingBets:"טוען הימורים…",loadingRanks:"טוען דירוג…",resolveT:"מה קרה בפועל?",resYes:"✅ קרה — כן",resNo:"❌ לא קרה — לא",resHint:"זה מחלק נקודות לכל מי שהימר."},
+en:{live:"LIVE",liveBadge:"Live · real-time",heroT1:"Bet. Be right.",heroT2:"Rule your group.",heroSub:"Guess before everyone, grab the strong side, climb to the top. A new bet every day — and the win stays on record.",stFree:"0 ₪",stFreeL:"always",stAges:"10–90",stAgesL:"every age",stBets:"∞",stBetsL:"bets",signinCard:"Sign in and start betting 🎰",continueGoogle:"Continue with Google",orEmail:"or with email",emailPh:"Your email",sendLink:"📧 Send me a login link",sending:"Sending…",staysLogged:"🔒 Sign in once — stay logged in forever",linkSentT:"Your link is on the way!",linkSentB:"Open the email to {email} and tap the link — you're in.",resend:"Resend / different email",whyTitle:"Why you can't stop",why1t:"The moment before the result",why1b:"You lock a guess — and hold your breath until it closes",why2t:"Right when everyone's wrong",why2b:"A correct guess in the minority is worth more points",why3t:"Climb to the top of the group",why3b:"A winning streak builds a legend — everyone remembers",footerNote:"Points only · never real money · all ages",googleOff:"Google isn't enabled yet. Use email above — it works instantly 👆",navFeed:"Feed",navBoard:"Ranks",navRules:"Rules",navProfile:"Me",tbBet:"Bet. Win.",tbFor:"for",boardH:"Who rules the group? 👑",rulesH:"Rules",profileH:"My profile",newBet:"🎰 New bet",allCat:"🎲 All",emptyFeed:"🎲 No bets here yet. Be the first!",locking:"Locking your bet…",betsN:"{n} bets",locked:"Locked",pickSide:"Bet — pick a side",closesIn:"Closes in",closedW:"Closed",minPays:"Minority pays more",minOpens:"Minority bonus opens at 6 bettors",hotNow:"🔥 Hottest now",autoTag:"auto",resolveBtn:"⚖️ Resolve now",wonB:"✅ Right! The points are yours",lostB:"❌ Not this time — your next bet is waiting",yes:"Yes",no:"No",back:"‹ Back",newBetT:"New bet 🎰",qPh:"Will our team win on Saturday?",subjectL:"Subject",whenClose:"When does it close?",d1h:"1 hour",d6h:"6 hours",d1d:"1 day",d3d:"3 days",d1w:"1 week",placeBet:"🎰 Place the bet",totalCat:"🏆 Total",emptyRanks:"🏆 No points yet. Place a bet and start climbing 🚀",levelL:"Level",totalPts:"Total points",toNext:"{n} points to level {l}",ptsBySub:"Points by subject",editBtn:"✏️ Edit",signOut:"Sign out",editProfile:"Edit profile",nameL:"Name",pickAvatar:"Pick an avatar",orUrl:"Or paste an image link (optional)",urlHint:"Link must start with http:// or https:// — otherwise we'll use the avatar you picked",saveBtn:"💾 Save changes",savingW:"Saving…",nameMin:"Name must be at least 2 characters",saveBlocked:"Save was blocked by the database — a short permission command needs to run.",howEarn:"🎰 How you earn",rCorrect:"Correct guess",rMin:"Correct & in the minority",r3:"3 in a row",r5:"5 in a row",rWrong:"Wrong",seasonReset:"Each group has a 30-day season, then it resets",allowedT:"✓ Allowed",al1:"Bets on events that can be verified",al2:"A bet about a person — only with their consent",al3:"Up to 40 per group, you choose when it closes",forbidT:"✕ Not allowed",fo1:"Demeaning content / cursing",fo2:"Voting on a bet that's about you",fo3:"Real money — there is none, ever",groupsT:"Groups",createGroup:"+ Create group",joinWithCode:"Join with a code",groupNamePh:"Group name",createBtn:"Create",joinBtn:"Join",groupCreated:"Group created!",inviteWa:"Invite on WhatsApp",enterGroup:"Enter group",noGroupT:"You don't have a group yet",noGroupB:"Create a group or join with a code to start betting.",createOrJoin:"+ Create / join a group",inviteText:"Come to the group \"{name}\" on Eyevos! Code: {code}. {url}",shareBtn:"📤 Share",shareWin:"I won the bet \"{q}\" on Eyevos 🏆 come try to beat me: {url}",shareBet:"New bet on Eyevos: \"{q}\" — yes or no? {url}",connecting:"Connecting…",loadingBets:"Loading bets…",loadingRanks:"Loading ranks…",resolveT:"What actually happened?",resYes:"✅ Happened — Yes",resNo:"❌ Didn't happen — No",resHint:"This pays out points to everyone in the bet."},
+es:{live:"EN VIVO",liveBadge:"En vivo · tiempo real",heroT1:"Apuesta. Acierta.",heroT2:"Domina tu grupo.",heroSub:"Adivina antes que todos, agarra el lado fuerte y sube hasta lo más alto. Una apuesta nueva cada día — y la victoria queda registrada.",stFree:"0 ₪",stFreeL:"siempre",stAges:"10–90",stAgesL:"toda edad",stBets:"∞",stBetsL:"apuestas",signinCard:"Entra y empieza a apostar 🎰",continueGoogle:"Continuar con Google",orEmail:"o con correo",emailPh:"Tu correo",sendLink:"📧 Envíame un enlace de acceso",sending:"Enviando…",staysLogged:"🔒 Inicia sesión una vez — y quédate dentro para siempre",linkSentT:"¡Tu enlace va en camino!",linkSentB:"Abre el correo en {email} y toca el enlace — ya estás dentro.",resend:"Reenviar / otro correo",whyTitle:"Por qué no podrás parar",why1t:"El instante antes del resultado",why1b:"Bloqueas tu pronóstico — y aguantas la respiración hasta que cierra",why2t:"Acertar cuando todos fallan",why2b:"Un acierto en minoría vale más puntos",why3t:"Sube a la cima del grupo",why3b:"Una racha ganadora crea una leyenda — todos la recuerdan",footerNote:"Solo puntos · nunca dinero real · todas las edades",googleOff:"Google aún no está activo. Usa el correo de arriba — funciona al instante 👆",navFeed:"Feed",navBoard:"Ranking",navRules:"Reglas",navProfile:"Yo",tbBet:"Apuesta. Gana.",tbFor:"por",boardH:"¿Quién domina el grupo? 👑",rulesH:"Reglas",profileH:"Mi perfil",newBet:"🎰 Nueva apuesta",allCat:"🎲 Todo",emptyFeed:"🎲 Aún no hay apuestas aquí. ¡Sé el primero!",locking:"Bloqueando tu apuesta…",betsN:"{n} apuestas",locked:"Bloqueada",pickSide:"Apuesta — elige un lado",closesIn:"Cierra en",closedW:"Cerrada",minPays:"La minoría paga más",minOpens:"El bonus de minoría se abre con 6 apostadores",hotNow:"🔥 Lo más caliente ahora",autoTag:"auto",resolveBtn:"⚖️ Resolver ahora",wonB:"✅ ¡Acertaste! Los puntos son tuyos",lostB:"❌ Esta vez no — tu próxima apuesta te espera",yes:"Sí",no:"No",back:"‹ Atrás",newBetT:"Nueva apuesta 🎰",qPh:"¿Ganará nuestro equipo el sábado?",subjectL:"Tema",whenClose:"¿Cuándo cierra?",d1h:"1 hora",d6h:"6 horas",d1d:"1 día",d3d:"3 días",d1w:"1 semana",placeBet:"🎰 Hacer la apuesta",totalCat:"🏆 Total",emptyRanks:"🏆 Aún no hay puntos. Haz una apuesta y empieza a subir 🚀",levelL:"Nivel",totalPts:"Puntos totales",toNext:"{n} puntos para el nivel {l}",ptsBySub:"Puntos por tema",editBtn:"✏️ Editar",signOut:"Cerrar sesión",editProfile:"Editar perfil",nameL:"Nombre",pickAvatar:"Elige un avatar",orUrl:"O pega un enlace de imagen (opcional)",urlHint:"El enlace debe empezar con http:// o https:// — si no, usaremos el avatar que elegiste",saveBtn:"💾 Guardar cambios",savingW:"Guardando…",nameMin:"El nombre debe tener al menos 2 caracteres",saveBlocked:"La base de datos bloqueó el guardado — hay que ejecutar un comando de permisos corto.",howEarn:"🎰 Cómo ganas puntos",rCorrect:"Pronóstico acertado",rMin:"Acierto en minoría",r3:"3 seguidas",r5:"5 seguidas",rWrong:"Fallo",seasonReset:"Cada grupo tiene una temporada de 30 días, luego se reinicia",allowedT:"✓ Permitido",al1:"Apuestas sobre eventos verificables",al2:"Una apuesta sobre una persona — solo con su consentimiento",al3:"Hasta 40 por grupo, tú eliges cuándo cierra",forbidT:"✕ Prohibido",fo1:"Contenido humillante / insultos",fo2:"Votar en una apuesta que es sobre ti",fo3:"Dinero real — no existe, nunca",groupsT:"Grupos",createGroup:"+ Crear grupo",joinWithCode:"Unirse con código",groupNamePh:"Nombre del grupo",createBtn:"Crear",joinBtn:"Unirse",groupCreated:"¡Grupo creado!",inviteWa:"Invitar por WhatsApp",enterGroup:"Entrar al grupo",noGroupT:"Todavía no tienes un grupo",noGroupB:"Crea un grupo o únete con un código para empezar a apostar.",createOrJoin:"+ Crear / unirse a un grupo",inviteText:"¡Únete al grupo \"{name}\" en Eyevos! Código: {code}. {url}",shareBtn:"📤 Compartir",shareWin:"Gané la apuesta \"{q}\" en Eyevos 🏆 ven a ver si me ganas: {url}",shareBet:"Nueva apuesta en Eyevos: \"{q}\" — ¿sí o no? {url}",connecting:"Conectando…",loadingBets:"Cargando apuestas…",loadingRanks:"Cargando ranking…",resolveT:"¿Qué pasó en realidad?",resYes:"✅ Pasó — Sí",resNo:"❌ No pasó — No",resHint:"Esto reparte puntos a todos los de la apuesta."},
+fr:{live:"EN DIRECT",liveBadge:"En direct · temps réel",heroT1:"Parie. Vois juste.",heroT2:"Règne sur ton groupe.",heroSub:"Devine avant tout le monde, choisis le bon camp et grimpe au sommet. Un nouveau pari chaque jour — et la victoire reste gravée.",stFree:"0 ₪",stFreeL:"toujours",stAges:"10–90",stAgesL:"tout âge",stBets:"∞",stBetsL:"paris",signinCard:"Connecte-toi et commence à parier 🎰",continueGoogle:"Continuer avec Google",orEmail:"ou par e-mail",emailPh:"Ton e-mail",sendLink:"📧 Envoie-moi un lien de connexion",sending:"Envoi…",staysLogged:"🔒 Connecte-toi une fois — reste connecté pour toujours",linkSentT:"Ton lien arrive !",linkSentB:"Ouvre l'e-mail envoyé à {email} et clique sur le lien — et te voilà dedans.",resend:"Renvoyer / autre e-mail",whyTitle:"Pourquoi tu ne pourras plus t'arrêter",why1t:"L'instant juste avant le résultat",why1b:"Tu verrouilles ton pronostic — et tu retiens ton souffle jusqu'à la clôture",why2t:"Avoir raison quand tout le monde a tort",why2b:"Un bon pronostic en minorité rapporte plus de points",why3t:"Grimpe en tête du groupe",why3b:"Une série de victoires bâtit une légende — tout le monde s'en souvient",footerNote:"Points uniquement · jamais d'argent réel · tous âges",googleOff:"Google n'est pas encore activé. Utilise l'e-mail ci-dessus — ça marche tout de suite 👆",navFeed:"Fil",navBoard:"Classement",navRules:"Règles",navProfile:"Moi",tbBet:"Parie. Gagne.",tbFor:"pour",boardH:"Qui règne sur le groupe ? 👑",rulesH:"Règles",profileH:"Mon profil",newBet:"🎰 Nouveau pari",allCat:"🎲 Tout",emptyFeed:"🎲 Aucun pari ici pour l'instant. Sois le premier !",locking:"Verrouillage de ton pari…",betsN:"{n} paris",locked:"Verrouillé",pickSide:"Parie — choisis un camp",closesIn:"Clôture dans",closedW:"Clôturé",minPays:"La minorité paie plus",minOpens:"Le bonus minorité s'ouvre à 6 parieurs",hotNow:"🔥 Le plus chaud maintenant",autoTag:"auto",resolveBtn:"⚖️ Trancher maintenant",wonB:"✅ Bien vu ! Les points sont à toi",lostB:"❌ Pas cette fois — ton prochain pari t'attend",yes:"Oui",no:"Non",back:"‹ Retour",newBetT:"Nouveau pari 🎰",qPh:"Notre équipe va-t-elle gagner samedi ?",subjectL:"Sujet",whenClose:"Clôture quand ?",d1h:"1 heure",d6h:"6 heures",d1d:"1 jour",d3d:"3 jours",d1w:"1 semaine",placeBet:"🎰 Placer le pari",totalCat:"🏆 Total",emptyRanks:"🏆 Pas encore de points. Place un pari et commence à grimper 🚀",levelL:"Niveau",totalPts:"Points totaux",toNext:"{n} points jusqu'au niveau {l}",ptsBySub:"Points par sujet",editBtn:"✏️ Modifier",signOut:"Déconnexion",editProfile:"Modifier le profil",nameL:"Nom",pickAvatar:"Choisis un avatar",orUrl:"Ou colle un lien d'image (facultatif)",urlHint:"Le lien doit commencer par http:// ou https:// — sinon on utilisera l'avatar que tu as choisi",saveBtn:"💾 Enregistrer",savingW:"Enregistrement…",nameMin:"Le nom doit faire au moins 2 caractères",saveBlocked:"L'enregistrement a été bloqué par la base de données — une courte commande de permission doit être exécutée.",howEarn:"🎰 Comment gagner des points",rCorrect:"Bon pronostic",rMin:"Bon pronostic en minorité",r3:"3 d'affilée",r5:"5 d'affilée",rWrong:"Faux",seasonReset:"Chaque groupe a une saison de 30 jours, puis remise à zéro",allowedT:"✓ Autorisé",al1:"Des paris sur des événements vérifiables",al2:"Un pari sur une personne — seulement avec son accord",al3:"Jusqu'à 40 par groupe, tu choisis quand ça clôture",forbidT:"✕ Interdit",fo1:"Contenu humiliant / insultes",fo2:"Voter sur un pari qui te concerne",fo3:"De l'argent réel — il n'y en a pas, jamais",groupsT:"Groupes",createGroup:"+ Créer un groupe",joinWithCode:"Rejoindre avec un code",groupNamePh:"Nom du groupe",createBtn:"Créer",joinBtn:"Rejoindre",groupCreated:"Groupe créé !",inviteWa:"Inviter sur WhatsApp",enterGroup:"Entrer dans le groupe",noGroupT:"Tu n'as pas encore de groupe",noGroupB:"Crée un groupe ou rejoins-en un avec un code pour commencer à parier.",createOrJoin:"+ Créer / rejoindre un groupe",inviteText:"Rejoins le groupe \"{name}\" sur Eyevos ! Code : {code}. {url}",shareBtn:"📤 Partager",shareWin:"J'ai gagné le pari \"{q}\" sur Eyevos 🏆 viens essayer de me battre : {url}",shareBet:"Nouveau pari sur Eyevos : \"{q}\" — oui ou non ? {url}",connecting:"Connexion…",loadingBets:"Chargement des paris…",loadingRanks:"Chargement du classement…",resolveT:"Qu'est-ce qui s'est vraiment passé ?",resYes:"✅ C'est arrivé — Oui",resNo:"❌ Ce n'est pas arrivé — Non",resHint:"Ceci distribue les points à tous les participants du pari."},
+pt:{live:"AO VIVO",liveBadge:"Ao vivo · em tempo real",heroT1:"Aposte. Acerte.",heroT2:"Mande no grupo.",heroSub:"Adivinhe antes de todos, pegue o lado forte e suba até o topo. Uma aposta nova todo dia — e a vitória fica registrada.",stFree:"0 ₪",stFreeL:"sempre",stAges:"10–90",stAgesL:"toda idade",stBets:"∞",stBetsL:"apostas",signinCard:"Entre e comece a apostar 🎰",continueGoogle:"Continuar com o Google",orEmail:"ou com e-mail",emailPh:"Seu e-mail",sendLink:"📧 Me manda um link de acesso",sending:"Enviando…",staysLogged:"🔒 Faça login uma vez — e fique conectado para sempre",linkSentT:"Seu link está a caminho!",linkSentB:"Abra o e-mail em {email} e toque no link — você já está dentro.",resend:"Reenviar / outro e-mail",whyTitle:"Por que você não vai conseguir parar",why1t:"O instante antes do resultado",why1b:"Você trava seu palpite — e prende a respiração até fechar",why2t:"Acertar quando todos erram",why2b:"Um palpite certo na minoria vale mais pontos",why3t:"Suba ao topo do grupo",why3b:"Uma sequência de vitórias cria uma lenda — todo mundo lembra",footerNote:"Só pontos · nunca dinheiro de verdade · todas as idades",googleOff:"O Google ainda não está ativado. Use o e-mail acima — funciona na hora 👆",navFeed:"Feed",navBoard:"Ranking",navRules:"Regras",navProfile:"Eu",tbBet:"Aposte. Vença.",tbFor:"em",boardH:"Quem manda no grupo? 👑",rulesH:"Regras",profileH:"Meu perfil",newBet:"🎰 Nova aposta",allCat:"🎲 Tudo",emptyFeed:"🎲 Ainda não tem aposta aqui. Seja o primeiro!",locking:"Travando sua aposta…",betsN:"{n} apostas",locked:"Travada",pickSide:"Aposte — escolha um lado",closesIn:"Fecha em",closedW:"Fechada",minPays:"A minoria paga mais",minOpens:"O bônus de minoria abre com 6 apostadores",hotNow:"🔥 Mais quente agora",autoTag:"auto",resolveBtn:"⚖️ Resolver agora",wonB:"✅ Acertou! Os pontos são seus",lostB:"❌ Dessa vez não — sua próxima aposta já está esperando",yes:"Sim",no:"Não",back:"‹ Voltar",newBetT:"Nova aposta 🎰",qPh:"Nosso time vai ganhar no sábado?",subjectL:"Assunto",whenClose:"Quando fecha?",d1h:"1 hora",d6h:"6 horas",d1d:"1 dia",d3d:"3 dias",d1w:"1 semana",placeBet:"🎰 Fazer a aposta",totalCat:"🏆 Total",emptyRanks:"🏆 Ainda sem pontos. Faça uma aposta e comece a subir 🚀",levelL:"Nível",totalPts:"Pontos totais",toNext:"{n} pontos para o nível {l}",ptsBySub:"Pontos por assunto",editBtn:"✏️ Editar",signOut:"Sair",editProfile:"Editar perfil",nameL:"Nome",pickAvatar:"Escolha um avatar",orUrl:"Ou cole um link de imagem (opcional)",urlHint:"O link precisa começar com http:// ou https:// — senão usamos o avatar que você escolheu",saveBtn:"💾 Salvar alterações",savingW:"Salvando…",nameMin:"O nome precisa ter pelo menos 2 caracteres",saveBlocked:"O salvamento foi bloqueado pelo banco de dados — é preciso rodar um comando curto de permissão.",howEarn:"🎰 Como ganhar pontos",rCorrect:"Palpite certo",rMin:"Certo e na minoria",r3:"3 seguidas",r5:"5 seguidas",rWrong:"Errou",seasonReset:"Cada grupo tem uma temporada de 30 dias, depois zera",allowedT:"✓ Permitido",al1:"Apostas em eventos que dá para verificar",al2:"Uma aposta sobre uma pessoa — só com o consentimento dela",al3:"Até 40 por grupo, você escolhe quando fecha",forbidT:"✕ Proibido",fo1:"Conteúdo humilhante / xingamentos",fo2:"Votar numa aposta que é sobre você",fo3:"Dinheiro de verdade — não existe, nunca",groupsT:"Grupos",createGroup:"+ Criar grupo",joinWithCode:"Entrar com código",groupNamePh:"Nome do grupo",createBtn:"Criar",joinBtn:"Entrar",groupCreated:"Grupo criado!",inviteWa:"Convidar no WhatsApp",enterGroup:"Entrar no grupo",noGroupT:"Você ainda não tem um grupo",noGroupB:"Crie um grupo ou entre com um código para começar a apostar.",createOrJoin:"+ Criar / entrar em um grupo",inviteText:"Vem pro grupo \"{name}\" no Eyevos! Código: {code}. {url}",shareBtn:"📤 Compartilhar",shareWin:"Ganhei a aposta \"{q}\" no Eyevos 🏆 vem tentar me vencer: {url}",shareBet:"Nova aposta no Eyevos: \"{q}\" — sim ou não? {url}",connecting:"Conectando…",loadingBets:"Carregando apostas…",loadingRanks:"Carregando ranking…",resolveT:"O que aconteceu de verdade?",resYes:"✅ Aconteceu — Sim",resNo:"❌ Não aconteceu — Não",resHint:"Isso distribui pontos para todos da aposta."},
+ru:{live:"В ЭФИРЕ",liveBadge:"В эфире · в реальном времени",heroT1:"Ставь. Угадывай.",heroT2:"Правь своей компанией.",heroSub:"Угадай раньше всех, займи сильную сторону и заберись на вершину. Каждый день новая ставка — а победа остаётся в истории.",stFree:"0 ₪",stFreeL:"всегда",stAges:"10–90",stAgesL:"любой возраст",stBets:"∞",stBetsL:"ставок",signinCard:"Войди и начинай ставить 🎰",continueGoogle:"Продолжить с Google",orEmail:"или по почте",emailPh:"Твоя почта",sendLink:"📧 Пришли мне ссылку для входа",sending:"Отправляем…",staysLogged:"🔒 Войди один раз — и оставайся в игре навсегда",linkSentT:"Ссылка уже летит к тебе!",linkSentB:"Открой письмо на {email} и нажми на ссылку — и ты внутри.",resend:"Отправить снова / другая почта",whyTitle:"Почему не оторваться",why1t:"Миг перед результатом",why1b:"Ты фиксируешь догадку — и затаиваешь дыхание до самого закрытия",why2t:"Прав, когда все ошиблись",why2b:"Верная догадка в меньшинстве стоит больше очков",why3t:"Заберись на вершину компании",why3b:"Серия побед рождает легенду — её все запомнят",footerNote:"Только очки · никогда не настоящие деньги · для всех возрастов",googleOff:"Google пока не подключён. Используй почту выше — работает сразу 👆",navFeed:"Лента",navBoard:"Рейтинг",navRules:"Правила",navProfile:"Я",tbBet:"Ставь. Побеждай.",tbFor:"на",boardH:"Кто правит компанией? 👑",rulesH:"Правила",profileH:"Мой профиль",newBet:"🎰 Новая ставка",allCat:"🎲 Все",emptyFeed:"🎲 Здесь пока нет ставок. Будь первым!",locking:"Фиксируем твою ставку…",betsN:"ставок: {n}",locked:"Зафиксировано",pickSide:"Ставь — выбери сторону",closesIn:"Закроется через",closedW:"Закрыто",minPays:"Меньшинство платит больше",minOpens:"Бонус меньшинства открывается с 6 игроков",hotNow:"🔥 Сейчас в огне",autoTag:"авто",resolveBtn:"⚖️ Решить сейчас",wonB:"✅ В точку! Очки твои",lostB:"❌ Не в этот раз — следующая ставка уже ждёт",yes:"Да",no:"Нет",back:"‹ Назад",newBetT:"Новая ставка 🎰",qPh:"Наша команда победит в субботу?",subjectL:"Тема",whenClose:"Когда закрывается?",d1h:"1 час",d6h:"6 часов",d1d:"1 день",d3d:"3 дня",d1w:"1 неделя",placeBet:"🎰 Сделать ставку",totalCat:"🏆 Всего",emptyRanks:"🏆 Очков пока нет. Сделай ставку и начинай подниматься 🚀",levelL:"Уровень",totalPts:"Всего очков",toNext:"ещё {n} очков до уровня {l}",ptsBySub:"Очки по темам",editBtn:"✏️ Изменить",signOut:"Выйти",editProfile:"Редактировать профиль",nameL:"Имя",pickAvatar:"Выбери аватар",orUrl:"Или вставь ссылку на картинку (необязательно)",urlHint:"Ссылка должна начинаться с http:// или https:// — иначе используем выбранный тобой аватар",saveBtn:"💾 Сохранить изменения",savingW:"Сохраняем…",nameMin:"Имя должно быть не короче 2 символов",saveBlocked:"Сохранение заблокировано базой данных — нужно выполнить короткую команду для прав доступа.",howEarn:"🎰 Как зарабатывать очки",rCorrect:"Верная догадка",rMin:"Верно и в меньшинстве",r3:"3 подряд",r5:"5 подряд",rWrong:"Ошибка",seasonReset:"У каждой компании сезон 30 дней, затем сброс",allowedT:"✓ Можно",al1:"Ставки на события, которые можно проверить",al2:"Ставка о человеке — только с его согласия",al3:"До 40 в компании, ты сам выбираешь, когда закроется",forbidT:"✕ Нельзя",fo1:"Унизительный контент / ругань",fo2:"Голосовать в ставке, которая о тебе",fo3:"Настоящие деньги — их нет, никогда",groupsT:"Компании",createGroup:"+ Создать компанию",joinWithCode:"Войти по коду",groupNamePh:"Название компании",createBtn:"Создать",joinBtn:"Войти",groupCreated:"Компания создана!",inviteWa:"Пригласить в WhatsApp",enterGroup:"Войти в компанию",noGroupT:"У тебя пока нет компании",noGroupB:"Создай компанию или войди по коду, чтобы начать ставить.",createOrJoin:"+ Создать / войти в компанию",inviteText:"Заходи в компанию «{name}» в Eyevos! Код: {code}. {url}",shareBtn:"📤 Поделиться",shareWin:"Я выиграл ставку «{q}» в Eyevos 🏆 попробуй обыграть меня: {url}",shareBet:"Новая ставка в Eyevos: «{q}» — да или нет? {url}",connecting:"Подключаемся…",loadingBets:"Загружаем ставки…",loadingRanks:"Загружаем рейтинг…",resolveT:"Что на самом деле случилось?",resYes:"✅ Случилось — Да",resNo:"❌ Не случилось — Нет",resHint:"Это распределит очки всем участникам ставки."},
+de:{live:"LIVE",liveBadge:"Live · in Echtzeit",heroT1:"Wette. Lieg richtig.",heroT2:"Herrsche über deine Gruppe.",heroSub:"Tippe vor allen anderen, schnapp dir die starke Seite und klettere ganz nach oben. Jeden Tag eine neue Wette — und der Sieg bleibt für immer notiert.",stFree:"0 ₪",stFreeL:"immer",stAges:"10–90",stAgesL:"jedes Alter",stBets:"∞",stBetsL:"Wetten",signinCard:"Einloggen und loswetten 🎰",continueGoogle:"Mit Google fortfahren",orEmail:"oder per E-Mail",emailPh:"Deine E-Mail",sendLink:"📧 Schick mir einen Login-Link",sending:"Wird gesendet…",staysLogged:"🔒 Einmal einloggen — für immer eingeloggt bleiben",linkSentT:"Dein Link ist unterwegs!",linkSentB:"Öffne die E-Mail an {email} und tipp auf den Link — und schon bist du drin.",resend:"Erneut senden / andere E-Mail",whyTitle:"Warum du nicht aufhören kannst",why1t:"Der Moment vor dem Ergebnis",why1b:"Du legst deinen Tipp fest — und hältst den Atem an, bis sie schließt",why2t:"Recht haben, wenn alle danebenliegen",why2b:"Ein richtiger Tipp in der Minderheit bringt mehr Punkte",why3t:"Klettere an die Spitze der Gruppe",why3b:"Eine Siegesserie macht dich zur Legende — alle erinnern sich",footerNote:"Nur Punkte · niemals echtes Geld · für jedes Alter",googleOff:"Google ist noch nicht aktiv. Nutz die E-Mail oben — das geht sofort 👆",navFeed:"Feed",navBoard:"Rangliste",navRules:"Regeln",navProfile:"Ich",tbBet:"Wette. Gewinne.",tbFor:"auf",boardH:"Wer herrscht über die Gruppe? 👑",rulesH:"Regeln",profileH:"Mein Profil",newBet:"🎰 Neue Wette",allCat:"🎲 Alle",emptyFeed:"🎲 Hier gibt's noch keine Wetten. Sei der Erste!",locking:"Deine Wette wird festgelegt…",betsN:"{n} Wetten",locked:"Festgelegt",pickSide:"Wette — wähl eine Seite",closesIn:"Schließt in",closedW:"Geschlossen",minPays:"Die Minderheit zahlt mehr",minOpens:"Minderheits-Bonus ab 6 Wettenden",hotNow:"🔥 Gerade am heißesten",autoTag:"auto",resolveBtn:"⚖️ Jetzt entscheiden",wonB:"✅ Richtig getippt! Die Punkte gehören dir",lostB:"❌ Diesmal nicht — deine nächste Wette wartet schon",yes:"Ja",no:"Nein",back:"‹ Zurück",newBetT:"Neue Wette 🎰",qPh:"Gewinnt unser Team am Samstag?",subjectL:"Thema",whenClose:"Wann schließt sie?",d1h:"1 Stunde",d6h:"6 Stunden",d1d:"1 Tag",d3d:"3 Tage",d1w:"1 Woche",placeBet:"🎰 Wette platzieren",totalCat:"🏆 Gesamt",emptyRanks:"🏆 Noch keine Punkte. Platzier eine Wette und kletter los 🚀",levelL:"Level",totalPts:"Punkte gesamt",toNext:"noch {n} Punkte bis Level {l}",ptsBySub:"Punkte nach Thema",editBtn:"✏️ Bearbeiten",signOut:"Abmelden",editProfile:"Profil bearbeiten",nameL:"Name",pickAvatar:"Wähl einen Avatar",orUrl:"Oder füg einen Bild-Link ein (optional)",urlHint:"Der Link muss mit http:// oder https:// beginnen — sonst nehmen wir den Avatar, den du gewählt hast",saveBtn:"💾 Änderungen speichern",savingW:"Wird gespeichert…",nameMin:"Der Name muss mindestens 2 Zeichen haben",saveBlocked:"Das Speichern wurde von der Datenbank blockiert — ein kurzer Berechtigungsbefehl muss ausgeführt werden.",howEarn:"🎰 So sammelst du Punkte",rCorrect:"Richtig getippt",rMin:"Richtig und in der Minderheit",r3:"3 in Folge",r5:"5 in Folge",rWrong:"Falsch",seasonReset:"Jede Gruppe hat eine 30-Tage-Saison, dann wird zurückgesetzt",allowedT:"✓ Erlaubt",al1:"Wetten auf überprüfbare Ereignisse",al2:"Eine Wette über eine Person — nur mit ihrer Zustimmung",al3:"Bis zu 40 pro Gruppe, du wählst, wann sie schließt",forbidT:"✕ Nicht erlaubt",fo1:"Erniedrigende Inhalte / Beschimpfungen",fo2:"Bei einer Wette abstimmen, die über dich ist",fo3:"Echtes Geld — gibt's nicht, niemals",groupsT:"Gruppen",createGroup:"+ Gruppe erstellen",joinWithCode:"Mit Code beitreten",groupNamePh:"Gruppenname",createBtn:"Erstellen",joinBtn:"Beitreten",groupCreated:"Gruppe erstellt!",inviteWa:"Per WhatsApp einladen",enterGroup:"Gruppe betreten",noGroupT:"Du hast noch keine Gruppe",noGroupB:"Erstell eine Gruppe oder tritt mit einem Code bei, um loszuwetten.",createOrJoin:"+ Gruppe erstellen / beitreten",inviteText:"Komm in die Gruppe \"{name}\" bei Eyevos! Code: {code}. {url}",shareBtn:"📤 Teilen",shareWin:"Ich hab die Wette \"{q}\" bei Eyevos gewonnen 🏆 versuch mal, mich zu schlagen: {url}",shareBet:"Neue Wette bei Eyevos: \"{q}\" — ja oder nein? {url}",connecting:"Verbinden…",loadingBets:"Wetten werden geladen…",loadingRanks:"Rangliste wird geladen…",resolveT:"Was ist wirklich passiert?",resYes:"✅ Passiert — Ja",resNo:"❌ Nicht passiert — Nein",resHint:"Das verteilt Punkte an alle in der Wette."},
+hi:{live:"लाइव",liveBadge:"लाइव · रियल-टाइम",heroT1:"दांव लगाओ। सही बनो।",heroT2:"अपने ग्रुप पर राज करो।",heroSub:"सबसे पहले अंदाज़ा लगाओ, मज़बूत साइड पकड़ो और टॉप तक चढ़ो। हर दिन नया दांव — और जीत हमेशा के लिए दर्ज हो जाती है।",stFree:"0 ₪",stFreeL:"हमेशा",stAges:"10–90",stAgesL:"हर उम्र",stBets:"∞",stBetsL:"दांव",signinCard:"साइन इन करो और दांव शुरू करो 🎰",continueGoogle:"Google से जारी रखें",orEmail:"या ईमेल से",emailPh:"आपका ईमेल",sendLink:"📧 मुझे लॉगिन लिंक भेजो",sending:"भेज रहे हैं…",staysLogged:"🔒 एक बार साइन इन करो — हमेशा लॉग इन रहो",linkSentT:"आपका लिंक रास्ते में है!",linkSentB:"{email} पर आया ईमेल खोलो और लिंक पर टैप करो — आप अंदर।",resend:"दोबारा भेजो / दूसरा ईमेल",whyTitle:"क्यों आप रुक नहीं पाओगे",why1t:"नतीजे से ठीक पहले का पल",why1b:"आप अपना अंदाज़ा लॉक करते हो — और बंद होने तक सांस रोके रहते हो",why2t:"जब सब गलत हों तब सही होना",why2b:"अल्पमत में सही अंदाज़ा ज़्यादा पॉइंट्स का होता है",why3t:"ग्रुप में सबसे ऊपर चढ़ो",why3b:"जीत की लड़ी एक लीजेंड बनाती है — सबको याद रहता है",footerNote:"सिर्फ़ पॉइंट्स · कभी असली पैसा नहीं · हर उम्र के लिए",googleOff:"Google अभी चालू नहीं है। ऊपर ईमेल इस्तेमाल करो — तुरंत काम करता है 👆",navFeed:"फ़ीड",navBoard:"रैंक",navRules:"नियम",navProfile:"मैं",tbBet:"दांव लगाओ। जीतो।",tbFor:"पर",boardH:"ग्रुप पर कौन राज करता है? 👑",rulesH:"नियम",profileH:"मेरी प्रोफ़ाइल",newBet:"🎰 नया दांव",allCat:"🎲 सभी",emptyFeed:"🎲 यहाँ अभी कोई दांव नहीं। पहले बनो!",locking:"आपका दांव लॉक कर रहे हैं…",betsN:"{n} दांव",locked:"लॉक्ड",pickSide:"दांव लगाओ — एक साइड चुनो",closesIn:"बंद होगा",closedW:"बंद",minPays:"अल्पमत ज़्यादा देता है",minOpens:"अल्पमत बोनस 6 दांव लगाने वालों पर खुलता है",hotNow:"🔥 अभी सबसे हॉट",autoTag:"ऑटो",resolveBtn:"⚖️ अभी फ़ैसला करो",wonB:"✅ सही! पॉइंट्स आपके",lostB:"❌ इस बार नहीं — आपका अगला दांव इंतज़ार में है",yes:"हाँ",no:"नहीं",back:"‹ वापस",newBetT:"नया दांव 🎰",qPh:"क्या हमारी टीम शनिवार को जीतेगी?",subjectL:"विषय",whenClose:"कब बंद होगा?",d1h:"1 घंटा",d6h:"6 घंटे",d1d:"1 दिन",d3d:"3 दिन",d1w:"1 हफ़्ता",placeBet:"🎰 दांव लगाओ",totalCat:"🏆 कुल",emptyRanks:"🏆 अभी कोई पॉइंट नहीं। एक दांव लगाओ और चढ़ना शुरू करो 🚀",levelL:"लेवल",totalPts:"कुल पॉइंट्स",toNext:"लेवल {l} तक {n} पॉइंट्स",ptsBySub:"विषय के हिसाब से पॉइंट्स",editBtn:"✏️ एडिट",signOut:"साइन आउट",editProfile:"प्रोफ़ाइल एडिट करो",nameL:"नाम",pickAvatar:"एक अवतार चुनो",orUrl:"या एक इमेज लिंक पेस्ट करो (वैकल्पिक)",urlHint:"लिंक http:// या https:// से शुरू होना चाहिए — वरना हम आपका चुना अवतार इस्तेमाल करेंगे",saveBtn:"💾 बदलाव सेव करो",savingW:"सेव कर रहे हैं…",nameMin:"नाम कम से कम 2 अक्षरों का होना चाहिए",saveBlocked:"सेव करना डेटाबेस ने रोक दिया — एक छोटी परमिशन कमांड चलानी होगी।",howEarn:"🎰 पॉइंट्स कैसे कमाओ",rCorrect:"सही अंदाज़ा",rMin:"सही और अल्पमत में",r3:"लगातार 3",r5:"लगातार 5",rWrong:"गलत",seasonReset:"हर ग्रुप का 30-दिन का सीज़न होता है, फिर रीसेट",allowedT:"✓ अनुमति है",al1:"ऐसी घटनाओं पर दांव जिन्हें वेरिफ़ाई किया जा सके",al2:"किसी व्यक्ति पर दांव — सिर्फ़ उसकी सहमति से",al3:"हर ग्रुप में 40 तक, कब बंद हो आप चुनो",forbidT:"✕ अनुमति नहीं",fo1:"अपमानजनक कंटेंट / गालियाँ",fo2:"ऐसे दांव पर वोट देना जो आप पर है",fo3:"असली पैसा — ऐसा कुछ नहीं, कभी नहीं",groupsT:"ग्रुप्स",createGroup:"+ ग्रुप बनाओ",joinWithCode:"कोड से जॉइन करो",groupNamePh:"ग्रुप का नाम",createBtn:"बनाओ",joinBtn:"जॉइन",groupCreated:"ग्रुप बन गया!",inviteWa:"WhatsApp पर इनवाइट करो",enterGroup:"ग्रुप में जाओ",noGroupT:"आपका अभी कोई ग्रुप नहीं है",noGroupB:"दांव शुरू करने के लिए ग्रुप बनाओ या कोड से जॉइन करो।",createOrJoin:"+ ग्रुप बनाओ / जॉइन करो",inviteText:"Eyevos पर \"{name}\" ग्रुप में आओ! कोड: {code}. {url}",shareBtn:"📤 शेयर",shareWin:"मैंने Eyevos पर दांव \"{q}\" जीता 🏆 आओ मुझे हराकर दिखाओ: {url}",shareBet:"Eyevos पर नया दांव: \"{q}\" — हाँ या नहीं? {url}",connecting:"कनेक्ट हो रहे हैं…",loadingBets:"दांव लोड हो रहे हैं…",loadingRanks:"रैंक लोड हो रही है…",resolveT:"असल में क्या हुआ?",resYes:"✅ हुआ — हाँ",resNo:"❌ नहीं हुआ — नहीं",resHint:"इससे दांव में शामिल सभी को पॉइंट्स बँटते हैं।"},
+zh:{live:"直播",liveBadge:"直播 · 实时",heroT1:"下注。猜对。",heroT2:"称霸你的小圈子。",heroSub:"抢在所有人之前猜中，押中强势一方，一路爬到顶。每天一注新赌局——赢了就永久记录在案。",stFree:"0 ₪",stFreeL:"永远",stAges:"10–90",stAgesL:"全年龄",stBets:"∞",stBetsL:"注",signinCard:"登录，开始下注 🎰",continueGoogle:"使用 Google 继续",orEmail:"或用邮箱",emailPh:"你的邮箱",sendLink:"📧 给我发个登录链接",sending:"发送中…",staysLogged:"🔒 登录一次——永远保持登录",linkSentT:"链接正在飞向你！",linkSentB:"打开发到 {email} 的邮件，点一下链接——你就进来了。",resend:"重新发送 / 换个邮箱",whyTitle:"为什么你会停不下来",why1t:"揭晓结果前的那一刻",why1b:"你锁定一个猜测——然后屏住呼吸，直到截止",why2t:"所有人都错时只有你对",why2b:"押在少数派又猜对，能拿更多分",why3t:"爬到小圈子的顶端",why3b:"连胜造就传奇——人人都记得",footerNote:"只有积分 · 永远不涉及真钱 · 全年龄",googleOff:"Google 还没开通。用上面的邮箱吧——立刻就能用 👆",navFeed:"动态",navBoard:"排名",navRules:"规则",navProfile:"我",tbBet:"下注。赢。",tbFor:"·",boardH:"谁称霸这个圈子？👑",rulesH:"规则",profileH:"我的资料",newBet:"🎰 新赌局",allCat:"🎲 全部",emptyFeed:"🎲 这里还没有赌局。来当第一个吧！",locking:"正在锁定你的下注…",betsN:"{n} 人下注",locked:"已锁定",pickSide:"下注——选一边",closesIn:"还有",closedW:"已截止",minPays:"少数派赢得更多",minOpens:"满 6 人下注开启少数派加成",hotNow:"🔥 现在最火",autoTag:"自动",resolveBtn:"⚖️ 立即裁定",wonB:"✅ 猜对了！积分归你",lostB:"❌ 这次没中——下一注已经等着你了",yes:"是",no:"否",back:"‹ 返回",newBetT:"新赌局 🎰",qPh:"我们队周六会赢吗？",subjectL:"主题",whenClose:"什么时候截止？",d1h:"1 小时",d6h:"6 小时",d1d:"1 天",d3d:"3 天",d1w:"1 周",placeBet:"🎰 下注",totalCat:"🏆 总计",emptyRanks:"🏆 还没有积分。下一注，开始往上爬 🚀",levelL:"等级",totalPts:"总积分",toNext:"还差 {n} 分升到 {l} 级",ptsBySub:"按主题分类的积分",editBtn:"✏️ 编辑",signOut:"退出登录",editProfile:"编辑资料",nameL:"昵称",pickAvatar:"选个头像",orUrl:"或粘贴一个图片链接（可选）",urlHint:"链接必须以 http:// 或 https:// 开头——否则就用你选的头像",saveBtn:"💾 保存更改",savingW:"保存中…",nameMin:"昵称至少要 2 个字符",saveBlocked:"保存被数据库拦下了——需要运行一条简短的权限命令。",howEarn:"🎰 怎么赚积分",rCorrect:"猜对",rMin:"猜对且在少数派",r3:"连对 3 次",r5:"连对 5 次",rWrong:"猜错",seasonReset:"每个圈子一个赛季 30 天，然后重置",allowedT:"✓ 可以",al1:"对可以核实的事件下注",al2:"关于某个人的赌局——必须经本人同意",al3:"每个圈子最多 40 注，由你决定何时截止",forbidT:"✕ 不可以",fo1:"羞辱性内容 / 骂人",fo2:"给关于你自己的赌局投票",fo3:"真钱——根本没有，永远不会有",groupsT:"圈子",createGroup:"+ 创建圈子",joinWithCode:"用邀请码加入",groupNamePh:"圈子名称",createBtn:"创建",joinBtn:"加入",groupCreated:"圈子创建成功！",inviteWa:"用 WhatsApp 邀请",enterGroup:"进入圈子",noGroupT:"你还没有圈子",noGroupB:"创建一个圈子，或用邀请码加入，开始下注吧。",createOrJoin:"+ 创建 / 加入圈子",inviteText:"快来 Eyevos 上的「{name}」圈子！邀请码：{code}。{url}",shareBtn:"📤 分享",shareWin:"我在 Eyevos 上赢了赌局「{q}」🏆 来试试能不能赢我：{url}",shareBet:"Eyevos 上的新赌局：「{q}」——是还是否？{url}",connecting:"连接中…",loadingBets:"正在加载赌局…",loadingRanks:"正在加载排名…",resolveT:"实际发生了什么？",resYes:"✅ 发生了——是",resNo:"❌ 没发生——否",resHint:"这会给赌局里的所有人结算积分。"},
+ar:{live:"مباشر",liveBadge:"مباشر · في الوقت الفعلي",heroT1:"راهن. وأصِب.",heroT2:"تحكّم بمجموعتك.",heroSub:"خمّن قبل الجميع، اختر الجانب الأقوى، واصعد إلى القمة. رهان جديد كل يوم — والفوز يبقى مسجّلاً.",stFree:"0 ₪",stFreeL:"دائماً",stAges:"10–90",stAgesL:"كل الأعمار",stBets:"∞",stBetsL:"رهانات",signinCard:"سجّل دخولك وابدأ المراهنة 🎰",continueGoogle:"المتابعة عبر Google",orEmail:"أو عبر البريد",emailPh:"بريدك الإلكتروني",sendLink:"📧 أرسل لي رابط دخول",sending:"جارٍ الإرسال…",staysLogged:"🔒 سجّل دخولك مرة واحدة — وابقَ مسجّلاً للأبد",linkSentT:"رابطك في الطريق إليك!",linkSentB:"افتح البريد المُرسَل إلى {email} واضغط على الرابط — وستكون بالداخل.",resend:"إعادة الإرسال / بريد آخر",whyTitle:"لماذا لن تستطيع التوقّف",why1t:"اللحظة التي تسبق النتيجة",why1b:"تثبّت تخمينك — وتحبس أنفاسك حتى يُغلَق",why2t:"أن تكون مصيباً حين يخطئ الجميع",why2b:"التخمين الصحيح ضمن الأقلية يساوي نقاطاً أكثر",why3t:"اصعد إلى قمة المجموعة",why3b:"سلسلة انتصارات تصنع أسطورة — والجميع يتذكّرها",footerNote:"نقاط فقط · لا مال حقيقي أبداً · لكل الأعمار",googleOff:"خدمة Google غير مُفعّلة بعد. استخدم البريد أعلاه — يعمل فوراً 👆",navFeed:"الموجز",navBoard:"الترتيب",navRules:"القواعد",navProfile:"أنا",tbBet:"راهن. وافُز.",tbFor:"على",boardH:"من يتحكّم بالمجموعة؟ 👑",rulesH:"القواعد",profileH:"ملفي الشخصي",newBet:"🎰 رهان جديد",allCat:"🎲 الكل",emptyFeed:"🎲 لا رهانات هنا بعد. كن الأول!",locking:"جارٍ تثبيت رهانك…",betsN:"{n} رهانات",locked:"مُثبَّت",pickSide:"راهن — اختر جانباً",closesIn:"يُغلَق خلال",closedW:"مُغلَق",minPays:"الأقلية تدفع أكثر",minOpens:"مكافأة الأقلية تُفتَح عند 6 مراهنين",hotNow:"🔥 الأكثر سخونة الآن",autoTag:"تلقائي",resolveBtn:"⚖️ احسم الآن",wonB:"✅ أصبت! النقاط لك",lostB:"❌ ليس هذه المرة — رهانك التالي بانتظارك",yes:"نعم",no:"لا",back:"‹ رجوع",newBetT:"رهان جديد 🎰",qPh:"هل سيفوز فريقنا يوم السبت؟",subjectL:"الموضوع",whenClose:"متى يُغلَق؟",d1h:"ساعة",d6h:"6 ساعات",d1d:"يوم",d3d:"3 أيام",d1w:"أسبوع",placeBet:"🎰 ضع الرهان",totalCat:"🏆 الإجمالي",emptyRanks:"🏆 لا نقاط بعد. ضع رهاناً وابدأ الصعود 🚀",levelL:"المستوى",totalPts:"مجموع النقاط",toNext:"{n} نقطة للوصول إلى المستوى {l}",ptsBySub:"النقاط حسب الموضوع",editBtn:"✏️ تعديل",signOut:"تسجيل الخروج",editProfile:"تعديل الملف الشخصي",nameL:"الاسم",pickAvatar:"اختر صورة رمزية",orUrl:"أو الصق رابط صورة (اختياري)",urlHint:"يجب أن يبدأ الرابط بـ http:// أو https:// — وإلا سنستخدم الصورة الرمزية التي اخترتها",saveBtn:"💾 حفظ التغييرات",savingW:"جارٍ الحفظ…",nameMin:"يجب ألا يقل الاسم عن حرفين",saveBlocked:"تم منع الحفظ من قِبل قاعدة البيانات — يلزم تنفيذ أمر صلاحيات قصير.",howEarn:"🎰 كيف تكسب النقاط",rCorrect:"تخمين صحيح",rMin:"صحيح وضمن الأقلية",r3:"3 متتالية",r5:"5 متتالية",rWrong:"خطأ",seasonReset:"لكل مجموعة موسم مدته 30 يوماً، ثم يُعاد ضبطه",allowedT:"✓ مسموح",al1:"رهانات على أحداث يمكن التحقّق منها",al2:"رهان عن شخص — فقط بموافقته",al3:"حتى 40 لكل مجموعة، وأنت تختار متى يُغلَق",forbidT:"✕ ممنوع",fo1:"محتوى مهين / شتائم",fo2:"التصويت على رهان يخصّك أنت",fo3:"مال حقيقي — لا وجود له، أبداً",groupsT:"المجموعات",createGroup:"+ إنشاء مجموعة",joinWithCode:"الانضمام برمز",groupNamePh:"اسم المجموعة",createBtn:"إنشاء",joinBtn:"انضمام",groupCreated:"تم إنشاء المجموعة!",inviteWa:"دعوة عبر WhatsApp",enterGroup:"دخول المجموعة",noGroupT:"ليس لديك مجموعة بعد",noGroupB:"أنشئ مجموعة أو انضم برمز لتبدأ المراهنة.",createOrJoin:"+ إنشاء / الانضمام إلى مجموعة",inviteText:"تعال إلى مجموعة \"{name}\" على Eyevos! الرمز: {code}. {url}",shareBtn:"📤 مشاركة",shareWin:"فزت بالرهان \"{q}\" على Eyevos 🏆 تعال وحاول أن تهزمني: {url}",shareBet:"رهان جديد على Eyevos: \"{q}\" — نعم أم لا؟ {url}",connecting:"جارٍ الاتصال…",loadingBets:"جارٍ تحميل الرهانات…",loadingRanks:"جارٍ تحميل الترتيب…",resolveT:"ماذا حدث فعلاً؟",resYes:"✅ حدث — نعم",resNo:"❌ لم يحدث — لا",resHint:"هذا يوزّع النقاط على كل المشاركين في الرهان."}
+};
+const CUR={ lang: localStorage.getItem("eyevos_lang") || "he" };
+function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
+function t(k,vars){ let s=(STR[CUR.lang]&&STR[CUR.lang][k]); if(s===undefined) s=STR.en[k]; if(s===undefined) s=k; if(vars){ for(const p in vars) s=s.split("{"+p+"}").join(vars[p]); } return s; }
+
+/* ===================== subjects ===================== */
+const SK=["sport","screen","reality","weather","news","food","family","life"];
+const SEMO={sport:"⚽",screen:"🎬",reality:"📺",weather:"🌦️",news:"📰",food:"🍔",family:"👨‍👩‍👧",life:"🎯"};
+const SC={sport:"#FF8A4D",screen:"#9D7BFF",reality:"#FF4D9D",weather:"#5BC8FF",news:"#FFC23C",food:"#46D36A",family:"#2DD4BF",life:"#C77DFF"};
+const SUBN={
+he:{sport:"ספורט",screen:"מסך",reality:"ריאליטי",weather:"מזג אוויר",news:"אקטואליה",food:"אוכל",family:"משפחה",life:"חיים"},
+en:{sport:"Sports",screen:"Movies",reality:"Reality",weather:"Weather",news:"News",food:"Food",family:"Family",life:"Life"},
+es:{sport:"Deportes",screen:"Cine",reality:"Reality",weather:"Clima",news:"Noticias",food:"Comida",family:"Familia",life:"Vida"},
+fr:{sport:"Sport",screen:"Cinéma",reality:"Téléréalité",weather:"Météo",news:"Actu",food:"Bouffe",family:"Famille",life:"Vie"},
+pt:{sport:"Esportes",screen:"Cinema",reality:"Reality",weather:"Clima",news:"Notícias",food:"Comida",family:"Família",life:"Vida"},
+ru:{sport:"Спорт",screen:"Кино",reality:"Реалити",weather:"Погода",news:"Новости",food:"Еда",family:"Семья",life:"Жизнь"},
+de:{sport:"Sport",screen:"Filme",reality:"Reality",weather:"Wetter",news:"News",food:"Essen",family:"Familie",life:"Leben"},
+hi:{sport:"खेल",screen:"फ़िल्में",reality:"रियलिटी",weather:"मौसम",news:"समाचार",food:"खाना",family:"परिवार",life:"ज़िंदगी"},
+zh:{sport:"体育",screen:"影视",reality:"真人秀",weather:"天气",news:"新闻",food:"美食",family:"家庭",life:"生活"},
+ar:{sport:"رياضة",screen:"أفلام",reality:"واقع",weather:"الطقس",news:"أخبار",food:"طعام",family:"العائلة",life:"الحياة"}
+};
+const subName=(k)=>((SUBN[CUR.lang]||SUBN.en)[k]||k);
+const slabel=(k)=>SEMO[k]+" "+subName(k);
+
+const pct=(a,b)=>(a+b===0?50:Math.round(a/(a+b)*100));
+const lvl=(x)=>Math.floor(x/50)+1;
+const AVATARS=["😎","🦊","🐯","🦁","🐼","🦄","🐲","🦅","🐺","🐙","🎯","🔥","👑","⚡","🎲","🏆","🌟","💎","🚀","🍀"];
 function Avatar({p,size}){
   const s=size||58, st={width:s,height:s,borderRadius:Math.round(s*.26),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0};
   if(p&&p.photo_url){ if(/^https?:/.test(p.photo_url)) return <div style={{...st,background:"var(--ink-3)"}}><img src={p.photo_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>;
@@ -105,7 +137,7 @@ function Avatar({p,size}){
   return <div style={{...st,background:"linear-gradient(150deg,var(--brand-2),var(--brand))",color:"#fff",fontWeight:800,fontSize:Math.round(s*.36),boxShadow:"0 10px 24px rgba(138,107,255,.4)"}}>{((p&&p.display_name)||"?").slice(0,2).toUpperCase()}</div>;
 }
 
-const SND = {
+const SND={
   on: localStorage.getItem("eyevos_sound")!=="off", ctx:null,
   ac(){ if(!this.ctx){ try{ this.ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return this.ctx; },
   beep(f,d,t,v){ if(!this.on)return; const c=this.ac(); if(!c)return; const o=c.createOscillator(),g=c.createGain(); o.type=t||"sine"; o.frequency.value=f; g.gain.value=v||.07; o.connect(g); g.connect(c.destination); const n=c.currentTime; o.start(n); g.gain.exponentialRampToValueAtTime(.0001,n+d); o.stop(n+d); },
@@ -117,7 +149,7 @@ const SND = {
 function CountUp({value,dur=650}){
   const [n,setN]=useState(value); const prev=useRef(value);
   useEffect(()=>{ const from=prev.current,to=value; prev.current=value; if(from===to){setN(to);return;} const start=performance.now(); let raf;
-    const tick=(t)=>{ const p=Math.min(1,(t-start)/dur); setN(Math.round(from+(to-from)*(1-Math.pow(1-p,3)))); if(p<1)raf=requestAnimationFrame(tick); };
+    const tick=(x)=>{ const p=Math.min(1,(x-start)/dur); setN(Math.round(from+(to-from)*(1-Math.pow(1-p,3)))); if(p<1)raf=requestAnimationFrame(tick); };
     raf=requestAnimationFrame(tick); return ()=>cancelAnimationFrame(raf); },[value,dur]);
   return <span className="tnum">{n}</span>;
 }
@@ -126,32 +158,41 @@ function Countdown({to}){
   useEffect(()=>{const id=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(id);},[]);
   const ms=new Date(to).getTime()-now;
   if(isNaN(ms))return null;
-  if(ms<=0)return <span style={{color:"var(--gold)",fontWeight:700}}>נסגר · מוכן להכרעה</span>;
+  if(ms<=0)return <span style={{color:"var(--gold)",fontWeight:700}}>{t("closedW")}</span>;
   const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),ss=s%60,p=n=>String(n).padStart(2,"0");
-  return <span className="tnum" style={{fontWeight:700,color:s<3600?"var(--yes)":"var(--muted)"}}>{d>0?d+" ימים ":""}{p(h)}:{p(m)}:{p(ss)}</span>;
+  return <span className="tnum" style={{fontWeight:700,color:s<3600?"var(--yes)":"var(--muted)"}}>{d>0?d+"d ":""}{p(h)}:{p(m)}:{p(ss)}</span>;
 }
-// payout per side, honest to the scoring: minority bonus (+3) opens only at >=6 voters & >=2 each side
-function payouts(t){
-  const gate=(t.yes+t.no)>=6 && t.yes>=2 && t.no>=2;
-  const min = gate ? (t.yes<t.no?"yes":(t.no<t.yes?"no":null)) : null;
+function payouts(t2){
+  const gate=(t2.yes+t2.no)>=6 && t2.yes>=2 && t2.no>=2;
+  const min = gate ? (t2.yes<t2.no?"yes":(t2.no<t2.yes?"no":null)) : null;
   return { yes: min==="yes"?8:5, no: min==="no"?8:5, gate, min };
 }
-function fmtClose(iso){ try{ return new Date(iso).toLocaleString("he-IL",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; } }
-function Spinner({label}){return <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,padding:"60px 0",color:"var(--muted)"}}><div className="spin"/><div style={{fontSize:13,fontWeight:700}}>{label||"טוען…"}</div></div>;}
+function fmtClose(iso){ try{ return new Date(iso).toLocaleString(CUR.lang,{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; } }
+function shareWa(text){ window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank"); }
+function Spinner({label}){return <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,padding:"60px 0",color:"var(--muted)"}}><div className="spin"/><div style={{fontSize:13,fontWeight:700}}>{label||t("connecting")}</div></div>;}
 function Confetti(){const c=["#FF4D6D","#2DD4BF","#FFC23C","#8A6BFF","#5BC8FF"];return <div className="confetti">{Array.from({length:22},(_,i)=><i key={i} style={{left:Math.round(Math.random()*100)+"%",background:c[i%c.length],animationDelay:(Math.random()*.4).toFixed(2)+"s"}}/>)}</div>;}
+function LangSheet({cur,onPick,onClose}){
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
+    <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 16px"}}>🌐 Language · שפה · اللغة</h3>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {LANGS.map(l=><button key={l.c} onClick={()=>onPick(l.c)} className={"chip"+(cur===l.c?" on":"")} style={{justifyContent:"center",padding:"13px",fontSize:14.5}}>{l.n}</button>)}
+    </div>
+  </div></div>;
+}
 
-/* ---------- sign in (rich) ---------- */
+/* ---------- sign in ---------- */
 function Coins(){
   const set=[["🪙","7%","-1s","13s"],["🎲","80%","-8s","16s"],["💎","22%","-5s","15s"],["🏆","90%","-11s","14s"],["🔥","46%","-3s","17s"],["⭐","64%","-6s","12s"],["🪙","34%","-9s","18s"],["💰","54%","-2s","15s"]];
   return <div className="coins">{set.map((c,i)=><span key={i} className="coin" style={{left:c[1],bottom:"-40px",animationDelay:c[2],animationDuration:c[3]}}>{c[0]}</span>)}</div>;
 }
-const TICK = ["⚽ מכבי תנצח במשחק הבא?","📺 מי יודח הערב מהאח הגדול?","🌦️ ירד גשם מחר בתל אביב?","🍔 החומוס ייגמר לפני שכולם יושבים?","📰 הדולר יעבור 3.7 ₪ השבוע?","🎯 כולם יגיעו בזמן למפגש?","📺 ציון מושלם ברוקדים עם כוכבים?","🍔 המשלוח יגיע תוך חצי שעה?"];
-function SignIn(){
+const TICK=["⚽ ⚽?","📺 📺?","🌦️ 🌦️?","🍔 🍔?","📰 📰?","🎯 🎯?","🏀 🏀?","🎬 🎬?"];
+function SignIn({onOpenLang}){
   const [email,setEmail]=useState(""),[sent,setSent]=useState(false),[busy,setBusy]=useState(false),[msg,setMsg]=useState(null);
   const emRef=useRef(null);
+  const ticks=[t("qPh"),"⚽ "+subName("sport")+"?","📺 "+subName("reality")+"?","🌦️ "+subName("weather")+"?","🍔 "+subName("food")+"?","📰 "+subName("news")+"?","🎬 "+subName("screen")+"?","🎯 "+subName("life")+"?"];
   const google=async()=>{ setMsg(null); SND.tap();
     try{ const r=await fetch("https://nsnbdgudqtygxaalhjsn.supabase.co/auth/v1/settings",{headers:{apikey:"sb_publishable_C6Z1uW15YbRH2kKQzSxTOA_Zb4w4nNc"}}); const s=await r.json();
-      if(!(s&&s.external&&s.external.google)){ setMsg("Google עדיין לא הופעל ב‑Supabase. בינתיים — היכנס עם מייל למעלה, זה עובד מיד 👆"); if(emRef.current)emRef.current.focus(); return; }
+      if(!(s&&s.external&&s.external.google)){ setMsg(t("googleOff")); if(emRef.current)emRef.current.focus(); return; }
     }catch(e){}
     const{error}=await SB.auth.signInWithOAuth({provider:"google",options:{redirectTo:REDIRECT}});
     if(error)setMsg(error.message);
@@ -160,94 +201,105 @@ function SignIn(){
     const{error}=await SB.auth.signInWithOtp({email:email.trim(),options:{emailRedirectTo:REDIRECT}});
     setBusy(false); if(error)setMsg(error.message); else setSent(true);
   };
-  return <div className="scroll" style={{paddingTop:26,textAlign:"center"}}>
-    <div className="ticker" style={{marginBottom:22}}><div className="run">{[...TICK,...TICK].map((t,i)=><span className="tk" key={i}>{t}</span>)}</div></div>
+  return <div className="scroll" style={{paddingTop:14,textAlign:"center"}}>
+    <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}><button onClick={onOpenLang} className="chip" style={{padding:"6px 11px",fontSize:13}}>🌐 {LANGS.find(l=>l.c===CUR.lang).n}</button></div>
+    <div className="ticker" style={{marginBottom:20}}><div className="run">{[...ticks,...ticks].map((x,i)=><span className="tk" key={i}>{x}</span>)}</div></div>
     <div style={{display:"flex",justifyContent:"center",marginBottom:14}}><div className="logob">🎯</div></div>
     <div className="disp neon" style={{fontSize:42,fontWeight:900,marginBottom:6}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></div>
-    <div className="livebadge" style={{marginBottom:16}}><span className="livedot"/> מחובר חי · נשמר באמת</div>
+    <div className="livebadge" style={{marginBottom:16}}><span className="livedot"/> {t("liveBadge")}</div>
     {sent?
-      <div className="card" style={{maxWidth:330,margin:"10px auto"}}><div style={{fontSize:44,marginBottom:8}}>📧</div><div style={{fontWeight:800,fontSize:17,marginBottom:6}}>הקישור בדרך אליך!</div><div style={{color:"var(--muted)",fontSize:13.5,lineHeight:1.6}}>פתח את המייל ל‑<b style={{color:"var(--text)"}}>{email}</b> ולחץ על הקישור — ותיכנס ישר פנימה.</div>
-        <button className="btn btn-ghost" style={{marginTop:14}} onClick={()=>setSent(false)}>שליחה שוב / מייל אחר</button></div>
+      <div className="card" style={{maxWidth:330,margin:"10px auto"}}><div style={{fontSize:44,marginBottom:8}}>📧</div><div style={{fontWeight:800,fontSize:17,marginBottom:6}}>{t("linkSentT")}</div><div style={{color:"var(--muted)",fontSize:13.5,lineHeight:1.6}}>{t("linkSentB",{email:email})}</div>
+        <button className="btn btn-ghost" style={{marginTop:14}} onClick={()=>setSent(false)}>{t("resend")}</button></div>
       :<>
-      <h1 className="disp" style={{fontSize:30,fontWeight:900,lineHeight:1.15,margin:"4px 0 8px"}}>תהמר. תצדק.<br/><span className="jackpot">תשלוט בקבוצה.</span></h1>
-      <p style={{color:"var(--muted)",fontSize:14.5,maxWidth:300,margin:"0 auto 18px",lineHeight:1.55}}>נחש לפני כולם, תפוס את הצד החזק, ותטפס לראש. כל יום הימור חדש — והניצחון נשאר רשום.</p>
-
+      <h1 className="disp" style={{fontSize:30,fontWeight:900,lineHeight:1.15,margin:"4px 0 8px"}}>{t("heroT1")}<br/><span className="jackpot">{t("heroT2")}</span></h1>
+      <p style={{color:"var(--muted)",fontSize:14.5,maxWidth:300,margin:"0 auto 18px",lineHeight:1.55}}>{t("heroSub")}</p>
       <div style={{display:"flex",gap:8,maxWidth:330,margin:"0 auto 20px"}}>
-        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--gold)"}}>0 ₪</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>תמיד</div></div>
-        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--brand-2)"}}>10–90</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>כל גיל</div></div>
-        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--no)"}}>∞</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>הימורים</div></div>
+        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--gold)"}}>{t("stFree")}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{t("stFreeL")}</div></div>
+        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--brand-2)"}}>{t("stAges")}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{t("stAgesL")}</div></div>
+        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--no)"}}>{t("stBets")}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{t("stBetsL")}</div></div>
       </div>
-
       {msg&&<div className="err" style={{maxWidth:330,margin:"0 auto 12px",textAlign:"start"}}>{msg}</div>}
       <div className="card" style={{maxWidth:330,margin:"0 auto",textAlign:"start"}}>
-        <div style={{fontWeight:800,fontSize:15,marginBottom:12,textAlign:"center"}}>היכנס ותתחיל להמר 🎰</div>
+        <div style={{fontWeight:800,fontSize:15,marginBottom:12,textAlign:"center"}}>{t("signinCard")}</div>
         <button onClick={google} className="gbtn">
-          <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5c-2 1.5-4.7 2.5-7.6 2.5-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C41.4 36.3 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>המשך עם Google</button>
-        <div style={{display:"flex",alignItems:"center",gap:10,margin:"14px 0",color:"var(--faint)",fontSize:12}}><div style={{flex:1,height:1,background:"var(--line)"}}/>או עם מייל<div style={{flex:1,height:1,background:"var(--line)"}}/></div>
-        <input ref={emRef} className="in" type="email" placeholder="המייל שלך" value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&magic()} style={{marginBottom:10,textAlign:"center"}}/>
-        <button className="btn btn-pri" disabled={busy||!email.includes("@")} onClick={magic}>{busy?"שולח…":"📧 שלח לי קישור כניסה"}</button>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:13,color:"var(--no)",fontSize:12,fontWeight:700}}>🔒 מתחברים פעם אחת — ונשארים מחוברים תמיד</div>
+          <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5c-2 1.5-4.7 2.5-7.6 2.5-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C41.4 36.3 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>{t("continueGoogle")}</button>
+        <div style={{display:"flex",alignItems:"center",gap:10,margin:"14px 0",color:"var(--faint)",fontSize:12}}><div style={{flex:1,height:1,background:"var(--line)"}}/>{t("orEmail")}<div style={{flex:1,height:1,background:"var(--line)"}}/></div>
+        <input ref={emRef} className="in" type="email" placeholder={t("emailPh")} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&magic()} style={{marginBottom:10,textAlign:"center"}}/>
+        <button className="btn btn-pri" disabled={busy||!email.includes("@")} onClick={magic}>{busy?t("sending"):t("sendLink")}</button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:13,color:"var(--no)",fontSize:12,fontWeight:700}}>{t("staysLogged")}</div>
       </div>
-
       <div style={{maxWidth:330,margin:"22px auto 0",textAlign:"start"}}>
-        <div style={{fontSize:12.5,fontWeight:800,color:"var(--faint)",textTransform:"uppercase",letterSpacing:".04em",marginBottom:4}}>למה אי אפשר להפסיק</div>
-        <div className="why"><div className="whyi" style={{background:"var(--yes-soft)"}}>🔥</div><div><div style={{fontWeight:700,fontSize:14}}>הרגע שלפני התוצאה</div><div style={{fontSize:12.5,color:"var(--muted)"}}>אתה נועל ניחוש — ועוצר נשימה עד שזה נסגר</div></div></div>
-        <div className="why"><div className="whyi" style={{background:"var(--gold-soft)"}}>🏆</div><div><div style={{fontWeight:700,fontSize:14}}>צודק כשכולם טעו</div><div style={{fontSize:12.5,color:"var(--muted)"}}>ניחוש נכון במיעוט שווה יותר נקודות</div></div></div>
-        <div className="why" style={{borderBottom:"none"}}><div className="whyi" style={{background:"var(--brand-soft)"}}>👑</div><div><div style={{fontWeight:700,fontSize:14}}>לטפס בראש הקבוצה</div><div style={{fontSize:12.5,color:"var(--muted)"}}>רצף ניצחונות בונה אגדה — וכולם זוכרים</div></div></div>
+        <div style={{fontSize:12.5,fontWeight:800,color:"var(--faint)",textTransform:"uppercase",letterSpacing:".04em",marginBottom:4}}>{t("whyTitle")}</div>
+        <div className="why"><div className="whyi" style={{background:"var(--yes-soft)"}}>🔥</div><div><div style={{fontWeight:700,fontSize:14}}>{t("why1t")}</div><div style={{fontSize:12.5,color:"var(--muted)"}}>{t("why1b")}</div></div></div>
+        <div className="why"><div className="whyi" style={{background:"var(--gold-soft)"}}>🏆</div><div><div style={{fontWeight:700,fontSize:14}}>{t("why2t")}</div><div style={{fontSize:12.5,color:"var(--muted)"}}>{t("why2b")}</div></div></div>
+        <div className="why" style={{borderBottom:"none"}}><div className="whyi" style={{background:"var(--brand-soft)"}}>👑</div><div><div style={{fontWeight:700,fontSize:14}}>{t("why3t")}</div><div style={{fontSize:12.5,color:"var(--muted)"}}>{t("why3b")}</div></div></div>
       </div>
       </>}
-    <p style={{color:"var(--faint)",fontSize:11.5,marginTop:18}}>נקודות בלבד · אף פעם לא כסף אמיתי · לכל הגילאים</p>
+    <p style={{color:"var(--faint)",fontSize:11.5,marginTop:18}}>{t("footerNote")}</p>
   </div>;
 }
 
 /* ---------- feed ---------- */
-function Bar({poll,t,onVote,locking}){
-  const total=t.yes+t.no,y=pct(t.yes,t.no),voted=t.mine,reveal=(!!voted||poll.status!=="open")&&!locking;
+function Bar({poll,tl,onVote,locking}){
+  const total=tl.yes+tl.no,y=pct(tl.yes,tl.no),voted=tl.mine,reveal=(!!voted||poll.status!=="open")&&!locking;
   return <div>
     <div className="bar">
-      {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="spin" style={{width:18,height:18,borderWidth:2}}/>נועל את ההימור…</div>
+      {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="spin" style={{width:18,height:18,borderWidth:2}}/>{t("locking")}</div>
       :<><div className="side" style={{width:(reveal?y:50)+"%",background:voted==="yes"?"var(--yes)":"var(--yes-soft)"}}/>
       <div className="side" style={{width:(reveal?100-y:50)+"%",background:voted==="no"?"var(--no)":"var(--no-soft)"}}/>
-      <button className="lab" style={{insetInlineStart:0,color:voted==="yes"?"#fff":"var(--yes)"}} disabled={reveal} onClick={()=>onVote("yes")}>כן {reveal?<span className="tnum">{y}%</span>:""}</button>
-      <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={reveal} onClick={()=>onVote("no")}>{reveal?<span className="tnum">{100-y}%</span>:""} לא</button></>}
+      <button className="lab" style={{insetInlineStart:0,color:voted==="yes"?"#fff":"var(--yes)"}} disabled={reveal} onClick={()=>onVote("yes")}>{t("yes")} {reveal?<span className="tnum">{y}%</span>:""}</button>
+      <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={reveal} onClick={()=>onVote("no")}>{reveal?<span className="tnum">{100-y}%</span>:""} {t("no")}</button></>}
     </div>
     <div style={{display:"flex",justifyContent:"space-between",marginTop:8,fontSize:12,color:"var(--muted)",fontWeight:600}}>
-      <span className="tnum">{total} הימרו</span><span style={{color:reveal?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{reveal?"ננעל":"הַמֵּר — בחר צד"}</span></div>
+      <span className="tnum">{t("betsN",{n:total})}</span><span style={{color:reveal?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{reveal?t("locked"):t("pickSide")}</span></div>
   </div>;
 }
-function PollCard({poll,t,me,onVote,onResolve,locking,featured}){
-  const total=t.yes+t.no;
+function PollCard({poll,tl,me,onVote,onResolve,locking,featured}){
+  const total=tl.yes+tl.no;
   const hot=poll.status==="open"&&total>=8;
   const closed=poll.status==="open"&&new Date(poll.closes_at)<new Date();
-  const auto=["sport","weather","screen","news"].indexOf(poll.subject)>=0&&!poll.force_proof&&poll.type==="event";
   const canResolve=(poll.status==="open"&&closed)||poll.status==="locked";
-  const mayResolve=canResolve&&(auto||poll.author_id===me.id);
-  const pay=payouts(t);
-  const myResult=poll.status==="resolved"&&t.mine?(t.mine===poll.resolved_outcome?"win":"lose"):null;
+  const mayResolve=canResolve&&poll.author_id===me.id;
+  const pay=payouts(tl);
+  const myResult=poll.status==="resolved"&&tl.mine?(tl.mine===poll.resolved_outcome?"win":"lose"):null;
+  const shareBet=()=>shareWa(t("shareBet",{q:poll.question,url:REDIRECT}));
+  const shareWin=()=>shareWa(t("shareWin",{q:poll.question,url:REDIRECT}));
   return <div className={"card"+(hot?" hotcard":"")} style={featured?{boxShadow:"0 0 0 1px rgba(255,194,60,.45),0 10px 34px rgba(255,194,60,.18)"}:null}>
-    {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}>🔥 הכי חם עכשיו</div>}
+    {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}>{t("hotNow")}</div>}
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
-      <span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {SUBJECTS[poll.subject]}</span>
-      <div style={{display:"flex",gap:6}}>{auto&&<span className="tag" style={{background:"rgba(45,212,191,.12)",color:"var(--no)"}}>אוטומטי</span>}{poll.status==="resolved"&&<span className="tag" style={{background:"var(--gold-soft)",color:"var(--gold)"}}>🏆 {poll.resolved_outcome==="yes"?"כן":"לא"}</span>}</div>
+      <span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>
+      <div style={{display:"flex",gap:6,alignItems:"center"}}>{poll.status==="resolved"&&<span className="tag" style={{background:"var(--gold-soft)",color:"var(--gold)"}}>🏆 {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")}>📤</button></div>
     </div>
     <p className="disp" style={{fontSize:18,fontWeight:700,margin:"0 0 12px",lineHeight:1.25}}>{poll.question}</p>
-    <Bar poll={poll} t={t} onVote={(c)=>onVote(poll,c)} locking={locking}/>
+    <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking}/>
     {poll.status==="open"&&<>
       <div style={{display:"flex",gap:8,marginTop:10}}>
-        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="yes"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="yes"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--yes)"}}>כן</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="yes"?"var(--gold)":"var(--text)"}}>+{pay.yes}{pay.min==="yes"?" 🔥":""}</span></div>
-        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="no"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="no"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--no)"}}>לא</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="no"?"var(--gold)":"var(--text)"}}>+{pay.no}{pay.min==="no"?" 🔥":""}</span></div>
+        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="yes"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="yes"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--yes)"}}>{t("yes")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="yes"?"var(--gold)":"var(--text)"}}>+{pay.yes}{pay.min==="yes"?" 🔥":""}</span></div>
+        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="no"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="no"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--no)"}}>{t("no")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="no"?"var(--gold)":"var(--text)"}}>+{pay.no}{pay.min==="no"?" 🔥":""}</span></div>
       </div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600}}>
-        <span>⏱ {closed?"נסגר":<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
-        <span>{pay.gate?"מיעוט משלם יותר":"בונוס מיעוט מ‑6 מהמרים"}</span>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600,gap:8}}>
+        <span>⏱ {closed?t("closedW"):<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
+        <span style={{whiteSpace:"nowrap"}}>{pay.gate?t("minPays"):t("minOpens")}</span>
       </div>
     </>}
-    {myResult&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,fontWeight:800,fontSize:13.5,textAlign:"center",background:myResult==="win"?"rgba(255,194,60,.14)":"var(--ink-3)",color:myResult==="win"?"var(--gold)":"var(--muted)"}}>{myResult==="win"?"✅ צדקת! הנקודות נכנסו לך":"❌ לא הפעם — מחכה לך הימור הבא"}</div>}
-    {mayResolve&&<button className="btn btn-gold" style={{marginTop:11,fontSize:14,padding:11}} onClick={()=>onResolve(poll,auto)}>⚖️ הכרע עכשיו</button>}
+    {myResult&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,fontWeight:800,fontSize:13.5,textAlign:"center",background:myResult==="win"?"rgba(255,194,60,.14)":"var(--ink-3)",color:myResult==="win"?"var(--gold)":"var(--muted)"}}>
+      {myResult==="win"?t("wonB"):t("lostB")}
+      {myResult==="win"&&<button onClick={shareWin} className="chip" style={{marginInlineStart:8,padding:"3px 9px",fontSize:12}}>{t("shareBtn")}</button>}
+    </div>}
+    {mayResolve&&<button className="btn btn-gold" style={{marginTop:11,fontSize:14,padding:11}} onClick={()=>onResolve(poll)}>{t("resolveBtn")}</button>}
   </div>;
 }
+function ResolveSheet({poll,onPick,onClose}){
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
+    <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 6px"}}>{t("resolveT")}</h3>
+    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 16px"}}>{poll.question}</p>
+    <button className="btn" style={{background:"var(--yes)",marginBottom:10}} onClick={()=>onPick("yes")}>{t("resYes")}</button>
+    <button className="btn" style={{background:"var(--no)",color:"#06302b",marginBottom:14}} onClick={()=>onPick("no")}>{t("resNo")}</button>
+    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5}}>{t("resHint")}</p>
+  </div></div>;
+}
 function Feed({group,me,onErr,onResolved}){
-  const [polls,setPolls]=useState(null),[tally,setTally]=useState({}),[filter,setFilter]=useState("all"),[creating,setCreating]=useState(false),[locking,setLocking]=useState(null);
+  const [polls,setPolls]=useState(null),[tally,setTally]=useState({}),[filter,setFilter]=useState("all"),[creating,setCreating]=useState(false),[locking,setLocking]=useState(null),[resolving,setResolving]=useState(null);
   const mounted=useRef(true);
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
   const load=async()=>{
@@ -261,8 +313,16 @@ function Feed({group,me,onErr,onResolved}){
     else setTally({});
   };
   useEffect(()=>{load();},[group.id]);
+  useEffect(()=>{                       // realtime: refresh when anyone votes / a poll changes (best-effort; needs Realtime replication on)
+    let tmr=null; const schedule=()=>{ if(tmr)clearTimeout(tmr); tmr=setTimeout(()=>{if(mounted.current)load();},400); };
+    const ch=SB.channel("rt-"+group.id)
+      .on("postgres_changes",{event:"*",schema:"public",table:"votes"},schedule)
+      .on("postgres_changes",{event:"*",schema:"public",table:"polls",filter:"group_id=eq."+group.id},schedule)
+      .subscribe();
+    return ()=>{ if(tmr)clearTimeout(tmr); SB.removeChannel(ch); };
+  },[group.id]);
   const vote=async(poll,choice)=>{
-    if(locking)return;                       // one bet locks at a time — no concurrent-vote race
+    if(locking)return;
     SND.lock(); setLocking(poll.id);
     const t0=Date.now();
     const{error}=await SB.rpc("cast_vote",{p_poll:poll.id,p_choice:choice});
@@ -272,95 +332,96 @@ function Feed({group,me,onErr,onResolved}){
     if(error)return onErr(error.message);
     await load();
   };
-  const resolve=async(poll,auto)=>{
-    const outcome=window.prompt("מה קרה בפועל? כתוב כן או לא:", "כן"); if(!outcome)return;
-    const o=(outcome.trim()==="כן"||outcome.trim().toLowerCase()==="yes")?"yes":"no";
+  const doResolve=async(o)=>{
+    const poll=resolving; setResolving(null); if(!poll)return;
     const{error}=await SB.rpc("resolve_poll",{p_poll:poll.id,p_outcome:o,p_void:false,p_proof:null});
     if(!mounted.current)return;
     if(error)return onErr(error.message);
-    const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win — never a loss
+    const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win
     if(won){ SND.win(); onResolved(true); } else { SND.tap(); onResolved(false); }
     await load();
   };
   if(creating)return <CreatePoll group={group} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
-  if(polls===null)return <Spinner label="טוען הימורים…"/>;
+  if(polls===null)return <Spinner label={t("loadingBets")}/>;
   const list=polls.filter(p=>p.status!=="void"&&(filter==="all"||p.subject===filter));
   let hottestId=null,hn=2;
   list.forEach(p=>{if(p.status==="open"){const n=(tally[p.id]||{yes:0,no:0}).yes+(tally[p.id]||{yes:0,no:0}).no;if(n>hn){hn=n;hottestId=p.id;}}});
   return <div>
-    <button className="btn btn-pri" onClick={()=>{SND.tap();setCreating(true);}} style={{marginBottom:13}}>🎰 שים הימור חדש</button>
+    <button className="btn btn-pri" onClick={()=>{SND.tap();setCreating(true);}} style={{marginBottom:13}}>{t("newBet")}</button>
     <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:4,marginBottom:13,scrollbarWidth:"none"}}>
-      {["all",...SK].map(k=><button key={k} className={"chip"+(filter===k?" on":"")} onClick={()=>setFilter(k)}>{k==="all"?"🎲 הכל":slabel(k)}</button>)}
+      {["all",...SK].map(k=><button key={k} className={"chip"+(filter===k?" on":"")} onClick={()=>setFilter(k)}>{k==="all"?t("allCat"):slabel(k)}</button>)}
     </div>
-    {list.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>🎲 עוד אין הימורים בנושא הזה. תהיה הראשון!</div>}
-    {list.map(p=><PollCard key={p.id} poll={p} t={tally[p.id]||{yes:0,no:0,mine:null}} me={me} onVote={vote} onResolve={resolve} locking={locking===p.id} featured={p.id===hottestId}/>)}
+    {list.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyFeed")}</div>}
+    {list.map(p=><PollCard key={p.id} poll={p} tl={tally[p.id]||{yes:0,no:0,mine:null}} me={me} onVote={vote} onResolve={(pl)=>setResolving(pl)} locking={locking===p.id} featured={p.id===hottestId}/>)}
+    {resolving&&<ResolveSheet poll={resolving} onPick={doResolve} onClose={()=>setResolving(null)}/>}
   </div>;
 }
 function CreatePoll({group,onDone,onCancel,onErr}){
-  const DUR=[{l:"שעה",h:1},{l:"6 שעות",h:6},{l:"יום",h:24},{l:"3 ימים",h:72},{l:"שבוע",h:168}];
+  const DUR=[{l:"d1h",h:1},{l:"d6h",h:6},{l:"d1d",h:24},{l:"d3d",h:72},{l:"d1w",h:168}];
   const [q,setQ]=useState(""),[subject,setSubject]=useState("sport"),[dur,setDur]=useState(24),[busy,setBusy]=useState(false);
   const submit=async()=>{if(q.trim().length<5)return;setBusy(true);
     const{error}=await SB.rpc("create_poll",{p_group:group.id,p_subject:subject,p_type:"event",p_personal:false,p_question:q.trim(),p_target:null,p_force_proof:false,p_closes_at:new Date(Date.now()+dur*3600000).toISOString()});
     setBusy(false);if(error)return onErr(error.message);SND.tap();onDone();};
   return <div>
-    <button onClick={onCancel} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit",fontSize:14}}>‹ חזרה</button>
-    <h2 className="disp" style={{fontSize:22,margin:"0 0 14px"}}>שים הימור חדש 🎰</h2>
-    <textarea className="in" rows="3" placeholder="מכבי תנצח בשבת?" value={q} onChange={e=>setQ(e.target.value)} style={{resize:"none",marginBottom:14}}/>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>נושא</div>
+    <button onClick={onCancel} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
+    <h2 className="disp" style={{fontSize:22,margin:"0 0 14px"}}>{t("newBetT")}</h2>
+    <textarea className="in" rows="3" placeholder={t("qPh")} value={q} onChange={e=>setQ(e.target.value)} style={{resize:"none",marginBottom:14}}/>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("subjectL")}</div>
     <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:18}}>{SK.map(k=><button key={k} className={"chip"+(subject===k?" on":"")} onClick={()=>setSubject(k)}>{slabel(k)}</button>)}</div>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>מתי נסגר?</div>
-    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:18}}>{DUR.map(d=><button key={d.h} className={"chip"+(dur===d.h?" on":"")} onClick={()=>setDur(d.h)}>{d.l}</button>)}</div>
-    <button className="btn btn-pri" disabled={busy||q.trim().length<5} onClick={submit}>🎰 שים את ההימור</button>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("whenClose")}</div>
+    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:18}}>{DUR.map(d=><button key={d.h} className={"chip"+(dur===d.h?" on":"")} onClick={()=>setDur(d.h)}>{t(d.l)}</button>)}</div>
+    <button className="btn btn-pri" disabled={busy||q.trim().length<5} onClick={submit}>{t("placeBet")}</button>
   </div>;
 }
 
 /* ---------- ranks ---------- */
-function Ranks({group,onErr}){
+function Ranks({group,me,onErr}){
   const [sub,setSub]=useState("total"),[rows,setRows]=useState(null);
-  useEffect(()=>{(async()=>{const{data,error}=await SB.from("member_scores").select("profile_id,subject,points,profiles(display_name)").eq("group_id",group.id);
+  useEffect(()=>{(async()=>{const{data,error}=await SB.from("member_scores").select("profile_id,subject,points,profiles(display_name,photo_url)").eq("group_id",group.id);
     if(error)return onErr(error.message);
-    const by={};(data||[]).forEach(r=>{const k=r.profile_id;by[k]=by[k]||{id:k,name:r.profiles?r.profiles.display_name:"—",total:0,s:{}};by[k].s[r.subject]=r.points;by[k].total+=r.points;});
+    const by={};(data||[]).forEach(r=>{const k=r.profile_id;by[k]=by[k]||{id:k,name:r.profiles?r.profiles.display_name:"—",photo:r.profiles?r.profiles.photo_url:null,total:0,s:{}};by[k].s[r.subject]=r.points;by[k].total+=r.points;});
     setRows(Object.values(by));})();},[group.id]);
-  if(rows===null)return <Spinner label="טוען דירוג…"/>;
+  if(rows===null)return <Spinner label={t("loadingRanks")}/>;
   const ranked=[...rows].sort((a,b)=>(sub==="total"?b.total-a.total:(b.s[sub]||0)-(a.s[sub]||0)));
   const val=(r)=>sub==="total"?r.total:(r.s[sub]||0);
   const medal=["🥇","🥈","🥉"];
   return <div>
     <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:12,scrollbarWidth:"none"}}>
-      {["total",...SK].map(k=><button key={k} className={"chip"+(sub===k?" on":"")} onClick={()=>setSub(k)}>{k==="total"?"🏆 סך הכל":slabel(k)}</button>)}
+      {["total",...SK].map(k=><button key={k} className={"chip"+(sub===k?" on":"")} onClick={()=>setSub(k)}>{k==="total"?t("totalCat"):slabel(k)}</button>)}
     </div>
-    {ranked.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>🏆 עוד אין נקודות. שים הימור והכרע אותו!</div>}
-    {ranked.map((r,i)=><div key={r.id} className="card" style={{display:"flex",alignItems:"center",gap:12,padding:13,borderColor:i===0?"rgba(255,194,60,.4)":"var(--line)"}}>
-      <span style={{width:24,fontWeight:800,fontSize:i<3?18:14,color:i<3?"var(--gold)":"var(--faint)",textAlign:"center"}}>{i<3?medal[i]:i+1}</span>
-      <div style={{flex:1,fontWeight:700}}>{r.name}</div>
+    {ranked.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyRanks")}</div>}
+    {ranked.map((r,i)=><div key={r.id} className="card" style={{display:"flex",alignItems:"center",gap:11,padding:11,borderColor:r.id===me.id?"var(--brand)":(i===0?"rgba(255,194,60,.4)":"var(--line)"),background:r.id===me.id?"var(--brand-soft)":"var(--ink-2)"}}>
+      <span style={{width:22,fontWeight:800,fontSize:i<3?18:14,color:i<3?"var(--gold)":"var(--faint)",textAlign:"center"}}>{i<3?medal[i]:i+1}</span>
+      <Avatar p={{display_name:r.name,photo_url:r.photo}} size={34}/>
+      <div style={{flex:1,fontWeight:700,fontSize:14.5}}>{r.name}</div>
       <span className="tnum disp" style={{fontWeight:800,fontSize:17,color:"var(--gold)"}}>{val(r)}</span></div>)}
   </div>;
 }
 
 /* ---------- profile ---------- */
 function Profile({group,me,total,scores,onSignOut,onUpdated}){
-  const L=lvl(total),next=L*50,intoLevel=total-(L-1)*50,prog=Math.round(intoLevel/50*100);
+  const L=lvl(total),next=L*50,prog=Math.round((total-(L-1)*50)/50*100);
   const [editing,setEditing]=useState(false);
   return <div>
     <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}>
       <Avatar p={me} size={58}/>
-      <div style={{flex:1}}><div className="disp" style={{fontSize:21,fontWeight:800}}>{me.display_name}</div><div style={{fontSize:13,color:"var(--muted)"}}>רמה {L} · {group.name}</div></div>
-      <button className="chip" onClick={()=>{SND.tap();setEditing(true);}} style={{padding:"8px 12px"}}>✏️ ערוך</button>
+      <div style={{flex:1}}><div className="disp" style={{fontSize:21,fontWeight:800}}>{me.display_name}</div><div style={{fontSize:13,color:"var(--muted)"}}>{t("levelL")} {L} · {group.name}</div></div>
+      <button className="chip" onClick={()=>{SND.tap();setEditing(true);}} style={{padding:"8px 12px"}}>{t("editBtn")}</button>
     </div>
     <div className="card" style={{padding:16}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-        <div><div style={{fontSize:12.5,color:"var(--muted)",fontWeight:700}}>סך הנקודות</div><div className="disp goldglow" style={{fontSize:34,fontWeight:900,color:"var(--gold)"}}><CountUp value={total}/></div></div>
+        <div><div style={{fontSize:12.5,color:"var(--muted)",fontWeight:700}}>{t("totalPts")}</div><div className="disp goldglow" style={{fontSize:34,fontWeight:900,color:"var(--gold)"}}><CountUp value={total}/></div></div>
         <div style={{width:52,height:52,borderRadius:15,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}><span className="disp tnum" style={{fontWeight:900,fontSize:23,color:"var(--brand-2)"}}>{L}</span></div>
       </div>
       <div style={{height:8,borderRadius:9,background:"var(--ink-3)",overflow:"hidden"}}><div style={{width:prog+"%",height:"100%",background:"linear-gradient(90deg,var(--brand),var(--brand-2))",transition:"width .6s"}}/></div>
-      <div style={{fontSize:11.5,color:"var(--faint)",marginTop:6,fontWeight:600}}>עוד {Math.max(0,next-total)} נקודות לרמה {L+1}</div>
+      <div style={{fontSize:11.5,color:"var(--faint)",marginTop:6,fontWeight:600}}>{t("toNext",{n:Math.max(0,next-total),l:L+1})}</div>
     </div>
-    <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>ניקוד לפי נושא</div>
+    <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("ptsBySub")}</div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
       {SK.map(k=><div key={k} className="card" style={{margin:0,padding:13,display:"flex",alignItems:"center",gap:9}}>
-        <div style={{width:32,height:32,borderRadius:9,background:SC[k]+"1f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>{SEMO[k]}</div><div><div className="disp tnum" style={{fontSize:18,fontWeight:800,color:SC[k]}}>{scores[k]||0}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{SUBJECTS[k]}</div></div></div>)}
+        <div style={{width:32,height:32,borderRadius:9,background:SC[k]+"1f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>{SEMO[k]}</div><div><div className="disp tnum" style={{fontSize:18,fontWeight:800,color:SC[k]}}>{scores[k]||0}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{subName(k)}</div></div></div>)}
     </div>
-    <button className="btn btn-ghost" onClick={onSignOut}>התנתק</button>
+    <button className="btn btn-ghost" onClick={onSignOut}>{t("signOut")}</button>
     {editing&&<EditProfile me={me} onClose={()=>setEditing(false)} onUpdated={onUpdated}/>}
   </div>;
 }
@@ -373,29 +434,29 @@ function EditProfile({me,onClose,onUpdated}){
   const validUrl=/^https?:\/\//.test(url.trim())?url.trim():"";
   const preview={display_name:name,photo_url:validUrl||avatar};
   const save=async()=>{
-    if(name.trim().length<2){setLerr("שם חייב להיות לפחות 2 תווים");return;}
+    if(name.trim().length<2){setLerr(t("nameMin"));return;}
     setBusy(true); setLerr(null);
     const photo=validUrl||(avatar||null);
     const{data,error}=await SB.from("profiles").update({display_name:name.trim(),photo_url:photo}).eq("id",me.id).select();
     setBusy(false);
-    if(error){ setLerr(/policy|row-level|permission/i.test(error.message)?"כדי לשמור פרופיל צריך להריץ פקודת הרשאה קצרה ב‑DB — שלחתי לך אותה בצ'אט.":error.message); return; }
-    if(!data||!data.length){ setLerr("השמירה נחסמה ע\"י ה‑DB — צריך להריץ פקודת הרשאה קצרה (שלחתי לך אותה בצ'אט)."); return; }
+    if(error){ setLerr(/policy|row-level|permission/i.test(error.message)?t("saveBlocked"):error.message); return; }
+    if(!data||!data.length){ setLerr(t("saveBlocked")); return; }
     SND.win(); onUpdated({...me,display_name:name.trim(),photo_url:photo}); onClose();
   };
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
-    <h3 className="disp" style={{textAlign:"center",fontSize:20,fontWeight:800,margin:"0 0 14px"}}>עריכת פרופיל</h3>
+    <h3 className="disp" style={{textAlign:"center",fontSize:20,fontWeight:800,margin:"0 0 14px"}}>{t("editProfile")}</h3>
     <div style={{display:"flex",justifyContent:"center",marginBottom:16}}><Avatar p={preview} size={76}/></div>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>שם</div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>{t("nameL")}</div>
     <input className="in" value={name} onChange={e=>setName(e.target.value)} maxLength={24} style={{marginBottom:16}}/>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>בחר אווטאר</div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("pickAvatar")}</div>
     <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:7,marginBottom:16}}>
       {AVATARS.map(a=><button key={a} onClick={()=>{setAvatar(a);setUrl("");}} style={{fontSize:21,padding:"5px 0",borderRadius:11,cursor:"pointer",border:"1px solid "+((avatar===a&&!url.trim())?"var(--brand)":"var(--line)"),background:(avatar===a&&!url.trim())?"var(--brand-soft)":"var(--ink-3)"}}>{a}</button>)}
     </div>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>או הדבק קישור לתמונה (לא חובה)</div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>{t("orUrl")}</div>
     <input className="in" placeholder="https://…" value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:url.trim()&&!validUrl?6:16}}/>
-    {url.trim()&&!validUrl&&<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:14}}>הקישור צריך להתחיל ב‑http:// או https:// — אחרת נשתמש באווטאר שבחרת</div>}
+    {url.trim()&&!validUrl&&<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:14}}>{t("urlHint")}</div>}
     {lerr&&<div className="err">{lerr}</div>}
-    <button className="btn btn-pri" disabled={busy} onClick={save}>{busy?"שומר…":"💾 שמור שינויים"}</button>
+    <button className="btn btn-pri" disabled={busy} onClick={save}>{busy?t("savingW"):t("saveBtn")}</button>
   </div></div>;
 }
 
@@ -403,12 +464,12 @@ function EditProfile({me,onClose,onUpdated}){
 function Rules(){
   const row=(k,v)=><div style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:"1px solid var(--line)"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{k}</span><span className="tnum" style={{fontWeight:800,color:"var(--gold)"}}>{v}</span></div>;
   return <div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>🎰 איך צוברים</div>
-      {row("ניחוש נכון","+5")}{row("נכון ובמיעוט (49% ומטה)","+3")}{row("3 ברצף","+4")}{row("5 ברצף","+5")}{row("טעות","0")}
-      <div style={{display:"flex",justifyContent:"space-between",padding:"9px 0"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>לכל קבוצה עונה של 30 יום, ואז איפוס</span><span style={{color:"var(--brand-2)",fontWeight:800}}>↻</span></div></div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--no)"}}>✓ מותר</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>הימורים על אירועים שאפשר לאמת — נבדקים אוטומטית</li><li>הימור על אדם — רק באישורו</li><li>עד 40 בקבוצה, אתם בוחרים מתי נסגר</li></ul></div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--yes)"}}>✕ אסור</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>תוכן משפיל / קללות</li><li>הצבעה על הימור שהוא עליך</li><li>כסף אמיתי — אין כזה, אף פעם</li></ul></div>
-    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700}}>נקודות בלבד · אף פעם לא כסף · לכל הגילאים</p>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>{t("howEarn")}</div>
+      {row(t("rCorrect"),"+5")}{row(t("rMin"),"+3")}{row(t("r3"),"+4")}{row(t("r5"),"+5")}{row(t("rWrong"),"0")}
+      <div style={{display:"flex",justifyContent:"space-between",padding:"9px 0"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{t("seasonReset")}</span><span style={{color:"var(--brand-2)",fontWeight:800}}>↻</span></div></div>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--no)"}}>{t("allowedT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("al1")}</li><li>{t("al2")}</li><li>{t("al3")}</li></ul></div>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--yes)"}}>{t("forbidT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("fo1")}</li><li>{t("fo2")}</li><li>{t("fo3")}</li></ul></div>
+    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700}}>{t("footerNote")}</p>
   </div>;
 }
 
@@ -417,27 +478,27 @@ function GroupSheet({groups,current,onPick,onErr,onClose,reload}){
   const [mode,setMode]=useState("list"),[name,setName]=useState(""),[code,setCode]=useState(""),[busy,setBusy]=useState(false),[made,setMade]=useState(null);
   const create=async()=>{if(!name.trim())return;setBusy(true);const{data,error}=await SB.rpc("create_group",{p_name:name.trim()});setBusy(false);if(error)return onErr(error.message);SND.win();setMade(data);reload();};
   const join=async()=>{if(code.trim().length<4)return;setBusy(true);const{error}=await SB.rpc("join_group",{p_code:code.trim().toUpperCase()});setBusy(false);if(error)return onErr(error.message);SND.tap();setCode("");reload();setMode("list");};
-  const wa=(g)=>{const txt=`בוא לקבוצה "${g.name}" ב‑Eyevos! קוד: ${g.invite_code}. ${REDIRECT}`;window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank");};
+  const wa=(g)=>shareWa(t("inviteText",{name:g.name,code:g.invite_code,url:REDIRECT}));
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
-    <h3 className="disp" style={{textAlign:"center",fontSize:20,fontWeight:800,margin:"0 0 16px"}}>קבוצות</h3>
-    {made?<div style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>הקבוצה נוצרה!</div><div className="disp tnum goldglow" style={{fontSize:28,fontWeight:900,color:"var(--brand-2)",letterSpacing:"3px",margin:"4px 0 14px"}}>{made.invite_code}</div>
-      <button className="btn" style={{background:"#25D366",marginBottom:10}} onClick={()=>wa(made)}>הזמן בוואטסאפ</button>
-      <button className="btn btn-pri" onClick={()=>{onPick(made);onClose();}}>כניסה לקבוצה</button></div>
+    <h3 className="disp" style={{textAlign:"center",fontSize:20,fontWeight:800,margin:"0 0 16px"}}>{t("groupsT")}</h3>
+    {made?<div style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>{t("groupCreated")}</div><div className="disp tnum goldglow" style={{fontSize:28,fontWeight:900,color:"var(--brand-2)",letterSpacing:"3px",margin:"4px 0 14px"}}>{made.invite_code}</div>
+      <button className="btn" style={{background:"#25D366",marginBottom:10}} onClick={()=>wa(made)}>{t("inviteWa")}</button>
+      <button className="btn btn-pri" onClick={()=>{onPick(made);onClose();}}>{t("enterGroup")}</button></div>
     :mode==="list"?<>
       {groups.map(g=><div key={g.id} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,borderColor:current&&current.id===g.id?"var(--brand)":"var(--line)"}}>
         <button onClick={()=>{onPick(g);onClose();}} style={{flex:1,display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer",textAlign:"start",color:"var(--text)",padding:0}}>
           <div style={{width:38,height:38,borderRadius:11,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
           <div><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div></button>
-        <button onClick={()=>wa(g)} className="chip" style={{padding:8}} title="שיתוף בוואטסאפ">🟢</button></div>)}
-      <button className="btn btn-pri" style={{marginTop:8,marginBottom:10}} onClick={()=>setMode("create")}>+ צור קבוצה</button>
-      <button className="btn btn-ghost" onClick={()=>setMode("join")}>הצטרף עם קוד</button></>
+        <button onClick={()=>wa(g)} className="chip" style={{padding:8}} title="WhatsApp">🟢</button></div>)}
+      <button className="btn btn-pri" style={{marginTop:8,marginBottom:10}} onClick={()=>setMode("create")}>{t("createGroup")}</button>
+      <button className="btn btn-ghost" onClick={()=>setMode("join")}>{t("joinWithCode")}</button></>
     :mode==="create"?<>
-      <button onClick={()=>setMode("list")} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit"}}>‹ חזרה</button>
-      <input className="in" placeholder="שם הקבוצה" value={name} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
-      <button className="btn btn-pri" disabled={busy||!name.trim()} onClick={create}>צור קבוצה</button></>
-    :<><button onClick={()=>setMode("list")} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit"}}>‹ חזרה</button>
+      <button onClick={()=>setMode("list")} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit"}}>{t("back")}</button>
+      <input className="in" placeholder={t("groupNamePh")} value={name} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
+      <button className="btn btn-pri" disabled={busy||!name.trim()} onClick={create}>{t("createBtn")}</button></>
+    :<><button onClick={()=>setMode("list")} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit"}}>{t("back")}</button>
       <input className="in" placeholder="K7M2QX" value={code} onChange={e=>setCode(e.target.value.toUpperCase())} style={{marginBottom:14,textAlign:"center",letterSpacing:"2px",fontSize:18}}/>
-      <button className="btn btn-pri" disabled={busy||code.trim().length<4} onClick={join}>הצטרף</button></>}
+      <button className="btn btn-pri" disabled={busy||code.trim().length<4} onClick={join}>{t("joinBtn")}</button></>}
   </div></div>;
 }
 
@@ -445,52 +506,58 @@ function GroupSheet({groups,current,onPick,onErr,onClose,reload}){
 function App(){
   const [session,setSession]=useState(undefined),[me,setMe]=useState(null),[groups,setGroups]=useState(null),[group,setGroup]=useState(null);
   const [tab,setTab]=useState("feed"),[err,setErr]=useState(null),[groupsOpen,setGroupsOpen]=useState(false),[celebrate,setCelebrate]=useState(false);
-  const [scores,setScores]=useState({}),[total,setTotal]=useState(0),[snd,setSnd]=useState(SND.on);
+  const [scores,setScores]=useState({}),[total,setTotal]=useState(0),[snd,setSnd]=useState(SND.on),[lang,setLang]=useState(CUR.lang),[langOpen,setLangOpen]=useState(false);
+  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=dirOf(lang);},[lang]);
+  const pickLang=(c)=>{CUR.lang=c;localStorage.setItem("eyevos_lang",c);setLang(c);setLangOpen(false);SND.tap();};
   useEffect(()=>{SB.auth.getSession().then(({data})=>setSession(data.session||null));const{data:s}=SB.auth.onAuthStateChange((_e,ss)=>setSession(ss||null));return()=>s.subscription.unsubscribe();},[]);
-  useEffect(()=>{if(!session){setMe(null);return;}SB.from("profiles").select("id,display_name,photo_url").eq("id",session.user.id).single().then(({data})=>setMe(data||{id:session.user.id,display_name:(session.user.email||"שחקן").split("@")[0]}));},[session]);
+  useEffect(()=>{if(!session){setMe(null);return;}SB.from("profiles").select("id,display_name,photo_url").eq("id",session.user.id).single().then(({data})=>setMe(data||{id:session.user.id,display_name:(session.user.email||"Player").split("@")[0]}));},[session]);
   const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("id,name,invite_code").order("created_at");if(error){setErr(error.message);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:(list[0]||null));};
   useEffect(()=>{if(me)loadGroups();},[me]);
-  const loadScores=async()=>{if(!group||!me)return;const{data}=await SB.from("member_scores").select("subject,points").eq("group_id",group.id).eq("profile_id",me.id);const s={};let t=0;(data||[]).forEach(r=>{s[r.subject]=r.points;t+=r.points;});setScores(s);setTotal(t);};
+  const loadScores=async()=>{if(!group||!me)return;const{data}=await SB.from("member_scores").select("subject,points").eq("group_id",group.id).eq("profile_id",me.id);const s={};let x=0;(data||[]).forEach(r=>{s[r.subject]=r.points;x+=r.points;});setScores(s);setTotal(x);};
   useEffect(()=>{loadScores();},[group,me]);
   const onErr=(m)=>{setErr(m);setTimeout(()=>setErr(null),5000);};
   const signOut=async()=>{await SB.auth.signOut();setGroup(null);setGroups(null);};
   const onResolved=(won)=>{loadScores();if(won){setCelebrate(true);setTimeout(()=>setCelebrate(false),1500);}};
+  const langSheet = langOpen?<LangSheet cur={lang} onPick={pickLang} onClose={()=>setLangOpen(false)}/>:null;
+  const langBtn = <button onClick={()=>setLangOpen(true)} className="chip" style={{padding:"6px 9px",fontSize:14}} title="Language">🌐</button>;
 
-  if(session===undefined)return <div className="stage"><div className="device"><Spinner label="מתחבר…"/></div></div>;
-  if(!session)return <div className="stage"><div className="device"><Coins/><SignIn/></div></div>;
+  if(session===undefined)return <div className="stage"><div className="device"><Spinner label={t("connecting")}/></div></div>;
+  if(!session)return <div className="stage"><div className="device"><Coins/><SignIn onOpenLang={()=>setLangOpen(true)}/>{langSheet}</div></div>;
   if(!me||groups===null)return <div className="stage"><div className="device"><Spinner/></div></div>;
 
   return <div className="stage"><div className="device">
     {celebrate&&<Confetti/>}
     <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-      <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> LIVE</span></div>
+      <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
-        <button onClick={()=>setSnd(SND.toggle())} className="chip" style={{padding:"6px 9px",fontSize:14}} title="צליל">{snd?"🔊":"🔇"}</button>
+        {langBtn}
+        <button onClick={()=>setSnd(SND.toggle())} className="chip" style={{padding:"6px 9px",fontSize:14}} title="sound">{snd?"🔊":"🔇"}</button>
         {tab==="feed"&&group&&<button className="chip" onClick={()=>setGroupsOpen(true)} style={{padding:"5px 10px",fontSize:12}}>👥 {group.name} ›</button>}
         <span className="pill" style={{fontSize:13}}>🏆 <CountUp value={total}/></span>
       </div></div>
-      {tab==="feed"&&<p className="disp" style={{fontSize:24,fontWeight:900,margin:"12px 0 0"}}>תהמר. תנצח.<br/>על <span className="jackpot">0 ₪</span>.</p>}
-      {tab==="board"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>מי המלך של הזירה? 👑</p>}
-      {tab==="rules"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>חוקים</p>}
-      {tab==="profile"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>הפרופיל שלי</p>}
+      {tab==="feed"&&<p className="disp" style={{fontSize:24,fontWeight:900,margin:"12px 0 0"}}>{t("tbBet")}<br/>{t("tbFor")} <span className="jackpot">{t("stFree")}</span></p>}
+      {tab==="board"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>{t("boardH")}</p>}
+      {tab==="rules"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>{t("rulesH")}</p>}
+      {tab==="profile"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>{t("profileH")}</p>}
     </div>
     <div className="scroll">
       {err&&<div className="err">{err}</div>}
       {!group?
-        <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎲</div><p style={{fontWeight:800,fontSize:17}}>אין לך עדיין קבוצה</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:16}}>צור קבוצה או הצטרף עם קוד כדי להתחיל להמר.</p><button className="btn btn-pri" onClick={()=>setGroupsOpen(true)} style={{maxWidth:260,margin:"0 auto"}}>+ צור / הצטרף לקבוצה</button></div>
+        <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎲</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:16}}>{t("noGroupB")}</p><button className="btn btn-pri" onClick={()=>setGroupsOpen(true)} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
         :tab==="feed"?<Feed group={group} me={me} onErr={onErr} onResolved={onResolved}/>
-        :tab==="board"?<Ranks group={group} onErr={onErr}/>
+        :tab==="board"?<Ranks group={group} me={me} onErr={onErr}/>
         :tab==="rules"?<Rules/>
         :<Profile group={group} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe}/>}
     </div>
     <div className="nav">
-      <button className={"navb"+(tab==="feed"?" on":"")} onClick={()=>setTab("feed")}>🏠 פיד</button>
-      <button className={"navb"+(tab==="board"?" on":"")} onClick={()=>setTab("board")}>🏆 דירוג</button>
+      <button className={"navb"+(tab==="feed"?" on":"")} onClick={()=>setTab("feed")}>🏠 {t("navFeed")}</button>
+      <button className={"navb"+(tab==="board"?" on":"")} onClick={()=>setTab("board")}>🏆 {t("navBoard")}</button>
       <button className="fab" onClick={()=>setTab("feed")}>+</button>
-      <button className={"navb"+(tab==="rules"?" on":"")} onClick={()=>setTab("rules")}>📖 חוקים</button>
-      <button className={"navb"+(tab==="profile"?" on":"")} onClick={()=>setTab("profile")}>👤 אני</button>
+      <button className={"navb"+(tab==="rules"?" on":"")} onClick={()=>setTab("rules")}>📖 {t("navRules")}</button>
+      <button className={"navb"+(tab==="profile"?" on":"")} onClick={()=>setTab("profile")}>👤 {t("navProfile")}</button>
     </div>
     {groupsOpen&&<GroupSheet groups={groups} current={group} onPick={(g)=>{setGroup(g);setTab("feed");}} onErr={onErr} onClose={()=>setGroupsOpen(false)} reload={loadGroups}/>}
+    {langSheet}
   </div></div>;
 }
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);

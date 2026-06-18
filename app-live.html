@@ -117,6 +117,13 @@ const SB = window.supabase.createClient("https://nsnbdgudqtygxaalhjsn.supabase.c
   { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 const REDIRECT = location.origin + location.pathname;
 
+// ?fresh=1 — start as a brand-new user: wipe saved session + language, then load a clean URL.
+const _FRESH = (function(){ try{ return new URLSearchParams(location.search).get("fresh")==="1"; }catch(e){ return false; } })();
+if(_FRESH){
+  try{ Object.keys(localStorage).forEach(function(k){ if(/eyevos|^sb-|supabase/i.test(k)) localStorage.removeItem(k); }); }catch(e){}
+  SB.auth.signOut().catch(function(){}).finally(function(){ location.replace(location.pathname); });
+}
+
 /* ===================== i18n ===================== */
 const LANGS=[{c:"he",n:"עברית",d:"rtl"},{c:"en",n:"English",d:"ltr"},{c:"ar",n:"العربية",d:"rtl"},{c:"es",n:"Español",d:"ltr"},{c:"fr",n:"Français",d:"ltr"},{c:"pt",n:"Português",d:"ltr"},{c:"ru",n:"Русский",d:"ltr"},{c:"de",n:"Deutsch",d:"ltr"},{c:"hi",n:"हिन्दी",d:"ltr"},{c:"zh",n:"中文",d:"ltr"}];
 const STR={
@@ -643,7 +650,7 @@ class ErrorBoundary extends React.Component{
     return this.props.children;
   }
 }
-ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App/></ErrorBoundary>);
+if(!_FRESH) ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App/></ErrorBoundary>);
 </script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
 </body>

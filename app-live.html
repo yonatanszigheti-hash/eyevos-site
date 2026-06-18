@@ -126,6 +126,8 @@ ar:{sport:"رياضة",screen:"أفلام",reality:"واقع",weather:"الطق�
 };
 const subName=(k)=>((SUBN[CUR.lang]||SUBN.en)[k]||k);
 const slabel=(k)=>SEMO[k]+" "+subName(k);
+// group's subject: from DB once migrated, else a local bridge set at creation, else default
+function grpSub(g){ if(!g)return "sport"; try{ return g.subject || localStorage.getItem("eyevos_gsub_"+g.id) || "sport"; }catch(e){ return g.subject||"sport"; } }
 
 const pct=(a,b)=>(a+b===0?50:Math.round(a/(a+b)*100));
 const lvl=(x)=>Math.floor(x/50)+1;
@@ -345,7 +347,7 @@ function Feed({group,me,onErr,onResolved,startCreate}){
   };
   if(creating)return <CreatePoll group={group} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
   if(polls===null)return <Spinner label={t("loadingBets")}/>;
-  const gsub=group.subject||"sport";
+  const gsub=grpSub(group);
   const list=polls.filter(p=>p.status!=="void");
   let hottestId=null,hn=2;
   list.forEach(p=>{if(p.status==="open"){const n=(tally[p.id]||{yes:0,no:0}).yes+(tally[p.id]||{yes:0,no:0}).no;if(n>hn){hn=n;hottestId=p.id;}}});
@@ -363,7 +365,7 @@ function Feed({group,me,onErr,onResolved,startCreate}){
 }
 function CreatePoll({group,onDone,onCancel,onErr}){
   const DUR=[{l:"d1h",h:1},{l:"d6h",h:6},{l:"d1d",h:24},{l:"d3d",h:72},{l:"d1w",h:168}];
-  const subject=group.subject||"sport";
+  const subject=grpSub(group);
   const [q,setQ]=useState(""),[dur,setDur]=useState(24),[busy,setBusy]=useState(false);
   const submit=async()=>{if(q.trim().length<5)return;setBusy(true);
     const{error}=await SB.rpc("create_poll",{p_group:group.id,p_subject:subject,p_type:"event",p_personal:false,p_question:q.trim(),p_target:null,p_force_proof:false,p_closes_at:new Date(Date.now()+dur*3600000).toISOString()});
@@ -482,7 +484,12 @@ function Rules(){
 /* ---------- groups (subject -> groups) ---------- */
 function Groups({groups,me,active,onErr,reload,onEnter}){
   const [sub,setSub]=useState(null),[mode,setMode]=useState("list"),[name,setName]=useState(""),[code,setCode]=useState(""),[busy,setBusy]=useState(false),[made,setMade]=useState(null);
-  const create=async()=>{if(!name.trim())return;setBusy(true);const{data,error}=await SB.rpc("create_group",{p_name:name.trim(),p_subject:sub});setBusy(false);if(error)return onErr(error.message);SND.win();setMade(data);reload();};
+  const create=async()=>{if(!name.trim())return;setBusy(true);
+    let res=await SB.rpc("create_group",{p_name:name.trim(),p_subject:sub});
+    if(res.error&&/function|does not exist|p_subject|schema cache/i.test(res.error.message)) res=await SB.rpc("create_group",{p_name:name.trim()}); // works before the per-subject SQL is run
+    setBusy(false);if(res.error)return onErr(res.error.message);
+    try{localStorage.setItem("eyevos_gsub_"+res.data.id,sub);}catch(e){}   // local bridge: remember this group's subject now; DB takes over after SQL
+    SND.win();setMade(res.data);reload();};
   const join=async()=>{if(code.trim().length<4)return;setBusy(true);const{error}=await SB.rpc("join_group",{p_code:code.trim().toUpperCase()});setBusy(false);if(error)return onErr(error.message);SND.tap();setCode("");reload();setMode("list");};
   const wa=(g)=>shareWa(t("inviteText",{name:g.name,code:g.invite_code,url:REDIRECT}));
   if(!sub)return <div>
@@ -493,7 +500,7 @@ function Groups({groups,me,active,onErr,reload,onEnter}){
         <span style={{fontSize:30}}>{SEMO[k]}</span><span style={{fontWeight:800,fontSize:14.5,color:SC[k]}}>{subName(k)}</span></button>)}
     </div>
   </div>;
-  const inSub=groups.filter(g=>(g.subject||"sport")===sub);
+  const inSub=groups.filter(g=>grpSub(g)===sub);
   return <div>
     <button onClick={()=>{setSub(null);setMode("list");setMade(null);}} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14,flexWrap:"wrap"}}><span style={{fontSize:24}}>{SEMO[sub]}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:SC[sub]}}>{subName(sub)}</span><span style={{color:"var(--muted)",fontSize:13}}>· {t("yourGroupsIn")}</span></div>

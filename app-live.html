@@ -150,6 +150,8 @@ zh:{chooseSubject:"先选个主题",chooseSubjectSub:"选个主题——然后�
 ar:{chooseSubject:"اختر موضوعاً أولاً",chooseSubjectSub:"اختر موضوعاً — وستظهر لك كل مجموعاتك",yourGroupsIn:"مجموعاتك",codeLabel:"الرمز",subjectLocked:"موضوع المجموعة"}
 };
 for(const _c in _GX){ if(STR[_c]) Object.assign(STR[_c],_GX[_c]); }
+const _GX2={ he:{settings:"הגדרות",langRow:"שפה",soundRow:"צליל",onW:"פועל",offW:"כבוי"}, en:{settings:"Settings",langRow:"Language",soundRow:"Sound",onW:"On",offW:"Off"} };
+for(const _c in _GX2){ if(STR[_c]) Object.assign(STR[_c],_GX2[_c]); }
 const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
 const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
@@ -454,9 +456,10 @@ function Ranks({group,me,onErr}){
 }
 
 /* ---------- profile ---------- */
-function Profile({group,me,total,scores,onSignOut,onUpdated}){
+function Profile({group,me,total,scores,onSignOut,onUpdated,onLang,snd,onSound,onRules,langName}){
   const L=lvl(total),next=L*50,prog=Math.round((total-(L-1)*50)/50*100);
   const [editing,setEditing]=useState(false);
+  const srow={display:"flex",alignItems:"center",justifyContent:"space-between",width:"100%",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",color:"var(--text)",fontWeight:700,fontSize:14.5,padding:"13px 12px"};
   return <div>
     <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}>
       <Avatar p={me} size={58}/>
@@ -475,6 +478,12 @@ function Profile({group,me,total,scores,onSignOut,onUpdated}){
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
       {SK.map(k=><div key={k} className="card" style={{margin:0,padding:13,display:"flex",alignItems:"center",gap:9}}>
         <div style={{width:32,height:32,borderRadius:9,background:SC[k]+"1f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>{SEMO[k]}</div><div><div className="disp tnum" style={{fontSize:18,fontWeight:800,color:SC[k]}}>{scores[k]||0}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{subName(k)}</div></div></div>)}
+    </div>
+    <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("settings")}</div>
+    <div className="card" style={{padding:4,marginBottom:14}}>
+      <button onClick={onLang} style={srow}><span>🌐 {t("langRow")}</span><span style={{color:"var(--muted)"}}>{langName} ›</span></button>
+      <button onClick={onSound} style={{...srow,borderTop:"1px solid var(--line)"}}><span>{snd?"🔊":"🔇"} {t("soundRow")}</span><span style={{color:"var(--muted)"}}>{snd?t("onW"):t("offW")}</span></button>
+      <button onClick={onRules} style={{...srow,borderTop:"1px solid var(--line)"}}><span>📖 {t("rulesH")}</span><span style={{color:"var(--muted)"}}>›</span></button>
     </div>
     <button className="btn btn-ghost" onClick={onSignOut}>{t("signOut")}</button>
     {editing&&<EditProfile me={me} onClose={()=>setEditing(false)} onUpdated={onUpdated}/>}
@@ -602,9 +611,6 @@ function App(){
     <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
-        {langBtn}
-        <button onClick={()=>setTab("rules")} className="chip" style={{padding:"6px 9px",fontSize:14}} title="rules">📖</button>
-        <button onClick={()=>setSnd(SND.toggle())} className="chip" style={{padding:"6px 9px",fontSize:14}} title="sound">{snd?"🔊":"🔇"}</button>
         {group&&tab!=="groups"&&tab!=="feed"&&<button className="chip" onClick={()=>setTab("groups")} style={{padding:"5px 10px",fontSize:12}}>👥 {group.name} ›</button>}
         <span className="pill" style={{fontSize:13}}>🏆 <CountUp value={total}/></span>
       </div></div>
@@ -623,7 +629,7 @@ function App(){
         :tab==="feed"?<Feed group={group} me={me} onErr={onErr} onResolved={onResolved} startCreate={startCreate}/>
         :tab==="board"?<Ranks group={group} me={me} onErr={onErr}/>
         :tab==="rules"?<Rules/>
-        :<Profile group={group} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe}/>}
+        :<Profile group={group} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>}
     </div>
     <div className="nav">
       <button className={"navb"+(tab==="feed"?" on":"")} onClick={()=>setTab("feed")}>🏠 {t("navFeed")}</button>

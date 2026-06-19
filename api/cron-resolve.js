@@ -1,3 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A78BFF"/><stop offset="1" stop-color="#8A6BFF"/></linearGradient></defs><rect width="512" height="512" rx="104" fill="url(#g)"/><text x="250" y="350" font-family="Arial,Helvetica,sans-serif" font-size="300" font-weight="bold" fill="#fff" text-anchor="middle">E</text><circle cx="378" cy="326" r="36" fill="#FF4D6D"/></svg>
 
 <!doctype html>
 <html lang="he" dir="rtl">
@@ -6980,4 +6981,123 @@ if(!_FRESH) ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBo
 </body>
 </html>
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A78BFF"/><stop offset="1" stop-color="#8A6BFF"/></linearGradient></defs><rect width="512" height="512" rx="104" fill="url(#g)"/><text x="250" y="350" font-family="Arial,Helvetica,sans-serif" font-size="300" font-weight="bold" fill="#fff" text-anchor="middle">E</text><circle cx="378" cy="326" r="36" fill="#FF4D6D"/></svg>
+-- ============================================================
+--  Eyevos — scheduled auto-resolution (system resolver)
+--  auto_resolve_poll: called ONLY by the trusted cron endpoint via the
+--  service-role key. It has no auth.uid()/membership check (the system is
+--  the caller), but it self-guards: it only resolves auto-verifiable
+--  subjects (sport/weather/screen/news), only AFTER closes_at, and is
+--  REVOKED from normal users so nobody can call it from the app.
+--  Run once in Supabase → SQL Editor. Requires FIX-resolve.sql already run.
+-- ============================================================
+
+create or replace function auto_resolve_poll(p_poll uuid, p_outcome vote_choice)
+returns text language plpgsql security definer set search_path=public as $$
+declare
+  v polls%rowtype; v_total int; v_win int; w numeric;
+  v_base int; v_minor int; v_streak_b int; v_new_streak int; r record;
+begin
+  select * into v from polls where id=p_poll for update;
+  if v.id is null or v.status not in ('open','locked') then return 'skip'; end if;
+  if not (v.subject in ('sport','weather','screen','news') and not v.force_proof and v.type='event')
+    then return 'not_auto'; end if;                         -- only publicly-verifiable subjects
+  if now() < v.closes_at then return 'not_closed'; end if;  -- never before the close time
+
+  select count(*), count(*) filter (where choice=p_outcome) into v_total, v_win from votes where poll_id=p_poll;
+  if v_total = 0 then update polls set status='void', resolved_outcome=p_outcome, resolved_by='auto' where id=p_poll; return 'void'; end if;
+  w := v_win::numeric / v_total;
+  update polls set status='resolved', resolved_outcome=p_outcome, resolved_by='auto' where id=p_poll;
+
+  for r in select voter_id, choice from votes where poll_id=p_poll loop
+    if r.choice = p_outcome then
+      v_base := 5;
+      v_minor := case when v.type<>'person' and w < 0.5
+                        and v_total >= 6 and least(v_win, v_total-v_win) >= 2 then 3 else 0 end;
+      select streak into v_streak_b from member_scores
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject and season_no=v.season_no;
+      v_new_streak := coalesce(v_streak_b,0) + 1;
+      v_streak_b := case when v_new_streak=3 then 4 when v_new_streak=5 then 5 else 0 end;
+      insert into score_events(group_id,profile_id,poll_id,subject,season_no,base,minority_bonus,streak_bonus)
+        values (v.group_id,r.voter_id,p_poll,v.subject,v.season_no,v_base,v_minor,v_streak_b)
+        on conflict (poll_id,profile_id) do nothing;
+      insert into member_scores(group_id,profile_id,subject,season_no,points,streak)
+        values (v.group_id,r.voter_id,v.subject,v.season_no, v_base+v_minor+v_streak_b, v_new_streak)
+        on conflict (group_id,profile_id,subject) do update
+          set points = member_scores.points + v_base+v_minor+v_streak_b, streak = v_new_streak;
+    else
+      update member_scores set streak=0
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject;
+    end if;
+  end loop;
+  return 'resolved';
+end; $$;
+
+-- lock it down: only the service role (cron) may run it, never app users
+revoke all on function auto_resolve_poll(uuid, vote_choice) from public, anon, authenticated;
+
+-- FIX: "column v_void does not exist" when resolving a prediction.
+-- Cause: resolve_poll referenced an undeclared identifier `v_void`; the
+-- parameter is `p_void`. One-word fix. Run this whole block once in
+-- Supabase → SQL Editor. (Safe: create-or-replace, same signature.)
+
+create or replace function resolve_poll(p_poll uuid, p_outcome vote_choice, p_void boolean default false, p_proof text default null)
+returns void language plpgsql security definer set search_path=public as $$
+declare
+  v polls%rowtype; v_auto boolean; v_total int; v_win int; w numeric;
+  v_base int; v_minor int; v_streak_b int; v_new_streak int; r record;
+begin
+  select * into v from polls where id=p_poll for update;
+  if v.id is null or v.status not in ('open','locked') then return; end if;
+  v_auto := v.subject in ('sport','weather','screen','news') and not v.force_proof and v.type='event';
+  if not is_member(v.group_id) then raise exception 'Not a member'; end if;
+  if not v_auto and v.author_id <> auth.uid() then
+    raise exception 'Only the author who posted this can answer it';
+  end if;
+  if not v_auto and not p_void and p_proof is null and v.force_proof then   -- FIXED: p_void (was v_void)
+    raise exception 'A proof photo is required'; end if;
+
+  if p_void then update polls set status='void' where id=p_poll; return; end if;
+
+  select count(*), count(*) filter (where choice=p_outcome) into v_total, v_win from votes where poll_id=p_poll;
+  if v_total = 0 then update polls set status='void', resolved_outcome=p_outcome where id=p_poll; return; end if;
+  w := v_win::numeric / v_total;
+  update polls set status='resolved', resolved_outcome=p_outcome,
+    resolved_by = case when v_auto then 'auto' else 'author' end, proof_url=p_proof where id=p_poll;
+
+  for r in select voter_id, choice from votes where poll_id=p_poll loop
+    if r.choice = p_outcome then
+      v_base := 5;
+      v_minor := case when v.type<>'person' and w < 0.5
+                        and v_total >= 6 and least(v_win, v_total-v_win) >= 2 then 3 else 0 end;
+      select streak into v_streak_b from member_scores
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject and season_no=v.season_no;
+      v_new_streak := coalesce(v_streak_b,0) + 1;
+      v_streak_b := case when v_new_streak=3 then 4 when v_new_streak=5 then 5 else 0 end;
+      insert into score_events(group_id,profile_id,poll_id,subject,season_no,base,minority_bonus,streak_bonus)
+        values (v.group_id,r.voter_id,p_poll,v.subject,v.season_no,v_base,v_minor,v_streak_b)
+        on conflict (poll_id,profile_id) do nothing;
+      insert into member_scores(group_id,profile_id,subject,season_no,points,streak)
+        values (v.group_id,r.voter_id,v.subject,v.season_no, v_base+v_minor+v_streak_b, v_new_streak)
+        on conflict (group_id,profile_id,subject) do update
+          set points = member_scores.points + v_base+v_minor+v_streak_b, streak = v_new_streak;
+    else
+      update member_scores set streak=0
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject;
+    end if;
+  end loop;
+end; $$;
+
+-- Per-subject groups: each group belongs to one subject. Run once in Supabase SQL Editor.
+alter table groups add column if not exists subject poll_subject;
+update groups set subject = 'sport' where subject is null;
+
+drop function if exists create_group(text, text);
+create or replace function create_group(p_name text, p_subject poll_subject default 'sport', p_photo text default null)
+returns groups language plpgsql security definer set search_path=public as $$
+declare g groups; begin
+  insert into groups(name, invite_code, photo_url, created_by, subject)
+    values (p_name, gen_code(), p_photo, auth.uid(), p_subject) returning * into g;
+  insert into group_members(group_id, profile_id, role) values (g.id, auth.uid(), 'admin');
+  return g;
+end; $$;
+grant execute on function create_group(text, poll_subject, text) to authenticated;

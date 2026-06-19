@@ -1,31 +1,7104 @@
-const SUPA = "https://nsnbdgudqtygxaalhjsn.supabase.co";
 
-async function verify(question, key) {
-  const prompt =
-    "You verify real-world yes/no predictions using current web information. " +
-    'Question: "' + question + '". Search the web for the actual outcome. ' +
-    "Reply with ONLY ONE WORD: YES, NO, or UNKNOWN (UNKNOWN if future/unverifiable).";
-  try {
-    const r = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + key,
-      { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tools: [{ google_search: {} }], contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0 } }) }
+-- Per-subject groups: each group belongs to one subject. Run once in Supabase SQL Editor.
+alter table groups add column if not exists subject poll_subject;
+update groups set subject = 'sport' where subject is null;
+
+drop function if exists create_group(text, text);
+create or replace function create_group(p_name text, p_subject poll_subject default 'sport', p_photo text default null)
+returns groups language plpgsql security definer set search_path=public as $$
+declare g groups; begin
+  insert into groups(name, invite_code, photo_url, created_by, subject)
+    values (p_name, gen_code(), p_photo, auth.uid(), p_subject) returning * into g;
+  insert into group_members(group_id, profile_id, role) values (g.id, auth.uid(), 'admin');
+  return g;
+end; $$;
+grant execute on function create_group(text, poll_subject, text) to authenticated;
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A78BFF"/><stop offset="1" stop-color="#8A6BFF"/></linearGradient></defs><rect width="512" height="512" rx="104" fill="url(#g)"/><text x="250" y="350" font-family="Arial,Helvetica,sans-serif" font-size="300" font-weight="bold" fill="#fff" text-anchor="middle">E</text><circle cx="378" cy="326" r="36" fill="#FF4D6D"/></svg>
+
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>Eyevos · כל הריגוש. אפס שקלים.</title>
+<meta name="description" content="Eyevos — כל הריגוש של הניחוש, על 0 ₪. מנחשים מה שיקרה, זוכים בנקודות וכבוד. חינם, מגיל 10 עד 90." />
+<meta name="theme-color" content="#0C0A14" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='16'%20fill='%238A6BFF'/%3E%3Ctext%20x='30'%20y='45'%20font-family='Arial,sans-serif'%20font-size='36'%20font-weight='bold'%20fill='white'%20text-anchor='middle'%3EE%3C/text%3E%3Ccircle%20cx='52'%20cy='43'%20r='5'%20fill='%23FF4D6D'/%3E%3C/svg%3E" />
+<meta property="og:title" content="Eyevos · תנחש לפני כולם" />
+<meta property="og:description" content="משחק הניחושים החברתי לקבוצה שלך. נקודות בלבד, אף פעם לא כסף." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://eyevos-site.vercel.app/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Eyevos · תנחש לפני כולם" />
+<meta name="twitter:description" content="משחק הניחושים החברתי לקבוצה שלך. נקודות בלבד, אף פעם לא כסף." />
+<meta name="color-scheme" content="dark" />
+<link rel="canonical" href="https://eyevos-site.vercel.app/" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap">
+<style>
+
+:root{
+  --ink:#15121E; --ink-2:#1E1A2C; --ink-3:#272138; --ink-4:#322A47; --bg:#0C0A14;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --text:#F4F1FA; --muted:#B3AAC9; --faint:#8B83A6;
+  --yes:#FF4D6D; --no:#2DD4BF; --gold:#FFC23C;
+  --brand:#8A6BFF; --brand-2:#A78BFF; --brand-soft:rgba(138,107,255,.16);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+html,body{margin:0;padding:0}
+body{font-family:'Heebo',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+.disp{font-family:'Heebo',system-ui,sans-serif;letter-spacing:-.02em;font-weight:800}
+.tnum{font-variant-numeric:tabular-nums}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 22px}
+section{position:relative}
+
+/* glow background */
+.bg-glow{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(800px 480px at 78% -8%, rgba(138,107,255,.20), transparent 60%),
+  radial-gradient(620px 420px at 6% 4%, rgba(255,77,109,.13), transparent 60%),
+  radial-gradient(700px 500px at 92% 38%, rgba(45,212,191,.10), transparent 60%);}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(12,10,20,.72);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:'Heebo';font-weight:900;font-size:23px;letter-spacing:-.04em}
+.logo span{color:var(--yes)}
+.nav-links{display:flex;align-items:center;gap:26px;font-weight:700;font-size:14.5px;color:var(--muted)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(180deg,var(--brand-2),var(--brand));
+  color:#fff;font-weight:800;font-size:14px;padding:10px 17px;border-radius:12px;box-shadow:0 8px 20px rgba(138,107,255,.32);border:none;cursor:pointer;font-family:inherit}
+.nav-cta:hover{filter:brightness(1.06)}
+@media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:inherit;font-weight:800;
+  font-size:16px;padding:15px 26px;border-radius:14px;border:none;cursor:pointer;transition:.16s;color:#fff}
+.btn:active{transform:translateY(1px)}
+.btn-pri{background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 12px 28px rgba(138,107,255,.36)}
+.btn-pri:hover{filter:brightness(1.07)}
+.btn-ghost{background:var(--ink-3);border:1px solid var(--line-2);color:var(--text)}
+.btn-ghost:hover{border-color:var(--brand)}
+
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:12.5px;letter-spacing:.02em;
+  color:#D9CDFF;background:var(--brand-soft);border:1px solid rgba(138,107,255,.4);border-radius:999px;padding:7px 14px}
+
+/* hero */
+.hero{padding:64px 0 40px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(38px,6.4vw,64px);line-height:1.04;margin:18px 0 0}
+.hero h1 .grad{background:linear-gradient(90deg,var(--yes),var(--brand-2) 55%,var(--no));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.sub{font-size:clamp(16px,2.2vw,19px);color:var(--muted);max-width:520px;margin:20px 0 0;font-weight:500}
+.hero-cta{display:flex;gap:13px;flex-wrap:wrap;margin-top:30px}
+.hero-meta{display:flex;gap:22px;margin-top:30px;flex-wrap:wrap}
+.hero-meta .m{display:flex;flex-direction:column}
+.hero-meta .m b{font-size:26px;font-weight:900;color:var(--text)}
+.hero-meta .m span{font-size:12.5px;color:var(--faint);font-weight:700}
+
+/* phone frame */
+.phone-wrap{display:flex;justify-content:center;perspective:1600px}
+.phone{position:relative;width:340px;height:710px;max-height:78vh;border-radius:42px;background:#000;
+  border:1px solid var(--line-2);padding:9px;box-shadow:0 50px 120px rgba(0,0,0,.6),0 0 0 1px rgba(138,107,255,.18);
+  transform:rotateY(-9deg) rotateX(3deg);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.phone:hover{transform:rotateY(0) rotateX(0)}
+.phone::after{content:"";position:absolute;top:14px;left:50%;transform:translateX(-50%);width:108px;height:24px;background:#000;border-radius:0 0 16px 16px;z-index:3}
+.phone iframe{width:100%;height:100%;border:none;border-radius:34px;background:var(--ink);display:block}
+.phone-tip{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:var(--ink-4);
+  border:1px solid var(--line-2);color:var(--text);font-size:12.5px;font-weight:800;padding:8px 15px;border-radius:999px;white-space:nowrap;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+
+@media(max-width:880px){
+  .hero{grid-template-columns:1fr;gap:30px;padding:40px 0 20px;text-align:center}
+  .hero p.sub{margin-inline:auto}
+  .hero-cta,.hero-meta{justify-content:center}
+  .phone{transform:none;width:320px}
+  .phone:hover{transform:none}
+}
+
+/* section heading */
+.sec{padding:64px 0}
+.sec-head{text-align:center;max-width:660px;margin:0 auto 44px}
+.sec-head .eyebrow{margin-bottom:16px}
+.sec-head h2{font-size:clamp(28px,4.2vw,40px);margin:0 0 12px;line-height:1.12}
+.sec-head p{color:var(--muted);font-size:16.5px;margin:0;font-weight:500}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:var(--ink-2);border:1px solid var(--line);border-radius:22px;padding:26px}
+.step .n{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:19px;color:#fff;background:linear-gradient(180deg,var(--brand-2),var(--brand));margin-bottom:16px}
+.step h3{margin:0 0 7px;font-size:19px}
+.step p{margin:0;color:var(--muted);font-size:14.5px}
+@media(max-width:760px){.steps{grid-template-columns:1fr}}
+
+/* features */
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.fcard{background:var(--ink-2);border:1px solid var(--line);border-radius:22px;padding:24px;transition:.18s}
+.fcard:hover{border-color:var(--line-2);transform:translateY(-3px)}
+.fico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:15px}
+.fcard h3{margin:0 0 7px;font-size:18px}
+.fcard p{margin:0;color:var(--muted);font-size:14px}
+@media(max-width:880px){.feat{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.feat{grid-template-columns:1fr}}
+
+/* safety band */
+.safety{background:linear-gradient(180deg,rgba(45,212,191,.06),transparent);border-block:1px solid var(--line)}
+.safe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+.safe{display:flex;gap:12px;align-items:flex-start;background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:17px}
+.safe svg{flex-shrink:0;margin-top:1px}
+.safe b{display:block;font-size:14.5px;margin-bottom:2px}
+.safe span{font-size:13px;color:var(--muted)}
+@media(max-width:820px){.safe-grid{grid-template-columns:1fr}}
+
+/* scoring strip */
+.score{background:var(--ink-2);border:1px solid var(--line);border-radius:24px;padding:30px;display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+.score table{width:100%;border-collapse:collapse;font-size:14.5px}
+.score th,.score td{text-align:start;padding:10px 8px;border-bottom:1px solid var(--line)}
+.score th{color:var(--faint);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.score td.pts{font-weight:900;color:var(--gold);font-size:16px;text-align:end}
+.score tr:last-child td{border-bottom:none}
+@media(max-width:760px){.score{grid-template-columns:1fr;gap:20px}}
+
+/* faq */
+.faq{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+details{background:var(--ink-2);border:1px solid var(--line);border-radius:16px;padding:4px 20px;transition:.18s}
+details[open]{border-color:var(--line-2)}
+summary{cursor:pointer;list-style:none;padding:16px 0;font-weight:800;font-size:16.5px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:24px;color:var(--brand-2);font-weight:800;transition:.2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin:0 0 18px;color:var(--muted);font-size:14.5px}
+
+/* waitlist / CTA */
+.cta-band{background:linear-gradient(135deg,rgba(138,107,255,.16),rgba(255,77,109,.10));border:1px solid var(--line-2);
+  border-radius:28px;padding:48px 30px;text-align:center;margin:20px 0}
+.cta-band h2{font-size:clamp(26px,4vw,38px);margin:0 0 10px}
+.cta-band p{color:var(--muted);margin:0 auto 26px;max-width:480px;font-size:16px}
+.wl{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:34px 0;margin-top:30px}
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;color:var(--faint);font-size:13.5px}
+.foot .pill{display:inline-flex;align-items:center;gap:7px;background:rgba(45,212,191,.1);color:var(--no);border:1px solid rgba(45,212,191,.25);padding:7px 14px;border-radius:999px;font-weight:800}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s cubic-bezier(.22,1,.36,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}.phone,.phone:hover,.fcard:hover{transform:none}*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--brand-2);outline-offset:3px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="wrap nav-in">
+    <div class="logo">Eyevos<span>.</span></div>
+    <div class="nav-links">
+      <a href="#how">איך זה עובד</a>
+      <a href="#features">למה כיף</a>
+      <a href="#safety">הריגוש</a>
+      <a href="#faq">שאלות</a>
+      <a class="nav-cta" href="app-live.html">פתח אפליקציה</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="sec hero wrap" style="padding-top:46px">
+  <div class="reveal in">
+    <span class="eyebrow">🎯 כל הריגוש של הניחוש · על 0 ₪ · מגיל 10 עד 90</span>
+    <h1 class="disp">כל הריגוש.<br><span class="grad">אפס שקלים.</span></h1>
+    <p class="sub">הניחוש הכי כיף שיש — בלי לשים גרוש. מנחשים מה שיקרה, מרגישים את הלב דופק עד התוצאה, <b style="color:var(--gold)">וזוכים בגדול כשכל השאר טעו ורק אתם צדקתם.</b> אדרנלין, רצפים חמים וכבוד — חינם.</p>
+    <div class="hero-cta">
+      <a class="btn btn-pri" href="app-live.html">בוא לנחש עכשיו</a>
+      <a class="btn btn-ghost" href="#how">איך זה עובד?</a>
+    </div>
+    <div class="hero-meta">
+      <div class="m"><b class="tnum">8</b><span>זירות ניחוש</span></div>
+      <div class="m"><b class="tnum">×1.6</b><span>זכייה גדולה במיעוט</span></div>
+      <div class="m"><b class="tnum">0₪</b><span>אפס סיכון, אפס כסף</span></div>
+    </div>
+  </div>
+  <div class="phone-wrap reveal in" id="try">
+    <div class="phone">
+      <iframe src="app-live.html?lang=he" title="Eyevos preview" loading="lazy" width="340" height="710" tabindex="-1" aria-hidden="true" style="pointer-events:none"></iframe>
+      <a href="app-live.html" aria-label="פתח את Eyevos" style="position:absolute;inset:9px;border-radius:34px;z-index:5"></a>
+      <div class="phone-tip">👆 הצצה חיה — הקש לפתיחה</div>
+    </div>
+  </div>
+</header>
+
+<!-- HOW -->
+<section class="sec wrap" id="how">
+  <div class="sec-head reveal">
+    <span class="eyebrow">3 צעדים</span>
+    <h2 class="disp">פשוט כמו לשלוח הודעה בקבוצה</h2>
+    <p>בלי לימוד, בלי הגדרות. פותחים קבוצה, מנחשים, צוברים.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="n">1</div>
+      <h3>פותחים קבוצה</h3>
+      <p>צור קבוצה לחבר'ה ושתף קוד הזמנה. כולם נכנסים תוך שניות — בלי אפליקציה להוריד.</p>
+    </div>
+    <div class="step reveal">
+      <div class="n">2</div>
+      <h3>מנחשים</h3>
+      <p>כל אחד מעלה ניחוש: אירוע, או שאלה על חבר (רק באישורו). כולם בוחרים כן / לא לפני הדדליין.</p>
+    </div>
+    <div class="step reveal">
+      <div class="n">3</div>
+      <h3>צוברים נקודות</h3>
+      <p>כשהתוצאה נסגרת, מי שצדק מקבל נקודות. צדקת כשרוב טעו? נכנס בונוס המיעוט האמיץ.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec wrap" id="features">
+  <div class="sec-head reveal">
+    <span class="eyebrow">למה זה ממכר</span>
+    <h2 class="disp">הקיק של לקרוא נכון את מה שיקרה</h2>
+    <p>כל פרט בנוי כדי שתרצו לחזור — ולגרור עוד חברים פנימה.</p>
+  </div>
+  <div class="feat">
+    <div class="fcard reveal">
+      <div class="fico" style="background:rgba(255,77,109,.14)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF4D6D" stroke-width="2" stroke-linecap="round"><rect x="3" y="9" width="18" height="6" rx="3"/><path d="M9 9v6"/></svg></div>
+      <h3>בר ה־VS החי</h3>
+      <p>ההצבעות זזות בזמן אמת — קואל מול טורקיז. רואים את כל הקבוצה מתלבטת לייב. זה המסך שאי אפשר להפסיק להסתכל עליו.</p>
+    </div>
+    <div class="fcard reveal">
+      <div class="fico" style="background:rgba(255,194,60,.14)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFC23C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
+      <h3>בונוס המיעוט האמיץ</h3>
+      <p>צדקת כשרוב טעו (49% ומטה)? עוד 3 נקודות מעבר ל־5. זה הלב הרגשי של המשחק — לזהות את מה שאף אחד אחר לא ראה.</p>
+    </div>
+    <div class="fcard reveal">
+      <div class="fico" style="background:rgba(138,107,255,.16)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A78BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <h3>שאלות על אנשים — רק באישור</h3>
+      <p>שאלה על חבר נשארת מוסתרת עד שהוא מאשר. הוא יכול לבטל בכל רגע. הכיף נשאר חברי, אף פעם לא על חשבון מישהו.</p>
+    </div>
+    <div class="fcard reveal">
+      <div class="fico" style="background:rgba(255,194,60,.14)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFC23C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>
+      <h3>לוח מובילים</h3>
+      <p>פודיום זהב, אחוז דיוק, ורצפים חיים. תחרות חברית שמחזירה את כולם כל יום לראות מי מוביל.</p>
+    </div>
+    <div class="fcard reveal">
+      <div class="fico" style="background:rgba(45,212,191,.14)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+      <h3>8 נושאים, דירוג לכל אחד</h3>
+      <p>ספורט · מסך · ריאליטי · מזג אוויר · אקטואליה · אוכל · משפחה · חיים. לכל נושא ניקוד ולוח מובילים משלו — אפשר להיות אלוף הספורט ואחרון באוכל.</p>
+    </div>
+    <div class="fcard reveal">
+      <div class="fico" style="background:rgba(91,168,255,.14)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5BA8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <h3>הכרעה הוגנת לכולם</h3>
+      <p>מי שפתח את הניחוש מכריע מה קרה באמת — וכולם רואים את התוצאה. הנקודות מתחלקות לפי מי שצדק, בלי לסדר אף אחד.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SCORING -->
+<section class="sec wrap">
+  <div class="score reveal">
+    <div>
+      <span class="eyebrow" style="margin-bottom:14px">🔥 איך צוברים</span>
+      <h2 class="disp" style="font-size:30px;margin:0 0 10px">ניחוש נכון = 5 נקודות.<br>נכון <i style="color:var(--gold)">ובמיעוט</i> = 8.</h2>
+      <p style="color:var(--muted);margin:0">צדקת והיית בצד שרוב לא בחר (49% ומטה)? בונוס מיעוט של עוד 3 נקודות. טעות = 0, אף פעם לא יורדים. <b style="color:var(--text)">ולכל נושא יש ניקוד ודירוג משלו.</b></p>
+    </div>
+    <div>
+      <table>
+        <thead><tr><th>הניחוש שלך</th><th>המשמעות</th><th style="text-align:end">זכייה</th></tr></thead>
+        <tbody>
+          <tr><td>נכון, עם הרוב</td><td>הלכת על בטוח</td><td class="pts">+5</td></tr>
+          <tr><td>נכון, במיעוט</td><td>49% ומטה הסכימו</td><td class="pts">+8</td></tr>
+          <tr><td>טעות</td><td>אפס — אף פעם לא מתחת</td><td class="pts">0</td></tr>
+          <tr><td>לכל נושא</td><td>ניקוד ודירוג נפרד</td><td class="pts">★</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- THE RUSH -->
+<section class="sec safety" id="safety">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">🔥 למה אי אפשר להפסיק</span>
+      <h2 class="disp">כל הריגוש של הניחוש — חינם</h2>
+      <p>חקרנו מה גורם לניחושים להיות ממכרים, ולקחנו את כל הכיף — בלי הכסף ובלי הסיכון.</p>
+    </div>
+    <div class="safe-grid">
+      <div class="safe reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF4D6D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div><b>המתח עד הרגע האחרון</b><span>הצבעת — ועכשיו הלב דופק עד שהתוצאה נכנסת. זה הקיק.</span></div></div>
+      <div class="safe reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC23C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg><div><b>הזכייה הגדולה</b><span>צדקת כשכולם טעו? זכייה ענקית בנקודות וחגיגה על המסך.</span></div></div>
+      <div class="safe reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF8A4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg><div><b>רצף חם 🔥</b><span>3 ברצף, 5 ברצף — בונוסים שמדליקים אותך להמשיך לרצף הבא.</span></div></div>
+      <div class="safe reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFC23C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 3.3a.5.5 0 0 1 .9 0l3 5.6 6.2-.9a.5.5 0 0 1 .3.9l-4.5 4.3 1 6.2a.5.5 0 0 1-.7.5L12 19l-5.6 2.9a.5.5 0 0 1-.7-.5l1-6.2L2.1 8.9a.5.5 0 0 1 .3-.9l6.2.9z"/></svg><div><b>לוח התהילה</b><span>טיפוס בדירוג, כתר על מקום 1, וזכות להתרברב מול כל החבר'ה.</span></div></div>
+      <div class="safe reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5BC8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22"/><path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4A2 2 0 0 0 17 6.2V2"/></svg><div><b>שעון רץ, עונה חמה</b><span>ההצבעה נסגרת בקרוב, והעונה מתאפסת בעוד ימים — אל תפספס.</span></div></div>
+      <div class="safe reveal"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#36D69B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg><div><b>0 ₪ — אפס סיכון</b><span>אי אפשר לקנות נקודות, אין כסף אמיתי. כל הכיף, בלי להפסיד גרוש.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec wrap" id="faq">
+  <div class="sec-head reveal">
+    <span class="eyebrow">שאלות נפוצות</span>
+    <h2 class="disp">מה שבטח רוצים לדעת</h2>
+  </div>
+  <div class="faq">
+    <details class="reveal" open><summary>רגע, זה לא משחק כסף?</summary><p>ממש לא. כל הריגוש של ניחוש — אבל על <b>0 ₪</b>. מנחשים מה שיקרה, מרגישים את המתח, וזוכים בנקודות וכבוד. אי אפשר לקנות נקודות, אין כסף אמיתי ואין מה להפסיד — אז זה חוקי, בטוח וכיפי לכל גיל.</p></details>
+    <details class="reveal"><summary>למי זה מתאים?</summary><p>לכולם — מגיל 10 עד 90. אותן זירות לכולם, אותו כיף, בלי הבדלי גיל. כל מה שצריך זה חבר'ה והרצון לקרוא נכון את מה שיקרה.</p></details>
+    <details class="reveal"><summary>איך נקבעת התוצאה?</summary><p>אם אפשר לאמת בגוגל (ספורט, מזג אוויר, חדשות) — Eyevos בודק את התוצאה <b>אוטומטית</b>. אם זה משהו שאי אפשר למצוא ברשת ("אמא אישרה את הטיול?") — <b>רק מי שפתח את השאלה</b> עונה כן/לא או מצרף תמונת הוכחה. אף אחד אחר.</p></details>
+    <details class="reveal"><summary>מי יכול לראות שאלה עליי?</summary><p>אף אחד — עד שאתה מאשר. שאלה על אדם נשארת מוסתרת לחלוטין עד שאתה אומר כן, ואתה יכול לבטל בכל רגע. ומי ששואלים עליו לא יכול להצביע על עצמו.</p></details>
+    <details class="reveal"><summary>אפשר לשחק עכשיו?</summary><p>בטוח — הדמו למעלה חי לגמרי. תנחש, תפתח ניחוש, תראה זכייה. בוא תיכנס.</p></details>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec wrap">
+  <div class="cta-band reveal">
+    <h2 class="disp">מוכן לנחש? 🎯</h2>
+    <p>החבר'ה כבר מנחשים. תיכנס, תקרא נכון את מה שיקרה, ותיקח את מקום ה-1 — הכל על 0 ₪.</p>
+    <div class="wl" style="gap:13px">
+      <a class="btn btn-pri" href="app-live.html" style="min-width:200px">בוא לנחש עכשיו</a>
+      <a class="btn btn-ghost" href="app-live.html" style="min-width:200px">פתח במסך מלא</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot">
+    <div class="logo" style="font-size:19px">Eyevos<span>.</span></div>
+    <span class="pill">🛡️ נקודות בלבד · אף פעם לא כסף אמיתי</span>
+    <span>© <span id="yr"></span> Eyevos · נבנה לקבוצות חברים</span>
+  </div>
+</footer>
+
+<script>
+  // year
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // scroll reveal
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  // PWA: register service worker for installability + offline shell
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+  }
+</script>
+</body>
+</html>
+
+{
+  "name": "Eyevos — Social Prediction Game",
+  "short_name": "Eyevos",
+  "description": "Predict before everyone, win points, rule your group. Points only — never real money. Ages 10+.",
+  "start_url": "/app-live.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0C0A14",
+  "theme_color": "#0C0A14",
+  "lang": "en",
+  "dir": "auto",
+  "categories": ["games", "entertainment", "social"],
+  "icons": [
+    { "src": "icon.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="index" />
+<title>Eyevos — Privacy Policy</title>
+<meta name="color-scheme" content="dark" />
+<style>
+  body{margin:0;background:#0C0A14;color:#F4F1FA;font-family:system-ui,'Segoe UI',Arial,sans-serif;line-height:1.7}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 22px 80px}
+  h1{font-size:30px;margin:0 0 6px} h2{font-size:19px;margin:30px 0 8px;color:#A78BFF}
+  p,li{color:#CFC8E0;font-size:15.5px} a{color:#A78BFF} .muted{color:#8B83A6;font-size:13.5px}
+  .card{background:#1E1A2C;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:18px 20px;margin:14px 0}
+  code{background:#272138;padding:2px 6px;border-radius:6px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Eyevos — Privacy Policy</h1>
+  <p class="muted">Last updated: 18 June 2026 · Eyevos is a free, points-only social <b>prediction game</b>. It involves <b>no real money</b> and no gambling of any kind. Suitable for ages 10+.</p>
+
+  <div class="card">
+    <h2>The short version</h2>
+    <p>We collect the minimum needed to run a friends prediction game: your sign-in email, the display name and avatar you choose, the groups you join, and the predictions/votes/points you make. We never sell your data, never handle money, and never show ads. You can delete your account any time.</p>
+  </div>
+
+  <h2>What we store</h2>
+  <ul>
+    <li><b>Account:</b> your email address (used only to sign you in via Google or a magic link) and a profile id.</li>
+    <li><b>Profile:</b> the display name and avatar (emoji or image link) you choose.</li>
+    <li><b>Game data:</b> groups you create or join, predictions you make, your votes, and your points/scores.</li>
+  </ul>
+  <p>Data is stored with <b>Supabase</b> (Postgres + Auth). Row-Level Security restricts your group data to members of your groups. We do not store payment information because there are no payments.</p>
+
+  <h2>What we do NOT do</h2>
+  <ul>
+    <li>No real money, deposits, withdrawals, or purchases — points have no cash value.</li>
+    <li>No selling or sharing of personal data with advertisers.</li>
+    <li>No tracking ads, no third-party analytics profiling.</li>
+    <li>No public exposure of your email or phone — they are never shown to other players.</li>
+  </ul>
+
+  <h2>Children (ages 10+)</h2>
+  <p>Eyevos is designed to be appropriate for ages 10 and up: points only, no money, no gambling, and content rules against demeaning material. We collect only what is needed to play. If you are a parent and want a child's account and data removed, contact us below and we will delete it.</p>
+
+  <h2>Sharing</h2>
+  <p>Invite links contain only a group name and a join code — never personal information. WhatsApp shares contain only the prediction text and a link you chose to share.</p>
+
+  <h2>Your choices</h2>
+  <ul>
+    <li>Edit your display name and avatar any time in the profile screen.</li>
+    <li>Leave a group, or request full account + data deletion by emailing us.</li>
+  </ul>
+
+  <h2>Contact</h2>
+  <p>Questions or deletion requests: <a href="mailto:yonatan.szigheti@gmail.com">yonatan.szigheti@gmail.com</a></p>
+
+  <p class="muted" style="margin-top:30px">Eyevos · points only · never real money · prediction game · ages 10+.</p>
+</div>
+</body>
+</html>
+
+/* Eyevos service worker — installability + offline shell.
+   IMPORTANT: only same-origin GETs are touched. Supabase (auth/data) and CDN
+   scripts are cross-origin and pass straight through to the network — never cached,
+   so login and live data are always fresh. */
+const CACHE = "eyevos-v1";
+const SHELL = ["/", "/index.html", "/app-live.html", "/manifest.webmanifest", "/icon.svg"];
+
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", (e) => {
+  const req = e.request;
+  if (req.method !== "GET") return;                         // never touch writes
+  const url = new URL(req.url);
+  if (url.origin !== location.origin) return;               // Supabase + CDNs: straight to network
+
+  // HTML: network-first so the app is always up to date; cached copy only offline.
+  if (req.mode === "navigate" || req.destination === "document") {
+    e.respondWith(
+      fetch(req)
+        .then((r) => { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); return r; })
+        .catch(() => caches.match(req).then((m) => m || caches.match("/app-live.html")))
     );
-    const j = await r.json();
-    let text = ""; try { text = j.candidates[0].content.parts.map((p) => p.text || "").join(" "); } catch (_) {}
-    const up = text.toUpperCase();
-    if (/\bYES\b/.test(up) && !/\bNO\b/.test(up)) return "yes";
-    if (/\bNO\b/.test(up) && !/\bYES\b/.test(up)) return "no";
-    return "unknown";
-  } catch (e) { return "unknown"; }
+    return;
+  }
+
+  // Other same-origin static: cache-first, fall back to network.
+  e.respondWith(
+    caches.match(req).then((m) => m || fetch(req).then((r) => {
+      const cp = r.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); return r;
+    }).catch(() => m))
+  );
+});
+
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>Eyevos · האפליקציה</title>
+<meta name="description" content="Eyevos — משחק ניחושים חברתי לקבוצות חברים. נקודות בלבד, אף פעם לא כסף." />
+<meta name="theme-color" content="#0C0A14" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='16'%20fill='%238A6BFF'/%3E%3Ctext%20x='32'%20y='45'%20font-family='Arial,sans-serif'%20font-size='38'%20font-weight='bold'%20fill='white'%20text-anchor='middle'%3EH%3C/text%3E%3Ccircle%20cx='50'%20cy='43'%20r='5'%20fill='%23FF4D6D'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Heebo:wght@400;500;700;800&display=swap');
+
+:root{
+  --ink:#15121E; --ink-2:#1E1A2C; --ink-3:#272138; --ink-4:#322A47;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --text:#F4F1FA; --muted:#A79EBE; --faint:#6E6786;
+  --yes:#FF4D6D; --yes-soft:rgba(255,77,109,.14);
+  --no:#2DD4BF; --no-soft:rgba(45,212,191,.14);
+  --gold:#FFC23C; --gold-soft:rgba(255,194,60,.14);
+  --brand:#8A6BFF; --brand-2:#A78BFF; --brand-soft:rgba(138,107,255,.16);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+.hunch-root{font-family:'Heebo','Plus Jakarta Sans',system-ui,sans-serif}
+.disp{font-family:'Bricolage Grotesque','Heebo','Plus Jakarta Sans',sans-serif;letter-spacing:-.02em}
+[dir="rtl"] .disp{font-family:'Heebo','Bricolage Grotesque',sans-serif}
+.tnum{font-variant-numeric:tabular-nums}
+.flip-x{display:inline-flex}
+[dir="rtl"] .flip-x{transform:scaleX(-1)}
+
+.stage{min-height:100vh;width:100%;background:
+  radial-gradient(900px 500px at 50% -10%, rgba(138,107,255,.14), transparent 60%),
+  #0C0A14;
+  display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text)}
+.device{position:relative;width:430px;max-width:100%;height:864px;max-height:calc(100vh - 48px);
+  background:var(--ink);border:1px solid var(--line);border-radius:34px;overflow:hidden;
+  box-shadow:0 40px 120px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04);
+  display:flex;flex-direction:column}
+.glow{position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(420px 220px at 12% -6%, rgba(255,77,109,.16), transparent 60%),
+  radial-gradient(420px 220px at 92% -4%, rgba(45,212,191,.14), transparent 60%);}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;position:relative;z-index:1}
+.scroll::-webkit-scrollbar{display:none}
+
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);
+  background:var(--ink-3);color:var(--muted);border-radius:999px;padding:8px 13px;
+  font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.18s;user-select:none;
+  font-family:inherit}
+.chip:hover{border-color:var(--line-2);color:var(--text)}
+.chip.on{background:var(--brand-soft);border-color:rgba(138,107,255,.5);color:#D9CDFF}
+
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;padding:16px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;
+  letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:4px 9px}
+
+.bar{position:relative;height:46px;border-radius:13px;overflow:hidden;display:flex;
+  background:var(--ink-3);border:1px solid var(--line);cursor:pointer;user-select:none}
+.bar .side{display:flex;align-items:center;height:100%;transition:width .55s cubic-bezier(.22,1,.36,1)}
+.bar .lab{position:absolute;top:0;height:100%;display:flex;align-items:center;gap:7px;
+  padding:0 14px;font-weight:800;font-size:14px;z-index:2;background:none;border:none;
+  font-family:inherit;cursor:pointer;color:inherit}
+.bar.locked,.bar.locked .lab{cursor:default}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;
+  cursor:pointer;border-radius:14px;padding:15px;font-family:inherit;font-weight:800;font-size:15px;
+  transition:.15s;color:#fff}
+.btn:active{transform:scale(.97)}
+.btn-pri{background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 8px 20px rgba(138,107,255,.32)}
+.btn-pri:disabled{opacity:.4;box-shadow:none;cursor:not-allowed}
+.btn-ghost{background:var(--ink-3);border:1px solid var(--line);color:var(--text)}
+
+.nav{display:flex;align-items:center;justify-content:space-around;padding:10px 8px 14px;
+  background:rgba(21,18,30,.86);backdrop-filter:blur(16px);border-top:1px solid var(--line);position:relative;z-index:2}
+.navb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;
+  cursor:pointer;color:var(--faint);font-family:inherit;font-size:10.5px;font-weight:700;padding:4px 12px;transition:.15s}
+.navb.on{color:var(--brand-2)}
+.fab{margin-top:-26px;width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 10px 24px rgba(138,107,255,.45);border:none;cursor:pointer;color:#fff}
+
+.sheet{position:absolute;inset:0;z-index:30;display:flex;align-items:flex-end;
+  background:rgba(8,6,14,.6);backdrop-filter:blur(3px);animation:fade .2s ease}
+.sheetcard{width:100%;background:var(--ink-2);border-top:1px solid var(--line-2);
+  border-radius:26px 26px 0 0;padding:22px 18px calc(18px + env(safe-area-inset-bottom));animation:rise .3s cubic-bezier(.22,1,.36,1)}
+.grab{width:40px;height:4px;border-radius:9px;background:var(--line-2);margin:0 auto 18px}
+.ticker{overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.ticker-track{display:inline-flex;gap:20px;animation:tick 26s linear infinite;will-change:transform}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-item{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5;border-radius:26px 26px 0 0}
+.confetti i{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;animation:conf-fall 1.2s cubic-bezier(.4,.6,.6,1) forwards}
+@keyframes conf-fall{0%{transform:translateY(-14px) rotate(0);opacity:1}100%{transform:translateY(320px) rotate(560deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.confetti{display:none}}
+
+/* ===== CASINO ENERGY ===== */
+.btn-pri{box-shadow:0 10px 26px rgba(138,107,255,.55), 0 0 18px rgba(167,139,255,.25)}
+.btn-pri:hover{filter:brightness(1.08) saturate(1.15)}
+.fab{box-shadow:0 10px 28px rgba(138,107,255,.6), 0 0 24px rgba(255,77,109,.3)}
+.bar.locked{box-shadow:inset 0 0 26px rgba(0,0,0,.35)}
+/* the points chip & gold things glow like a jackpot counter */
+.goldglow{text-shadow:0 0 14px rgba(255,194,60,.65), 0 0 4px rgba(255,194,60,.5)}
+.neonbar{box-shadow:0 0 0 1px rgba(255,77,109,.35), 0 0 22px rgba(255,77,109,.28)}
+/* LIVE dot — hotter neon ping */
+.dot{box-shadow:0 0 8px rgba(255,77,109,.9), 0 0 0 0 rgba(255,77,109,.6)}
+/* JACKPOT win headline */
+.jackpot{background:linear-gradient(90deg,#FFC23C,#FF4D6D,#FFC23C);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.2s linear infinite}
+@keyframes shine{to{background-position:200% 0}}
+.win-num{animation:winpop .5s cubic-bezier(.22,1.5,.4,1) both;text-shadow:0 0 22px rgba(255,194,60,.7)}
+@keyframes winpop{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+/* hot poll glow */
+.hotcard{box-shadow:0 0 0 1px rgba(255,77,109,.3), 0 8px 30px rgba(255,77,109,.16)}
+/* chip-shimmer on hot/live tags */
+@keyframes pulseglow{0%,100%{box-shadow:0 0 0 0 rgba(255,77,109,.0)}50%{box-shadow:0 0 14px 1px rgba(255,77,109,.45)}}
+.livepulse{animation:pulseglow 1.8s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.jackpot,.win-num,.livepulse{animation:none!important}}
+
+.dot{width:7px;height:7px;border-radius:50%;background:var(--yes);box-shadow:0 0 0 0 rgba(255,77,109,.6);animation:ping 1.6s infinite;display:inline-block}
+.spark{animation:pop .5s cubic-bezier(.22,1.4,.4,1) both}
+.row-pop{animation:rise .35s cubic-bezier(.22,1,.36,1) both}
+
+.toast{position:absolute;left:50%;transform:translateX(-50%);bottom:92px;z-index:40;
+  background:var(--ink-4);border:1px solid var(--line-2);color:var(--text);padding:11px 16px;
+  border-radius:13px;font-size:13.5px;font-weight:700;box-shadow:0 12px 30px rgba(0,0,0,.5);animation:rise .25s both;max-width:88%}
+
+button:focus-visible,.chip:focus-visible,[tabindex]:focus-visible,.bar .lab:focus-visible{
+  outline:2px solid var(--brand-2);outline-offset:2px;border-radius:8px}
+
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(255,77,109,.5)}70%{box-shadow:0 0 0 7px rgba(255,77,109,0)}100%{box-shadow:0 0 0 0 rgba(255,77,109,0)}}
+@keyframes rise{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+
+@media (max-width:480px){
+  .stage{padding:0}
+  .device{width:100%;height:100vh;height:100dvh;max-height:100dvh;border-radius:0;border:none}
+}
+/* embedded inside the landing phone frame */
+body.embed .stage{padding:0;min-height:100%;background:transparent}
+body.embed .device{width:100%;height:100%;max-height:100%;border-radius:0;border:none;box-shadow:none}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script>
+  // when embedded in the landing iframe, drop the phone chrome
+  try { if (window.self !== window.top) document.body.classList.add('embed'); } catch (e) { document.body.classList.add('embed'); }
+</script>
+<script src="app.js"></script>
+</body>
+</html>
+
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+const {
+  useState,
+  useEffect,
+  useRef
+} = React;
+
+/* ============================================================
+   Eyevos v4 — social prediction game. Points only, never money.
+   All ages (10-90), same 7 subjects for everyone (no gating).
+   Google sign-in · monthly seasons (points reset) · streak
+   bonuses (3->+4, 5->+5) · pick exact close date+time ·
+   smart resolution (auto-verify vs photo proof) · create/join/
+   invite groups (WhatsApp) · staged ranks (subject->group->board)
+   · per-subject scores · 10 languages, RTL-aware.
+   ============================================================ */
+
+/* ---------- inline icons (lucide path data, ISC) ---------- */
+const ICONS = {
+  home: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>',
+  zap: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  chevron: '<path d="m9 18 6-6-6-6"/>',
+  arrowleft: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
+  crown: '<path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  sparkles: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>',
+  hourglass: '<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',
+  help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+  medal: '<path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15"/><path d="M11 12 5.12 2.2"/><path d="m13 12 5.88-9.8"/><path d="M8 7h8"/><circle cx="12" cy="17" r="5"/><path d="M12 18v-2h-.5"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
+  tv: '<rect width="20" height="15" x="2" y="7" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/>',
+  cloud: '<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>',
+  newspaper: '<path d="M15 18h-5"/><path d="M18 14h-8"/><path d="M22 6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v13a1 1 0 0 0 1 1h17a2 2 0 0 0 2-2z"/><path d="M10 6h8v4h-8z"/>',
+  utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  image: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+  edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
+  book: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
+  scale: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  flag: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>',
+  share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>',
+  calendar: '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
+  volume: '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>',
+  mute: '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/>'
+};
+function Icon({
+  name,
+  size = 18,
+  color = "currentColor",
+  style,
+  cls
+}) {
+  return /*#__PURE__*/React.createElement("svg", {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: color,
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    className: cls,
+    style: {
+      flexShrink: 0,
+      ...style
+    },
+    dangerouslySetInnerHTML: {
+      __html: ICONS[name] || ""
+    }
+  });
+}
+function GoogleG({
+  size = 18
+}) {
+  return /*#__PURE__*/React.createElement("svg", {
+    width: size,
+    height: size,
+    viewBox: "0 0 48 48",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("path", {
+    fill: "#FFC107",
+    d: "M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"
+  }), /*#__PURE__*/React.createElement("path", {
+    fill: "#FF3D00",
+    d: "M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"
+  }), /*#__PURE__*/React.createElement("path", {
+    fill: "#4CAF50",
+    d: "M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5c-2 1.5-4.7 2.5-7.6 2.5-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"
+  }), /*#__PURE__*/React.createElement("path", {
+    fill: "#1976D2",
+    d: "M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C41.4 36.3 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"
+  }));
 }
 
-export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  const q = ((req.query && req.query.q) || "").toString().trim().slice(0, 300);
-  if (!q) return res.status(200).json({ verdict: "unknown", reason: "empty" });
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) return res.status(200).json({ verdict: "unknown", reason: "no_key" });
-  const verdict = await verify(q, key);
-  return res.status(200).json({ verdict });
+/* ---------- 7 subjects (researched: span ages 10-90, no gating) ---------- */
+const SUBJECTS = {
+  sport: {
+    c: "#FF8A4D",
+    icon: "trophy",
+    verifiable: true
+  },
+  weather: {
+    c: "#5BC8FF",
+    icon: "cloud",
+    verifiable: true
+  },
+  screen: {
+    c: "#FF4D9D",
+    icon: "tv",
+    verifiable: true
+  },
+  news: {
+    c: "#FFC23C",
+    icon: "newspaper",
+    verifiable: true
+  },
+  family: {
+    c: "#36D69B",
+    icon: "heart",
+    verifiable: false
+  },
+  food: {
+    c: "#A78BFF",
+    icon: "utensils",
+    verifiable: false
+  },
+  life: {
+    c: "#8A6BFF",
+    icon: "sparkles",
+    verifiable: false
+  }
+};
+const SUBJECT_KEYS = ["sport", "weather", "screen", "news", "family", "food", "life"];
+const visibleSubjects = () => SUBJECT_KEYS; // same subjects for everyone
+
+const SUBJECT_KW = {
+  sport: ["מכבי", "הפועל", "משחק", "גול", "אליפ", "אלופ", "כדורגל", "כדורסל", "ניצח", "קבוצת", "ליגה", "שחקן", "אימון", "טורניר", "אולימפ", "מדל", "goal", "league", "match", "nba"],
+  weather: ["מזג אוויר", "גשם", "שלג", "מעלות", "חום", "קר", "סופה", "שרב", "ברד", "טמפרטור", "מעונן", "rain", "snow", "degrees", "storm", "weather", "heat"],
+  screen: ["סדרה", "סרט", "זמר", "שיר", "אירוויזיון", "הופע", "אלבום", "ריאליטי", "הכוכב הבא", "האח הגדול", "נטפליקס", "עונה", "פרק", "אוסקר", "קליפ", "movie", "series", "song", "eurovision", "netflix", "season", "episode"],
+  news: ["חדשות", "כותרת", "ראש הממשל", "ראש העיר", "בחירות", "אסון", "הסכם", "מלחמה", "שביתה", "פיגוע", "ועדה", "הכרזה", "headline", "news", "election", "strike"],
+  family: ["אמא", "אבא", "הור", "אחות", "סבא", "סבת", "משפח", "דוד ", "דודה", "תינוק", "חתונה", "בר מצווה", "שש בש", "mom", "dad", "parents", "family", "grandma", "grandpa", "wedding"],
+  food: ["אוכל", "עוגה", "מתכון", "מסעד", "פיצה", "בישול", "ארוחה", "טעים", "מלוח", "שף", "המבורגר", "קינוח", "cake", "recipe", "restaurant", "pizza", "dinner", "chef"],
+  life: []
+};
+function detectSubject(q) {
+  const t = (q || "").toLowerCase();
+  let best = null,
+    bestN = 0;
+  for (const k of SUBJECT_KEYS) {
+    if (k === "life") continue;
+    let n = 0;
+    for (const w of SUBJECT_KW[k]) if (t.includes(w.toLowerCase())) n++;
+    if (n > bestN) {
+      bestN = n;
+      best = k;
+    }
+  }
+  return bestN > 0 ? best : null;
 }
+// light content filter (the real one lives server-side; this is the front-line guard)
+const BANNED = ["מכוער", "מכוערת", "שמן", "שמנה", "טמבל", "מפגר", "מפגרת", "זונה", "שרמוטה", "להתאבד", "שתמות", "תמות", "kill", "kys", "slut", "whore", "retard", "retarded", "ugly", "idiot", "loser"];
+function containsBanned(t) {
+  t = (t || "").toLowerCase();
+  return BANNED.some(w => t.indexOf(w.toLowerCase()) >= 0);
+}
+
+/* ---------- resolution method (auto-verify vs photo proof vs group) ---------- */
+function resolveMethod(poll) {
+  if (poll.forceProof) return "proof";
+  if (poll.type === "person") return poll.personal ? "proof" : "group";
+  return SUBJECTS[poll.subject] && SUBJECTS[poll.subject].verifiable ? "auto" : "proof";
+}
+
+/* ---------- scoring ---------- */
+const BASE = 5,
+  MINORITY_BONUS = 3,
+  BONUS_MIN_VOTERS = 6,
+  BONUS_MIN_PER_SIDE = 2;
+const STREAK3 = 4,
+  STREAK5 = 5;
+// correct=5; correct & minority(<50%, gated)=+3; person polls get no minority bonus.
+// streak: hitting 3-in-a-row=+4, 5-in-a-row=+5 (only those two milestones).
+function payout(poll, streakBefore) {
+  const total = poll.yes + poll.no;
+  const won = poll.result;
+  const winShare = total ? (won === "yes" ? poll.yes : poll.no) / total : 0;
+  const myWin = poll.mine === won;
+  const minority = winShare < 0.5;
+  const gateOK = total >= BONUS_MIN_VOTERS && Math.min(poll.yes, poll.no) >= BONUS_MIN_PER_SIDE;
+  const conf = poll.mineConf || 1; // 1 = safe, 2 = sure, 3 = ALL IN
+  const base = BASE * conf; // bigger conviction = bigger base win
+  const bonus = myWin && minority && poll.type !== "person" && gateOK ? MINORITY_BONUS : 0;
+  const streakAfter = myWin ? (streakBefore || 0) + 1 : 0;
+  const streakBonus = myWin ? streakAfter === 3 ? STREAK3 : streakAfter === 5 ? STREAK5 : 0 : 0;
+  const cost = myWin ? 0 : (conf - 1) * 2; // wrong ALL-IN stings (-4), but floored at 0 elsewhere
+  return {
+    won,
+    winShare,
+    myWin,
+    minority,
+    bonus,
+    base,
+    conf,
+    cost,
+    streakAfter,
+    streakBonus,
+    earned: myWin ? base + bonus + streakBonus : 0,
+    agreePct: Math.round(winShare * 100)
+  };
+}
+
+/* ---------- deadlines & per-group seasons ---------- */
+function defaultDeadline() {
+  const d = new Date(Date.now() + 86400000);
+  const p = n => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function fmtDeadline(s) {
+  if (!s) return "";
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  const p = n => String(n).padStart(2, "0");
+  return `${p(d.getDate())}/${p(d.getMonth() + 1)} · ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+/* ---------- members & per-subject scores ---------- */
+const HUES = {
+  "עדי": "#FF8A4D",
+  "מאיה": "#FF4D6D",
+  "דניאל": "#5BA8FF",
+  "נועם": "#36D69B",
+  "ליאור": "#FFC23C",
+  "יונתן": "#2DD4BF",
+  "רוני": "#FF6B6B",
+  "טל": "#A78BFF",
+  "סבתא רותי": "#36D69B"
+};
+const sumScores = s => SUBJECT_KEYS.reduce((a, k) => a + (s[k] || 0), 0);
+const z = (sport, weather, screen, news, family, food, life) => ({
+  sport,
+  weather,
+  screen,
+  news,
+  family,
+  food,
+  life
+});
+const SEED_MEMBERS = [{
+  name: "עדי",
+  color: HUES["עדי"],
+  acc: 78,
+  streak: 6,
+  g: ["squad"],
+  s: z(120, 30, 50, 40, 50, 60, 60)
+}, {
+  name: "מאיה",
+  color: HUES["מאיה"],
+  acc: 69,
+  streak: 2,
+  g: ["squad", "class", "fam"],
+  s: z(45, 25, 70, 60, 40, 40, 25)
+}, {
+  name: "סבתא רותי",
+  color: HUES["סבתא רותי"],
+  acc: 74,
+  streak: 3,
+  g: ["fam"],
+  s: z(20, 35, 40, 50, 90, 55, 10)
+}, {
+  name: "דניאל",
+  color: HUES["דניאל"],
+  acc: 64,
+  streak: 0,
+  g: ["squad"],
+  s: z(55, 20, 30, 25, 25, 20, 15)
+}, {
+  name: "נועם",
+  color: HUES["נועם"],
+  acc: 58,
+  streak: 1,
+  g: ["squad", "class"],
+  s: z(40, 15, 20, 10, 15, 10, 10)
+}, {
+  name: "ליאור",
+  color: HUES["ליאור"],
+  acc: 55,
+  streak: 0,
+  g: ["squad"],
+  s: z(25, 10, 15, 10, 15, 10, 10)
+}, {
+  name: "טל",
+  color: HUES["טל"],
+  acc: 66,
+  streak: 2,
+  g: ["class"],
+  s: z(30, 15, 40, 20, 20, 30, 20)
+}, {
+  name: "רוני",
+  color: HUES["רוני"],
+  acc: 61,
+  streak: 1,
+  g: ["class", "fam"],
+  s: z(35, 20, 25, 30, 35, 30, 25)
+}];
+const ME_SEED = {
+  name: "אתה",
+  color: "#8A6BFF",
+  photo: null,
+  me: true,
+  acc: 71,
+  streak: 4,
+  g: ["squad", "class", "fam"],
+  s: z(60, 20, 35, 25, 30, 30, 40)
+}; // total 240
+
+// each group runs its OWN 30-day season; seasonLeft counts down daily to 0, then resets to 30.
+const SEASON_DAYS = 30;
+const INIT_GROUPS = [{
+  id: "squad",
+  name: "החבר'ה",
+  code: "K7M2QX",
+  count: 12,
+  photo: null,
+  seasonLeft: 23
+}, {
+  id: "class",
+  name: "כיתה ט'2",
+  code: "B9PLRT",
+  count: 31,
+  photo: null,
+  seasonLeft: 12
+}, {
+  id: "fam",
+  name: "משפחה",
+  code: "H4XW8N",
+  count: 9,
+  photo: null,
+  seasonLeft: 28
+}];
+
+/* ---------- seed polls (subjects: sport/weather/screen/news/family/food/life) ---------- */
+const SEED = [{
+  id: 1,
+  group: "squad",
+  subject: "sport",
+  type: "event",
+  q: "מכבי תנצח את הפועל בשבת?",
+  by: "עדי",
+  yes: 13,
+  no: 7,
+  mine: null,
+  ends: "ראשון · 18:30",
+  status: "live"
+}, {
+  id: 2,
+  group: "squad",
+  subject: "news",
+  type: "event",
+  q: "ראש הממשלה יכריז על בחירות מוקדמות?",
+  by: "מאיה",
+  yes: 5,
+  no: 18,
+  mine: null,
+  ends: "מחר",
+  status: "live"
+}, {
+  id: 3,
+  group: "squad",
+  subject: "screen",
+  type: "event",
+  q: "ישראל תעלה לגמר האירוויזיון?",
+  by: "ליאור",
+  yes: 21,
+  no: 6,
+  mine: null,
+  ends: "שבת · 22:00",
+  status: "live"
+}, {
+  id: 4,
+  group: "squad",
+  subject: "weather",
+  type: "event",
+  q: "יהיו 40 מעלות בשבוע הבא?",
+  by: "דניאל",
+  yes: 14,
+  no: 9,
+  mine: "no",
+  ends: "שבוע",
+  status: "live"
+}, {
+  id: 5,
+  group: "squad",
+  subject: "family",
+  type: "event",
+  q: "אמא תאשר את הטיול בלי הורים?",
+  by: "אתה",
+  yes: 8,
+  no: 9,
+  mine: "yes",
+  ends: "חמישי",
+  status: "live"
+}, {
+  id: 6,
+  group: "squad",
+  subject: "sport",
+  type: "person",
+  personal: false,
+  q: "יונתן יקלע 20+ נקודות הערב?",
+  by: "מאיה",
+  tagged: "יונתן",
+  yes: 9,
+  no: 14,
+  mine: null,
+  ends: "היום · 21:00",
+  status: "live"
+}, {
+  id: 7,
+  group: "squad",
+  subject: "sport",
+  type: "person",
+  personal: false,
+  q: "נועם ייכנס לחמישייה הפותחת השבוע?",
+  by: "עדי",
+  tagged: "נועם",
+  yes: 0,
+  no: 0,
+  mine: null,
+  ends: "שישי",
+  status: "pending"
+}, {
+  id: 8,
+  group: "squad",
+  subject: "weather",
+  type: "event",
+  q: "יירד שלג בעיר החורף?",
+  by: "דניאל",
+  yes: 11,
+  no: 9,
+  mine: "yes",
+  ends: "נסגר",
+  status: "locked"
+}, {
+  id: 9,
+  group: "squad",
+  subject: "food",
+  type: "event",
+  q: "העוגה של אמא תצא מושלמת בשישי?",
+  by: "מאיה",
+  yes: 6,
+  no: 17,
+  mine: "yes",
+  ends: "נסגר",
+  status: "resolved",
+  result: "yes",
+  forceProof: true
+}, {
+  id: 10,
+  group: "class",
+  subject: "screen",
+  type: "event",
+  q: "העונה החדשה תצא החודש?",
+  by: "טל",
+  yes: 22,
+  no: 9,
+  mine: null,
+  ends: "מחר",
+  status: "live"
+}, {
+  id: 11,
+  group: "class",
+  subject: "life",
+  type: "event",
+  q: "הטיול השנתי ייצא לים?",
+  by: "רוני",
+  yes: 19,
+  no: 14,
+  mine: null,
+  ends: "3 ימים",
+  status: "live"
+}, {
+  id: 12,
+  group: "fam",
+  subject: "family",
+  type: "event",
+  q: "סבתא תכין קובה בשישי?",
+  by: "סבתא רותי",
+  yes: 16,
+  no: 2,
+  mine: "yes",
+  ends: "שישי",
+  status: "live",
+  forceProof: true
+}, {
+  id: 13,
+  group: "squad",
+  subject: "screen",
+  type: "event",
+  q: "הסדרה תסתיים בקליפהנגר?",
+  by: "ליאור",
+  yes: 7,
+  no: 13,
+  mine: null,
+  ends: "נסגר",
+  status: "locked"
+},
+// a consent request addressed to YOU (so the consent flow is visible to the target only)
+{
+  id: 14,
+  group: "squad",
+  subject: "sport",
+  type: "person",
+  personal: false,
+  q: "אתה תסיים את המשחק במקום הראשון?",
+  by: "מאיה",
+  tagged: "אתה",
+  yes: 0,
+  no: 0,
+  mine: null,
+  ends: "שבת",
+  status: "pending"
+}];
+const pct = (a, b) => a + b === 0 ? 50 : Math.round(a / (a + b) * 100);
+const initials = n => (n || "?").slice(0, 2).toUpperCase();
+const levelOf = total => Math.floor(total / 50) + 1;
+const levelFloor = lvl => (lvl - 1) * 50;
+
+/* ---------- i18n ---------- */
+const LANGS = [{
+  code: "he",
+  label: "עברית",
+  flag: "🇮🇱",
+  dir: "rtl"
+}, {
+  code: "en",
+  label: "English",
+  flag: "🇬🇧",
+  dir: "ltr"
+}, {
+  code: "es",
+  label: "Español",
+  flag: "🇪🇸",
+  dir: "ltr"
+}, {
+  code: "ar",
+  label: "العربية",
+  flag: "🇸🇦",
+  dir: "rtl"
+}, {
+  code: "hi",
+  label: "हिन्दी",
+  flag: "🇮🇳",
+  dir: "ltr"
+}, {
+  code: "pt",
+  label: "Português",
+  flag: "🇧🇷",
+  dir: "ltr"
+}, {
+  code: "ru",
+  label: "Русский",
+  flag: "🇷🇺",
+  dir: "ltr"
+}, {
+  code: "fr",
+  label: "Français",
+  flag: "🇫🇷",
+  dir: "ltr"
+}, {
+  code: "de",
+  label: "Deutsch",
+  flag: "🇩🇪",
+  dir: "ltr"
+}, {
+  code: "zh",
+  label: "中文",
+  flag: "🇨🇳",
+  dir: "ltr"
+}];
+const STR = {
+  en: {
+    tagline: "The social prediction game. Points only, never money.",
+    continueGoogle: "Continue with Google",
+    signInPriv: "No money, no DMs. For all ages.",
+    group: "Group",
+    headline1: "Call it before",
+    headline2: "everyone else does.",
+    boardHeadline: "Who's on top of the arena?",
+    feed: "Feed",
+    ranks: "Ranks",
+    createNav: "New",
+    rules: "Rules",
+    you: "You",
+    all: "All",
+    sport: "Sport",
+    weather: "Weather",
+    screen: "Screen & Stage",
+    news: "News",
+    family: "Family",
+    food: "Food",
+    life: "Life",
+    emptyT: "Nothing here yet",
+    emptyS: "Be the first to call something.",
+    tapCall: "Place your bet — pick a side",
+    yes: "YES",
+    no: "NO",
+    votes: n => `${n} bets`,
+    minorityYou: "You're the brave minority",
+    crowd: "You're with the crowd",
+    lockedIn: "Locked in",
+    live: "LIVE",
+    resolvedTag: "Resolved",
+    awaiting: "Awaiting consent",
+    lockedTag: "Closed",
+    hot: "HOT",
+    autoTag: "Auto-verified",
+    proofTag: "Photo",
+    asked: n => `${n} asked`,
+    hiddenUntil: t => `Hidden until @${t} approves`,
+    reviewAs: t => `Review as @${t}`,
+    resolveBtn: "Resolve",
+    seeResult: "See result",
+    targetCantVote: "You can't vote — it's about you",
+    voteToReveal: "Bet to reveal the odds",
+    inVotes: n => `${n} bets in`,
+    report: "Report",
+    reported: "Reported — sent for review.",
+    reportUnkind: "This feels unkind — report",
+    voidBtn: "Can't tell / void it",
+    voidedTag: "Void",
+    voidedToast: "Voided — 0 points, streaks kept.",
+    cantResolveStaked: "You voted here — only members with no stake can resolve.",
+    onlyAuthorResolves: by => `Only @${by}, who posted it, can answer this`,
+    resolvedByAuto: "Resolved automatically",
+    resolvedByGroup: "Resolved by the group",
+    shareBtn: "Share the win",
+    shareCopied: "Copied! Paste it anywhere.",
+    shareText: (q, side, earned) => `I called it on Eyevos 🎯 "${q}" → ${side}${earned ? ` (+${earned})` : ""}. Points only, never money. Join my group:`,
+    emptyBoard: "No members in this group yet.",
+    emptyBoardSub: "Invite friends with the group code.",
+    createT: "What are we calling?",
+    createS: "Pick the kind of question.",
+    cancel: "Cancel",
+    back: "Back",
+    pickGroup: "Which group?",
+    eventT: "About an event",
+    eventD: "A game, the weather, a show, news — verifiable.",
+    personT: "About someone",
+    personD: "Tag a friend — they approve before it goes live.",
+    safeNote: "Questions about a person stay hidden until they say yes. Only fair calls — never to put someone down.",
+    personalOrGeneral: "Is this personal or general?",
+    personalT: "Personal",
+    personalD: "A private matter — needs approval + a photo proof.",
+    generalT: "General",
+    generalD: "Something the group can observe — the group decides.",
+    whoAbout: "Who's it about?",
+    writeQ: "Write the question",
+    onlyMembers: "Only members of this group can be tagged.",
+    phPerson: t => `Will ${t || "they"} make it this week?`,
+    phEvent: "Will it rain on Saturday's trip?",
+    subjectLabel: "Subject",
+    deadlineLabel: "When does voting close?",
+    mismatch: s => `This looks like ${s}. Pick a matching subject.`,
+    methodAuto: "Eyevos will verify the result automatically from public sources.",
+    methodGroup: "The group decides what happened.",
+    methodProof: "A photo proof will be required at resolution.",
+    notOnline: "Can't be found online — require a photo",
+    sendApprove: t => t ? `Send to @${t} for approval` : "Pick a friend & write a question",
+    consentT: "A question about you",
+    consentS: by => `${by} wants to open this to the group. Hidden unless you approve.`,
+    approve: "Approve — open voting",
+    decline: "Decline & delete",
+    resolveT: "What actually happened?",
+    resolveProofBtn: "Attach proof photo",
+    proofNeeded: "A proof photo is required for this one.",
+    confirm: "Confirm result",
+    verifyingTitle: "Eyevos is checking the result",
+    verifyingNote: "(demo — a real results API plugs in here)",
+    itWas: s => `It was ${s === "yes" ? "YES" : "NO"}`,
+    yourPick: "Your pick",
+    actualWas: "What happened",
+    correctCall: "Correct call",
+    minorityBonus: "Minority bonus",
+    streakBonusL: "Streak bonus",
+    earned: "You won",
+    braveLine: "You bet against the crowd — and nailed it. Minority bonus!",
+    streakLine: n => `${n} in a row! 🔥 You're on fire.`,
+    nice: "Let's go! 🎉",
+    winBang: "YOU WON! 🎉",
+    postCall: "Place the bet 🎰",
+    howSure: "How sure?",
+    conf1: "Safe",
+    conf2: "Sure",
+    conf3: "ALL IN",
+    stakeL: "Stake",
+    convLine: c => c === 3 ? "🔥 ALL IN — triple base!" : c === 2 ? "Sure bet — double base" : "Safe bet",
+    lostBang: "Not this time",
+    costRow: "All-in sting",
+    dailyT: "Daily bonus! 🎁",
+    dailyS: n => `Welcome back — here's +${n} on the house.`,
+    dailyClaim: "Claim it",
+    points: "Points",
+    rankL: "Rank",
+    accuracy: "Accuracy",
+    streak: "Streak",
+    level: "Level",
+    toNext: n => `${n} pts to level up`,
+    levelHelp: "every 50 pts = a level",
+    totalPts: "Total points",
+    perSubject: "Points by subject",
+    profileSub: lvl => `Level ${lvl} · all ages welcome`,
+    editProfile: "Edit profile",
+    nameL: "Name",
+    photoL: "Photo",
+    save: "Save",
+    signOut: "Sign out",
+    choosePhoto: "Choose from gallery",
+    recent: "Recent calls",
+    me: "You",
+    pointsOnly: "Points only · never real money · all ages",
+    rankPickSubject: "1 · Pick a subject",
+    rankPickGroup: "2 · Pick your group",
+    rankBoard: "3 · The board",
+    seasonLeft: n => `Season resets in ${n} days`,
+    seasonRule: "Each group runs its own 30-day season — then points reset to 0.",
+    potd: "Prediction of the day",
+    reactions: "Reactions",
+    rulesT: "Rules",
+    rulesScoreT: "Scoring",
+    rulesAllowedT: "Allowed",
+    rulesForbiddenT: "Not allowed",
+    rulesScore: [["Correct call", "+5"], ["Correct & you were the minority (≤49%)", "+3"], ["3 correct in a row", "+4"], ["5 correct in a row", "+5"], ["Wrong", "0 — never below zero"], ["Each group: a 30-day season, then points reset", "↻"], ["Each subject keeps its own score & rank", "★"]],
+    rulesAllowed: ["Verifiable events (game, weather, show, news) — Eyevos checks them automatically", "Private outcomes — confirmed with a photo proof + the group", "Person questions — only with that person's approval", "Up to 40 members per group · you pick the exact closing date & time"],
+    rulesForbidden: ["Anything degrading, slurs, body-shaming", "A subject that doesn't match the text (sport ≠ food)", "Voting on a poll that is about you", "Resolving a poll you voted on", "Real money — there is none, ever"],
+    langT: "Language",
+    membersOf: n => `${n}/40`,
+    createGroup: "Create a group",
+    joinGroup: "Join with a code",
+    groupName: "Group name",
+    inviteWa: "Invite on WhatsApp",
+    enterCode: "Invite code",
+    createBtn: "Create",
+    joinBtn: "Join",
+    inviteText: (name, code, url) => `Join my group "${name}" on Eyevos! Code: ${code}. ${url}`,
+    groupCreated: "Group created! Share the code.",
+    joinedGroup: "Joined the group!",
+    badCode: "No group with that code.",
+    voteClosed: "Voting closed.",
+    already: "You already called this.",
+    declined: "Question deleted.",
+    approved: "Approved — voting is open.",
+    created: "Your call is posted!",
+    sent: "Sent for approval.",
+    needLong: "Write a slightly longer question.",
+    needDeadline: "Pick a closing date & time.",
+    savedProfile: "Profile saved.",
+    needFuture: "Pick a closing time in the future.",
+    blocked: "That question was blocked — keep it fair.",
+    pickSubjectStep: "1 · Pick a subject",
+    pickGroupStep: "2 · Which group?",
+    writeStep: "3 · Write the call",
+    noNotifs: "No new requests.",
+    awaitingApproval: t => `Waiting for @${t} to approve`,
+    shareGroupT: "Group created! 🎉",
+    shareGroupS: "Invite your people to start playing.",
+    copyLink: "Copy invite link",
+    doneBtn: "Done",
+    noGroups: "You're not in any group yet — create one first.",
+    resolvedToast: "Resolved — points paid out.",
+    proofMissing: "Attach a proof photo first.",
+    pickOutcome: "Pick what happened first.",
+    cantVoteSelf: "You can't vote on a poll about you."
+  },
+  he: {
+    tagline: "משחק הניחושים החברתי. נקודות בלבד, אף פעם לא כסף.",
+    continueGoogle: "המשך עם Google",
+    signInPriv: "בלי כסף, בלי הודעות פרטיות. לכל הגילאים.",
+    group: "קבוצה",
+    headline1: "תנחש את זה",
+    headline2: "לפני כל השאר.",
+    boardHeadline: "מי המלך של הזירה?",
+    feed: "פיד",
+    ranks: "דירוג",
+    createNav: "חדש",
+    rules: "חוקים",
+    you: "אני",
+    all: "הכל",
+    sport: "ספורט",
+    weather: "מזג אוויר",
+    screen: "מסך ובמה",
+    news: "חדשות",
+    family: "משפחה",
+    food: "אוכל",
+    life: "חיים",
+    emptyT: "עדיין אין כאן כלום",
+    emptyS: "היה הראשון לנחש משהו.",
+    tapCall: "שים הימור — בחר צד",
+    yes: "כן",
+    no: "לא",
+    votes: n => `${n} הימרו`,
+    minorityYou: "אתה במיעוט האמיץ",
+    crowd: "אתה עם הרוב",
+    lockedIn: "ננעל",
+    live: "חי",
+    resolvedTag: "הוכרע",
+    awaiting: "ממתין לאישור",
+    lockedTag: "נסגר",
+    hot: "חם",
+    autoTag: "אימות אוטומטי",
+    proofTag: "תמונה",
+    asked: n => `${n} שאל/ה`,
+    hiddenUntil: t => `מוסתר עד ש־@${t} מאשר/ת`,
+    reviewAs: t => `בדוק בתור @${t}`,
+    resolveBtn: "הכרע",
+    seeResult: "ראה תוצאה",
+    targetCantVote: "אי אפשר להצביע — השאלה עליך",
+    voteToReveal: "הַמֵּר כדי לחשוף את הסיכויים",
+    inVotes: n => `${n} כבר הימרו`,
+    report: "דווח",
+    reported: "דווח — יישלח לבדיקה.",
+    reportUnkind: "זה לא הוגן — דווח",
+    voidBtn: "אי אפשר להכריע / בטל",
+    voidedTag: "בוטל",
+    voidedToast: "בוטל — אפס נקודות, הרצף נשמר.",
+    cantResolveStaked: "הצבעת כאן — רק מי שאין לו ניקוד בניחוש יכול להכריע.",
+    onlyAuthorResolves: by => `רק @${by}, שפתח את השאלה, יכול לענות`,
+    resolvedByAuto: "הוכרע אוטומטית",
+    resolvedByGroup: "הוכרע ע\"י הקבוצה",
+    shareBtn: "שתף את הניצחון",
+    shareCopied: "הועתק! אפשר להדביק בכל מקום.",
+    shareText: (q, side, earned) => `ניחשתי נכון ב־Eyevos 🎯 "${q}" ← ${side}${earned ? ` (+${earned})` : ""}. נקודות בלבד, אף פעם לא כסף. בוא לקבוצה שלי:`,
+    emptyBoard: "אין עדיין חברים בקבוצה הזו.",
+    emptyBoardSub: "הזמן חברים עם קוד הקבוצה.",
+    createT: "על מה אנחנו מנחשים?",
+    createS: "בחר את סוג השאלה.",
+    cancel: "ביטול",
+    back: "חזרה",
+    pickGroup: "לאיזו קבוצה?",
+    eventT: "על אירוע",
+    eventD: "משחק, מזג אוויר, תוכנית, חדשות — כל דבר שאפשר לאמת.",
+    personT: "על מישהו",
+    personD: "תייג חבר — הוא מאשר לפני שזה עולה.",
+    safeNote: "שאלות על אדם נשארות מוסתרות עד שהוא מאשר. רק ניחושים הוגנים — אף פעם לא משהו שנועד להשפיל.",
+    personalOrGeneral: "זה אישי או כללי?",
+    personalT: "אישי",
+    personalD: "עניין פרטי — צריך אישור + תמונת הוכחה.",
+    generalT: "כללי",
+    generalD: "משהו שהקבוצה יכולה לראות — הקבוצה מכריעה.",
+    whoAbout: "על מי מדובר?",
+    writeQ: "כתוב את השאלה",
+    onlyMembers: "רק חברים בקבוצה הזו ניתנים לתיוג.",
+    phPerson: t => `${t || "הוא/היא"} יעשה/תעשה את זה השבוע?`,
+    phEvent: "ירד גשם בטיול בשבת?",
+    subjectLabel: "נושא",
+    deadlineLabel: "מתי ההצבעה נסגרת?",
+    mismatch: s => `נראה שזה שייך ל${s}. בחר נושא מתאים.`,
+    methodAuto: "Eyevos יאמת את התוצאה אוטומטית ממקורות פומביים.",
+    methodGroup: "הקבוצה מכריעה מה קרה.",
+    methodProof: "בעת ההכרעה תידרש תמונת הוכחה.",
+    notOnline: "אי אפשר למצוא את זה ברשת — דרוש תמונה",
+    sendApprove: t => t ? `שלח ל־@${t} לאישור` : "בחר חבר וכתוב שאלה",
+    consentT: "שאלה עליך",
+    consentS: by => `${by} רוצה לפתוח את זה לקבוצה. מוסתר אלא אם תאשר.`,
+    approve: "אשר — פתח הצבעה",
+    decline: "דחה ומחק",
+    resolveT: "מה קרה באמת?",
+    resolveProofBtn: "צרף תמונת הוכחה",
+    proofNeeded: "לניחוש הזה צריך תמונת הוכחה.",
+    confirm: "אשר תוצאה",
+    verifyingTitle: "Eyevos בודק את התוצאה",
+    verifyingNote: "(דמו — כאן מתחבר API תוצאות אמיתי)",
+    itWas: s => `התשובה: ${s === "yes" ? "כן" : "לא"}`,
+    yourPick: "הניחוש שלך",
+    actualWas: "מה שקרה באמת",
+    correctCall: "ניחוש נכון",
+    minorityBonus: "בונוס מיעוט",
+    streakBonusL: "בונוס רצף",
+    earned: "נכנס לקופה",
+    braveLine: "הימרת נגד הזרם — וקלעת בול! בונוס מיעוט.",
+    streakLine: n => `${n} ברצף! 🔥 אתה בוער.`,
+    nice: "יאללה! 🎉",
+    winBang: "קלעת בול! 🎉",
+    postCall: "שים את ההימור 🎰",
+    howSure: "כמה בטוח?",
+    conf1: "רגיל",
+    conf2: "בטוח",
+    conf3: "בכל הקופה",
+    stakeL: "סיכון",
+    convLine: c => c === 3 ? "🔥 בכל הקופה — פי 3 על הבסיס!" : c === 2 ? "הימור בטוח — בסיס כפול" : "הימור בטוח",
+    lostBang: "לא הפעם",
+    costRow: "מחיר ה'בכל הקופה'",
+    dailyT: "בונוס יומי! 🎁",
+    dailyS: n => `טוב לראות אותך — קח +${n} על חשבון הבית.`,
+    dailyClaim: "קח את זה",
+    points: "נקודות",
+    rankL: "דירוג",
+    accuracy: "דיוק",
+    streak: "רצף",
+    level: "רמה",
+    toNext: n => `עוד ${n} נק' לרמה הבאה`,
+    levelHelp: "כל 50 נק' = רמה",
+    totalPts: "סך הנקודות",
+    perSubject: "ניקוד לפי נושא",
+    profileSub: lvl => `רמה ${lvl} · לכל הגילאים`,
+    editProfile: "ערוך פרופיל",
+    nameL: "שם",
+    photoL: "תמונה",
+    save: "שמור",
+    signOut: "התנתק",
+    choosePhoto: "בחר מהגלריה",
+    recent: "ניחושים אחרונים",
+    me: "אתה",
+    pointsOnly: "נקודות בלבד · אף פעם לא כסף · לכל הגילאים",
+    rankPickSubject: "1 · בחר נושא",
+    rankPickGroup: "2 · בחר קבוצה",
+    rankBoard: "3 · הדירוג",
+    seasonLeft: n => `העונה מתאפסת בעוד ${n} ימים`,
+    seasonRule: "לכל קבוצה עונה משלה של 30 ימים — בסוף הנקודות מתאפסות ל־0.",
+    potd: "ניחוש היום",
+    reactions: "תגובות",
+    rulesT: "חוקים",
+    rulesScoreT: "ניקוד",
+    rulesAllowedT: "מה מותר",
+    rulesForbiddenT: "מה אסור",
+    rulesScore: [["ניחוש נכון", "+5"], ["נכון ואתה היית במיעוט (49% ומטה)", "+3"], ["3 נכונים ברצף", "+4"], ["5 נכונים ברצף", "+5"], ["טעות", "0 — אף פעם לא מתחת לאפס"], ["לכל קבוצה עונה של 30 יום, ואז הנקודות מתאפסות", "↻"], ["לכל נושא ניקוד ודירוג משלו", "★"]],
+    rulesAllowed: ["אירועים שאפשר לאמת (משחק, מזג אוויר, תוכנית, חדשות) — Eyevos בודק אוטומטית", "תוצאות פרטיות — מאשרים עם תמונת הוכחה + הקבוצה", "שאלות על אדם — רק באישור אותו אדם", "עד 40 חברים בקבוצה · אתם בוחרים תאריך ושעת סגירה מדויקים"],
+    rulesForbidden: ["כל דבר משפיל, קללות, ביוש גוף", "נושא שלא תואם את התוכן (ספורט ≠ אוכל)", "הצבעה על ניחוש שהוא עליך", "הכרעת ניחוש שהצבעת בו", "כסף אמיתי — אין כזה, אף פעם"],
+    langT: "שפה",
+    membersOf: n => `${n}/40`,
+    createGroup: "צור קבוצה",
+    joinGroup: "הצטרף עם קוד",
+    groupName: "שם הקבוצה",
+    inviteWa: "הזמן בוואטסאפ",
+    enterCode: "קוד הזמנה",
+    createBtn: "צור",
+    joinBtn: "הצטרף",
+    inviteText: (name, code, url) => `בוא לקבוצה "${name}" ב־Eyevos! קוד: ${code}. ${url}`,
+    groupCreated: "הקבוצה נוצרה! שתף את הקוד.",
+    joinedGroup: "הצטרפת לקבוצה!",
+    badCode: "אין קבוצה עם הקוד הזה.",
+    voteClosed: "ההצבעה נסגרה.",
+    already: "כבר ניחשת את זה.",
+    declined: "השאלה נמחקה.",
+    approved: "אושר — ההצבעה נפתחה.",
+    created: "הניחוש פורסם!",
+    sent: "נשלח לאישור.",
+    needLong: "כתוב שאלה קצת יותר ארוכה.",
+    needDeadline: "בחר תאריך ושעת סגירה.",
+    savedProfile: "הפרופיל נשמר.",
+    needFuture: "בחר זמן סגירה עתידי.",
+    blocked: "השאלה נחסמה — שמור על זה הוגן.",
+    pickSubjectStep: "1 · בחר נושא",
+    pickGroupStep: "2 · לאיזו קבוצה?",
+    writeStep: "3 · כתוב את הניחוש",
+    noNotifs: "אין בקשות חדשות.",
+    awaitingApproval: t => `ממתין שֶׁ־@${t} יאשר/ת`,
+    shareGroupT: "הקבוצה נוצרה! 🎉",
+    shareGroupS: "הזמן את החבר'ה כדי להתחיל לשחק.",
+    copyLink: "העתק קישור הזמנה",
+    doneBtn: "סיום",
+    noGroups: "אתה עדיין לא בקבוצה — צור קבוצה קודם.",
+    resolvedToast: "הוכרע — הנקודות חולקו.",
+    proofMissing: "צרף קודם תמונת הוכחה.",
+    pickOutcome: "בחר קודם מה קרה.",
+    cantVoteSelf: "אי אפשר להצביע על שאלה שהיא עליך."
+  },
+  es: {
+    sport: "Deporte",
+    weather: "Clima",
+    screen: "Pantalla",
+    news: "Noticias",
+    family: "Familia",
+    food: "Comida",
+    life: "Vida",
+    feed: "Inicio",
+    ranks: "Ranking",
+    createNav: "Nuevo",
+    rules: "Reglas",
+    you: "Tú",
+    all: "Todo",
+    yes: "SÍ",
+    no: "NO",
+    tapCall: "Toca un lado",
+    continueGoogle: "Continuar con Google",
+    tagline: "El juego social de predicciones. Solo puntos, nunca dinero.",
+    signInPriv: "Sin dinero, sin mensajes. Para todas las edades.",
+    headline1: "Adivínalo antes",
+    headline2: "que los demás.",
+    boardHeadline: "¿Quién lee mejor la jugada?",
+    postCall: "Publicar",
+    resolveBtn: "Resolver",
+    seeResult: "Ver resultado",
+    points: "Puntos",
+    level: "Nivel",
+    langT: "Idioma",
+    voteToReveal: "Vota para ver el reparto",
+    createGroup: "Crear grupo",
+    joinGroup: "Unirse con código",
+    inviteWa: "Invitar por WhatsApp"
+  },
+  ar: {
+    sport: "رياضة",
+    weather: "الطقس",
+    screen: "شاشة",
+    news: "أخبار",
+    family: "عائلة",
+    food: "طعام",
+    life: "حياة",
+    feed: "الرئيسية",
+    ranks: "الترتيب",
+    createNav: "جديد",
+    rules: "القواعد",
+    you: "أنت",
+    all: "الكل",
+    yes: "نعم",
+    no: "لا",
+    tapCall: "اختر جهة",
+    continueGoogle: "المتابعة عبر Google",
+    tagline: "لعبة التوقعات الاجتماعية. نقاط فقط، لا مال.",
+    signInPriv: "بلا مال، بلا رسائل. لكل الأعمار.",
+    headline1: "توقّعها قبل",
+    headline2: "أي شخص آخر.",
+    boardHeadline: "من يقرأ الموقف أفضل؟",
+    postCall: "انشر",
+    resolveBtn: "احسم",
+    seeResult: "النتيجة",
+    points: "نقاط",
+    level: "مستوى",
+    langT: "اللغة",
+    voteToReveal: "صوّت لكشف النتيجة",
+    createGroup: "إنشاء مجموعة",
+    joinGroup: "انضم برمز",
+    inviteWa: "دعوة عبر واتساب"
+  },
+  fr: {
+    sport: "Sport",
+    weather: "Météo",
+    screen: "Écran",
+    news: "Actu",
+    family: "Famille",
+    food: "Cuisine",
+    life: "Vie",
+    feed: "Accueil",
+    ranks: "Classement",
+    createNav: "Nouveau",
+    rules: "Règles",
+    you: "Toi",
+    all: "Tout",
+    yes: "OUI",
+    no: "NON",
+    tapCall: "Touche un côté",
+    continueGoogle: "Continuer avec Google",
+    tagline: "Le jeu social de pronostics. Que des points, jamais d'argent.",
+    signInPriv: "Sans argent, sans messages. Pour tous les âges.",
+    headline1: "Devine-le avant",
+    headline2: "tous les autres.",
+    boardHeadline: "Qui lit le mieux la situation ?",
+    postCall: "Publier",
+    resolveBtn: "Résoudre",
+    seeResult: "Résultat",
+    points: "Points",
+    level: "Niveau",
+    langT: "Langue",
+    voteToReveal: "Vote pour voir le partage",
+    createGroup: "Créer un groupe",
+    joinGroup: "Rejoindre avec un code",
+    inviteWa: "Inviter sur WhatsApp"
+  },
+  de: {
+    sport: "Sport",
+    weather: "Wetter",
+    screen: "Bildschirm",
+    news: "Nachrichten",
+    family: "Familie",
+    food: "Essen",
+    life: "Leben",
+    feed: "Feed",
+    ranks: "Rang",
+    createNav: "Neu",
+    rules: "Regeln",
+    you: "Du",
+    all: "Alle",
+    yes: "JA",
+    no: "NEIN",
+    tapCall: "Tippe eine Seite",
+    continueGoogle: "Mit Google fortfahren",
+    tagline: "Das soziale Tippspiel. Nur Punkte, niemals Geld.",
+    signInPriv: "Kein Geld, keine DMs. Für jedes Alter.",
+    headline1: "Sag es voraus, bevor",
+    headline2: "es alle anderen tun.",
+    boardHeadline: "Wer liest die Lage am besten?",
+    postCall: "Veröffentlichen",
+    resolveBtn: "Auflösen",
+    seeResult: "Ergebnis",
+    points: "Punkte",
+    level: "Level",
+    langT: "Sprache",
+    voteToReveal: "Stimme ab, um zu sehen",
+    createGroup: "Gruppe erstellen",
+    joinGroup: "Mit Code beitreten",
+    inviteWa: "Per WhatsApp einladen"
+  },
+  pt: {
+    sport: "Esporte",
+    weather: "Clima",
+    screen: "Telinha",
+    news: "Notícias",
+    family: "Família",
+    food: "Comida",
+    life: "Vida",
+    feed: "Início",
+    ranks: "Ranking",
+    createNav: "Novo",
+    rules: "Regras",
+    you: "Você",
+    all: "Tudo",
+    yes: "SIM",
+    no: "NÃO",
+    tapCall: "Toque num lado",
+    continueGoogle: "Continuar com Google",
+    tagline: "O jogo social de palpites. Só pontos, nunca dinheiro.",
+    signInPriv: "Sem dinheiro, sem mensagens. Para todas as idades.",
+    headline1: "Adivinhe antes",
+    headline2: "de todo mundo.",
+    boardHeadline: "Quem lê melhor a jogada?",
+    postCall: "Publicar",
+    resolveBtn: "Resolver",
+    seeResult: "Ver resultado",
+    points: "Pontos",
+    level: "Nível",
+    langT: "Idioma",
+    voteToReveal: "Vote para ver a divisão",
+    createGroup: "Criar grupo",
+    joinGroup: "Entrar com código",
+    inviteWa: "Convidar no WhatsApp"
+  },
+  ru: {
+    sport: "Спорт",
+    weather: "Погода",
+    screen: "Экран",
+    news: "Новости",
+    family: "Семья",
+    food: "Еда",
+    life: "Жизнь",
+    feed: "Лента",
+    ranks: "Рейтинг",
+    createNav: "Новый",
+    rules: "Правила",
+    you: "Ты",
+    all: "Все",
+    yes: "ДА",
+    no: "НЕТ",
+    tapCall: "Нажми сторону",
+    continueGoogle: "Войти через Google",
+    tagline: "Социальная игра-прогноз. Только очки, никогда не деньги.",
+    signInPriv: "Без денег, без сообщений. Для всех возрастов.",
+    headline1: "Угадай раньше,",
+    headline2: "чем все остальные.",
+    boardHeadline: "Кто лучше читает ситуацию?",
+    postCall: "Опубликовать",
+    resolveBtn: "Решить",
+    seeResult: "Результат",
+    points: "Очки",
+    level: "Уровень",
+    langT: "Язык",
+    voteToReveal: "Проголосуй, чтобы увидеть",
+    createGroup: "Создать группу",
+    joinGroup: "Войти по коду",
+    inviteWa: "Пригласить в WhatsApp"
+  },
+  hi: {
+    sport: "खेल",
+    weather: "मौसम",
+    screen: "स्क्रीन",
+    news: "खबरें",
+    family: "परिवार",
+    food: "खाना",
+    life: "जीवन",
+    feed: "फ़ीड",
+    ranks: "रैंक",
+    createNav: "नया",
+    rules: "नियम",
+    you: "आप",
+    all: "सभी",
+    yes: "हाँ",
+    no: "नहीं",
+    tapCall: "एक तरफ़ चुनें",
+    continueGoogle: "Google से जारी रखें",
+    tagline: "सोशल प्रेडिक्शन गेम। सिर्फ़ पॉइंट, कभी पैसा नहीं।",
+    signInPriv: "कोई पैसा नहीं, कोई DM नहीं। हर उम्र के लिए।",
+    headline1: "सबसे पहले",
+    headline2: "अंदाज़ा लगाओ।",
+    boardHeadline: "सबसे अच्छा कौन भांपता है?",
+    postCall: "पोस्ट करें",
+    resolveBtn: "तय करें",
+    seeResult: "नतीजा",
+    points: "पॉइंट",
+    level: "स्तर",
+    langT: "भाषा",
+    voteToReveal: "बँटवारा देखने के लिए वोट करें",
+    createGroup: "समूह बनाएँ",
+    joinGroup: "कोड से जुड़ें",
+    inviteWa: "WhatsApp पर बुलाएँ"
+  },
+  zh: {
+    sport: "体育",
+    weather: "天气",
+    screen: "影视",
+    news: "新闻",
+    family: "家庭",
+    food: "美食",
+    life: "生活",
+    feed: "动态",
+    ranks: "排行",
+    createNav: "新建",
+    rules: "规则",
+    you: "我",
+    all: "全部",
+    yes: "是",
+    no: "否",
+    tapCall: "点一边",
+    continueGoogle: "使用 Google 继续",
+    tagline: "社交预测游戏。只有积分，永远没有金钱。",
+    signInPriv: "没有金钱，没有私信。适合所有年龄。",
+    headline1: "抢在所有人之前",
+    headline2: "做出预测。",
+    boardHeadline: "谁最懂局势？",
+    postCall: "发布",
+    resolveBtn: "揭晓",
+    seeResult: "看结果",
+    points: "积分",
+    level: "等级",
+    langT: "语言",
+    voteToReveal: "投票后查看分布",
+    createGroup: "创建群组",
+    joinGroup: "用代码加入",
+    inviteWa: "用 WhatsApp 邀请"
+  }
+};
+function dict(lang) {
+  return {
+    ...STR.en,
+    ...(STR[lang] || {})
+  };
+}
+
+/* ---------- shared bits ---------- */
+function Avatar({
+  name,
+  photo,
+  size = 30,
+  ring
+}) {
+  const col = HUES[name] || "#8A6BFF";
+  if (photo) {
+    return /*#__PURE__*/React.createElement("img", {
+      src: photo,
+      alt: name,
+      style: {
+        width: size,
+        height: size,
+        borderRadius: 10,
+        objectFit: "cover",
+        flexShrink: 0,
+        border: ring ? `2px solid ${col}` : "none"
+      }
+    });
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: size,
+      height: size,
+      borderRadius: 10,
+      flexShrink: 0,
+      background: col + "26",
+      color: col,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontWeight: 800,
+      fontSize: size * 0.34,
+      border: ring ? `2px solid ${col}` : "none"
+    }
+  }, initials(name));
+}
+function SubjectTag({
+  subject,
+  L
+}) {
+  const C = SUBJECTS[subject];
+  return /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: C.c + "1f",
+      color: C.c
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: C.icon,
+    size: 11,
+    color: C.c
+  }), " ", L[subject]);
+}
+
+/* ---------- VS vote bar (split hidden until you vote) ---------- */
+function VoteBar({
+  poll,
+  onVote,
+  isTarget,
+  L
+}) {
+  const [pending, setPending] = useState(null); // side chosen, awaiting conviction ("how sure?")
+  const total = poll.yes + poll.no;
+  const y = pct(poll.yes, poll.no);
+  const voted = poll.mine;
+  const reveal = !!voted || poll.status !== "live";
+  const wy = reveal ? y : 50;
+  const yesBg = voted === "yes" ? "var(--yes)" : !reveal && pending === "yes" ? "var(--yes)" : "var(--yes-soft)";
+  const noBg = voted === "no" ? "var(--no)" : !reveal && pending === "no" ? "var(--no)" : "var(--no-soft)";
+  const conf = [[1, L.conf1], [2, L.conf2], [3, L.conf3]];
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "bar" + (reveal ? " locked" : ""),
+    role: "group",
+    "aria-label": "VS"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "side",
+    style: {
+      width: `${wy}%`,
+      background: yesBg
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "side",
+    style: {
+      width: `${100 - wy}%`,
+      background: noBg
+    }
+  }), reveal ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    className: "lab",
+    style: {
+      insetInlineStart: 0,
+      color: voted === "yes" ? "#fff" : "var(--yes)"
+    }
+  }, voted === "yes" && /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 15,
+    color: "#fff"
+  }), " ", L.yes, " ", /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      opacity: .9
+    }
+  }, y, "%")), /*#__PURE__*/React.createElement("span", {
+    className: "lab",
+    style: {
+      insetInlineEnd: 0,
+      color: voted === "no" ? "#06302b" : "var(--no)"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      opacity: .9
+    }
+  }, 100 - y, "%"), " ", L.no, " ", voted === "no" && /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 15,
+    color: "#06302b"
+  }))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    className: "lab",
+    style: {
+      insetInlineStart: 0,
+      color: pending === "yes" ? "#fff" : "var(--yes)"
+    },
+    disabled: isTarget,
+    onClick: () => !isTarget && setPending("yes"),
+    "aria-label": L.yes
+  }, L.yes), /*#__PURE__*/React.createElement("button", {
+    className: "lab",
+    style: {
+      insetInlineEnd: 0,
+      color: pending === "no" ? "#06302b" : "var(--no)"
+    },
+    disabled: isTarget,
+    onClick: () => !isTarget && setPending("no"),
+    "aria-label": L.no
+  }, L.no))), !reveal && pending && !isTarget && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 7,
+      marginTop: 10,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11.5,
+      fontWeight: 800,
+      color: "var(--muted)",
+      whiteSpace: "nowrap"
+    }
+  }, L.howSure), conf.map(([c, label]) => /*#__PURE__*/React.createElement("button", {
+    key: c,
+    className: "chip",
+    style: {
+      flex: 1,
+      justifyContent: "center",
+      padding: "9px 6px",
+      borderColor: c === 3 ? "rgba(255,194,60,.5)" : "var(--line)",
+      color: c === 3 ? "var(--gold)" : "var(--text)"
+    },
+    onClick: () => onVote(pending, c)
+  }, c === 3 ? "🔥 " : "", label, " ", /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      opacity: .7
+    }
+  }, "\xD7", c)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginTop: 9,
+      fontSize: 12,
+      color: "var(--muted)",
+      fontWeight: 600
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tnum"
+  }, reveal ? L.votes(total) : L.inVotes(total)), isTarget ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "var(--brand-2)",
+      fontWeight: 700,
+      display: "inline-flex",
+      gap: 4,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "lock",
+    size: 12,
+    color: "var(--brand-2)"
+  }), " ", L.targetCantVote) : !reveal ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "var(--brand-2)",
+      fontWeight: 700
+    }
+  }, pending ? L.howSure : L.voteToReveal) : voted && poll.type !== "person" ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 12,
+    color: "var(--gold)"
+  }), (voted === "yes" ? y : 100 - y) < 50 ? L.minorityYou : L.crowd) : /*#__PURE__*/React.createElement("span", null, L.lockedIn)));
+}
+
+/* ---------- win celebration ---------- */
+function Confetti() {
+  const colors = ["#FF4D6D", "#2DD4BF", "#FFC23C", "#8A6BFF", "#5BC8FF", "#FF8A4D"];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "confetti",
+    "aria-hidden": "true"
+  }, Array.from({
+    length: 18
+  }, (_, i) => /*#__PURE__*/React.createElement("i", {
+    key: i,
+    style: {
+      left: Math.round(Math.random() * 100) + "%",
+      background: colors[i % colors.length],
+      animationDelay: (Math.random() * 0.35).toFixed(2) + "s",
+      transform: `scale(${(0.7 + Math.random() * 0.7).toFixed(2)})`
+    }
+  })));
+}
+
+/* ---------- sound + haptics (WebAudio, default-on, muteable) ----------
+   ETHICAL RULE: a "win" sound/vibe fires ONLY on a real point gain. A wrong
+   call gets a calm neutral tone — never a win sound (no "loss disguised as a win"). */
+const SOUND = (() => {
+  let ctx = null,
+    on = true;
+  try {
+    on = localStorage.getItem("eyevos_sound") !== "off";
+  } catch (e) {}
+  function ac() {
+    if (!ctx) {
+      try {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch (e) {}
+    }
+    return ctx;
+  }
+  function tone(freq, dur, when, type, gain) {
+    const c = ac();
+    if (!c) return;
+    const o = c.createOscillator(),
+      g = c.createGain();
+    o.type = type || "sine";
+    o.frequency.value = freq;
+    o.connect(g);
+    g.connect(c.destination);
+    const t = c.currentTime + (when || 0);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(gain || 0.12, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.start(t);
+    o.stop(t + dur + 0.03);
+  }
+  return {
+    get on() {
+      return on;
+    },
+    toggle() {
+      on = !on;
+      try {
+        localStorage.setItem("eyevos_sound", on ? "on" : "off");
+      } catch (e) {}
+      if (on) tone(660, 0.1, 0, "triangle", 0.1);
+      return on;
+    },
+    tick() {
+      if (!on) return;
+      tone(440, 0.05, 0, "triangle", 0.07);
+      try {
+        navigator.vibrate && navigator.vibrate(8);
+      } catch (e) {}
+    },
+    win(tier) {
+      if (!on) return;
+      [523, 659, 784, 1047, 1319].slice(0, 2 + (tier || 1)).forEach((f, i) => tone(f, 0.2, i * 0.085, "triangle", 0.14));
+      try {
+        navigator.vibrate && navigator.vibrate([0, 30, 45, 30]);
+      } catch (e) {}
+    },
+    lose() {
+      if (!on) return;
+      tone(240, 0.14, 0, "sine", 0.05);
+    }
+  };
+})();
+
+/* count-up a number for the casino "rolling odds/points" feel */
+function CountUp({
+  to,
+  dur = 650,
+  prefix = ""
+}) {
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    let raf, t0;
+    const tick = t => {
+      if (!t0) t0 = t;
+      const p = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 3);
+      setN(Math.round(to * e));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [to]);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, prefix, n);
+}
+
+/* ---------- emoji reactions (fixed, age-safe palette — no free text) ---------- */
+const REACTIONS = ["🔥", "😮", "😂", "👏", "🎯"];
+function ReactionBar({
+  poll,
+  onReact
+}) {
+  const r = poll.reactions || {};
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      flexWrap: "wrap",
+      marginTop: 12,
+      paddingTop: 12,
+      borderTop: "1px solid var(--line)"
+    }
+  }, REACTIONS.map(e => /*#__PURE__*/React.createElement("button", {
+    key: e,
+    onClick: () => onReact(poll.id, e),
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 5,
+      background: r[e] ? "var(--brand-soft)" : "var(--ink-3)",
+      border: "1px solid var(--line)",
+      borderRadius: 999,
+      padding: "5px 10px",
+      cursor: "pointer",
+      fontSize: 15,
+      fontFamily: "inherit",
+      color: "var(--text)",
+      transition: ".15s"
+    }
+  }, /*#__PURE__*/React.createElement("span", null, e), r[e] ? /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      fontSize: 12,
+      color: "var(--brand-2)",
+      fontWeight: 800
+    }
+  }, r[e]) : null)));
+}
+
+/* ---------- poll card ---------- */
+function PollCard({
+  poll,
+  meName,
+  onVote,
+  onOpenConsent,
+  onReveal,
+  onResolve,
+  onReport,
+  onReact,
+  L
+}) {
+  const isTarget = poll.tagged && poll.tagged === meName;
+  if (poll.status === "pending") {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "card row-pop",
+      style: {
+        borderStyle: "dashed",
+        borderColor: "var(--line-2)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }
+    }, /*#__PURE__*/React.createElement(SubjectTag, {
+      subject: poll.subject,
+      L: L
+    }), /*#__PURE__*/React.createElement("span", {
+      className: "tag",
+      style: {
+        background: "var(--gold-soft)",
+        color: "var(--gold)"
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "hourglass",
+      size: 11,
+      color: "var(--gold)"
+    }), " ", L.awaiting)), /*#__PURE__*/React.createElement("p", {
+      className: "disp",
+      style: {
+        fontSize: 18,
+        fontWeight: 700,
+        margin: "11px 0 6px",
+        lineHeight: 1.25
+      }
+    }, poll.q), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12.5,
+        color: "var(--muted)",
+        display: "flex",
+        alignItems: "center",
+        gap: 6
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "shield",
+      size: 14,
+      color: "var(--brand-2)"
+    }), " ", isTarget ? L.consentT : L.awaitingApproval(poll.tagged)), isTarget ? /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-pri",
+      style: {
+        marginTop: 13
+      },
+      onClick: () => onOpenConsent(poll)
+    }, L.reviewAs(poll.tagged), " ", /*#__PURE__*/React.createElement(Icon, {
+      name: "chevron",
+      size: 16,
+      cls: "flip-x"
+    })) : null);
+  }
+  const resolved = poll.status === "resolved";
+  const isVoid = poll.status === "void";
+  const locked = poll.status === "locked";
+  const method = resolveMethod(poll);
+  const hot = poll.status === "live" && poll.yes + poll.no >= 20;
+  // auto = the app checks public sources (anyone can trigger). proof/group = ONLY the author who
+  // posted the question may answer / send the photo — nobody else.
+  const canResolve = method === "auto" ? true : poll.by === meName;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "card row-pop" + (hot ? " hotcard" : ""),
+    style: isVoid ? {
+      opacity: .6
+    } : null
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 11
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 7,
+      alignItems: "center",
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement(SubjectTag, {
+    subject: poll.subject,
+    L: L
+  }), poll.type === "person" && /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "var(--brand-soft)",
+      color: "var(--brand-2)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "shield",
+    size: 11,
+    color: "var(--brand-2)"
+  }), " @", poll.tagged), method === "auto" ? /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "rgba(45,212,191,.12)",
+      color: "var(--no)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "search",
+    size: 11,
+    color: "var(--no)"
+  }), " ", L.autoTag) : method === "proof" ? /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "rgba(255,194,60,.12)",
+      color: "var(--gold)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "camera",
+    size: 11,
+    color: "var(--gold)"
+  }), " ", L.proofTag) : null, hot && /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "var(--yes-soft)",
+      color: "var(--yes)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 11,
+    color: "var(--yes)"
+  }), " ", L.hot)), poll.status === "live" ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 6,
+      fontSize: 11,
+      fontWeight: 800,
+      color: "var(--yes)"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "dot"
+  }), " ", L.live) : resolved ? /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "var(--gold-soft)",
+      color: "var(--gold)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trophy",
+    size: 11,
+    color: "var(--gold)"
+  }), " ", L.resolvedTag) : isVoid ? /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "var(--ink-3)",
+      color: "var(--faint)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 11
+  }), " ", L.voidedTag) : /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "var(--ink-3)",
+      color: "var(--muted)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "clock",
+    size: 11
+  }), " ", L.lockedTag)), /*#__PURE__*/React.createElement("p", {
+    className: "disp",
+    style: {
+      fontSize: 19,
+      fontWeight: 700,
+      margin: "0 0 14px",
+      lineHeight: 1.25
+    }
+  }, poll.q), /*#__PURE__*/React.createElement(VoteBar, {
+    poll: poll,
+    onVote: (s, c) => onVote(poll.id, s, c),
+    isTarget: isTarget,
+    L: L
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: 14,
+      paddingTop: 13,
+      borderTop: "1px solid var(--line)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 7
+    }
+  }, /*#__PURE__*/React.createElement(Avatar, {
+    name: poll.by,
+    size: 22
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12.5,
+      color: "var(--muted)",
+      fontWeight: 600
+    }
+  }, L.asked(poll.by)), /*#__PURE__*/React.createElement("button", {
+    onClick: () => onReport(poll),
+    "aria-label": L.report,
+    title: L.report,
+    style: {
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: "var(--faint)",
+      padding: 4,
+      display: "inline-flex",
+      marginInlineStart: 2
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flag",
+    size: 13
+  }))), resolved ? /*#__PURE__*/React.createElement("button", {
+    className: "btn-ghost btn",
+    style: {
+      width: "auto",
+      padding: "8px 13px",
+      fontSize: 13
+    },
+    onClick: () => onReveal(poll)
+  }, L.seeResult, " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "sparkles",
+    size: 14,
+    color: "var(--gold)"
+  })) : locked ? canResolve ? /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    style: {
+      width: "auto",
+      padding: "8px 14px",
+      fontSize: 13
+    },
+    onClick: () => onResolve(poll)
+  }, L.resolveBtn, " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "scale",
+    size: 14,
+    color: "#fff"
+  })) : /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--faint)",
+      display: "inline-flex",
+      gap: 5,
+      alignItems: "center",
+      maxWidth: 190,
+      textAlign: "end"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "lock",
+    size: 12
+  }), " ", L.onlyAuthorResolves(poll.by)) : isVoid ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: "var(--faint)"
+    }
+  }, L.voidedTag) : /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: "var(--faint)",
+      display: "inline-flex",
+      gap: 5,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "clock",
+    size: 12
+  }), " ", poll.ends)), resolved && onReact && /*#__PURE__*/React.createElement(ReactionBar, {
+    poll: poll,
+    onReact: onReact
+  }));
+}
+
+/* ---------- Feed ---------- */
+function Feed({
+  polls,
+  meName,
+  members,
+  filter,
+  setFilter,
+  subjects,
+  season,
+  onVote,
+  onOpenConsent,
+  onReveal,
+  onResolve,
+  onReport,
+  onReact,
+  L
+}) {
+  const list = polls.filter(p => filter === "all" || p.subject === filter);
+  // Prediction of the day = the hottest LIVE poll (most votes) — always something to open
+  const potd = list.filter(p => p.status === "live").sort((a, b) => b.yes + b.no - (a.yes + a.no))[0];
+  const rest = list.filter(p => !potd || p.id !== potd.id);
+  const cardProps = {
+    meName,
+    onVote,
+    onOpenConsent,
+    onReveal,
+    onResolve,
+    onReport,
+    onReact,
+    L
+  };
+  // live activity ticker — makes a quiet group feel alive (all derived, no backend)
+  const ticker = [];
+  (members || []).forEach(m => {
+    if (!m.me && m.streak >= 3) ticker.push({
+      i: "flame",
+      t: `${m.name} · ${m.streak} ${L.streak}`
+    });
+  });
+  polls.filter(p => p.status === "live").slice(0, 5).forEach(p => ticker.push({
+    i: "plus",
+    t: `${p.by}: ${p.q.length > 24 ? p.q.slice(0, 24) + "…" : p.q}`
+  }));
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "4px 16px 16px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      flexWrap: "wrap",
+      padding: "4px 0 10px"
+    }
+  }, ["all", ...subjects].map(c => /*#__PURE__*/React.createElement("button", {
+    key: c,
+    className: "chip" + (filter === c ? " on" : ""),
+    onClick: () => setFilter(c)
+  }, L[c]))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      color: "var(--faint)",
+      fontSize: 11.5,
+      fontWeight: 700,
+      margin: "0 0 10px"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "hourglass",
+    size: 12,
+    color: "var(--gold)"
+  }), " ", L.seasonLeft(season)), ticker.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ticker",
+    style: {
+      margin: "0 0 13px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ticker-track"
+  }, [...ticker, ...ticker].map((it, idx) => /*#__PURE__*/React.createElement("span", {
+    className: "tick-item",
+    key: idx
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: it.i,
+    size: 12,
+    color: it.i === "flame" ? "var(--gold)" : "var(--brand-2)"
+  }), " ", it.t)))), potd && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 13
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      margin: "0 2px 7px",
+      fontSize: 12,
+      fontWeight: 800,
+      color: "var(--gold)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 13,
+    color: "var(--gold)"
+  }), " ", L.potd), /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderRadius: 22,
+      padding: 1.5,
+      background: "linear-gradient(120deg, var(--gold), var(--brand))"
+    }
+  }, /*#__PURE__*/React.createElement(PollCard, _extends({
+    poll: potd
+  }, cardProps)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 13
+    }
+  }, rest.map(p => /*#__PURE__*/React.createElement(PollCard, _extends({
+    key: p.id,
+    poll: p
+  }, cardProps))), list.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      color: "var(--faint)",
+      padding: "48px 0"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "help",
+    size: 30,
+    style: {
+      marginBottom: 8
+    }
+  }), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontWeight: 700,
+      color: "var(--muted)"
+    }
+  }, L.emptyT), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13
+    }
+  }, L.emptyS))));
+}
+
+/* ---------- Create flow: subject -> group -> write ---------- */
+function CreateFlow({
+  onCreate,
+  onCancel,
+  onOpenGroups,
+  myGroups,
+  members,
+  subjects,
+  L
+}) {
+  const [step, setStep] = useState(0);
+  const [subject, setSubject] = useState(null);
+  const [grp, setGrp] = useState(null);
+  const [type, setType] = useState("event");
+  const [personal, setPersonal] = useState(null);
+  const [q, setQ] = useState("");
+  const [tagged, setTagged] = useState(null);
+  const [deadline, setDeadline] = useState(defaultDeadline());
+  const [forceProof, setForceProof] = useState(false);
+
+  // only members of the chosen group can be tagged (matches the on-screen promise)
+  const people = (members || []).filter(m => !m.me && (m.g || []).indexOf(grp) >= 0).map(m => m.name);
+  const detected = detectSubject(q);
+  const mismatch = subject && subject !== "life" && detected && detected !== subject && subjects.indexOf(detected) >= 0;
+  const banned = containsBanned(q);
+  const futureOk = deadline && new Date(deadline) > new Date();
+  const canSubmit = q.trim().length > 4 && futureOk && !mismatch && !banned && (type === "event" || tagged && personal !== null);
+  const method = resolveMethod({
+    type,
+    subject,
+    personal,
+    forceProof
+  });
+  const back = step === 0 ? onCancel : () => setStep(step - 1);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "8px 18px 24px"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: back,
+    style: {
+      background: "none",
+      border: "none",
+      color: "var(--muted)",
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 16,
+      fontFamily: "inherit",
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "arrowleft",
+    size: 17,
+    cls: "flip-x"
+  }), " ", step === 0 ? L.cancel : L.back), step === 0 && /*#__PURE__*/React.createElement("div", {
+    className: "row-pop"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 800,
+      color: "var(--brand-2)",
+      margin: "0 0 4px"
+    }
+  }, L.pickSubjectStep), /*#__PURE__*/React.createElement("h2", {
+    className: "disp",
+    style: {
+      fontSize: 24,
+      fontWeight: 800,
+      margin: "0 0 18px"
+    }
+  }, L.createT), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 10
+    }
+  }, subjects.map(c => /*#__PURE__*/React.createElement("button", {
+    key: c,
+    className: "card",
+    onClick: () => {
+      setSubject(c);
+      setStep(1);
+    },
+    style: {
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      padding: 15,
+      textAlign: "start",
+      borderColor: subject === c ? "var(--brand)" : "var(--line)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 38,
+      height: 38,
+      borderRadius: 11,
+      background: SUBJECTS[c].c + "1f",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: SUBJECTS[c].icon,
+    size: 19,
+    color: SUBJECTS[c].c
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      fontSize: 14.5
+    }
+  }, L[c]))))), step === 1 && /*#__PURE__*/React.createElement("div", {
+    className: "row-pop"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 800,
+      color: "var(--brand-2)",
+      margin: "0 0 12px"
+    }
+  }, L.pickGroupStep), myGroups.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      color: "var(--muted)",
+      padding: "30px 0"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 28,
+    style: {
+      marginBottom: 8
+    }
+  }), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontWeight: 700
+    }
+  }, L.noGroups), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    style: {
+      marginTop: 14
+    },
+    onClick: onOpenGroups
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "plus",
+    size: 16,
+    color: "#fff"
+  }), " ", L.createGroup)) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, myGroups.map(g => /*#__PURE__*/React.createElement("button", {
+    key: g.id,
+    className: "card",
+    onClick: () => {
+      setGrp(g.id);
+      setStep(2);
+    },
+    style: {
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      padding: 14,
+      textAlign: "start"
+    }
+  }, g.photo ? /*#__PURE__*/React.createElement("img", {
+    src: g.photo,
+    alt: g.name,
+    style: {
+      width: 40,
+      height: 40,
+      borderRadius: 12,
+      objectFit: "cover"
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 40,
+      height: 40,
+      borderRadius: 12,
+      background: "var(--brand-soft)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 20,
+    color: "var(--brand-2)"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 800,
+      fontSize: 15
+    }
+  }, g.name), /*#__PURE__*/React.createElement("div", {
+    className: "tnum",
+    style: {
+      fontSize: 12,
+      color: "var(--muted)"
+    }
+  }, L.membersOf(g.count))), /*#__PURE__*/React.createElement(Icon, {
+    name: "chevron",
+    size: 16,
+    color: "var(--faint)",
+    cls: "flip-x"
+  }))))), step === 2 && /*#__PURE__*/React.createElement("div", {
+    className: "row-pop"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 800,
+      color: "var(--brand-2)",
+      margin: "0 0 10px",
+      display: "flex",
+      alignItems: "center",
+      gap: 7
+    }
+  }, L.writeStep, " \xB7 ", /*#__PURE__*/React.createElement(SubjectTag, {
+    subject: subject,
+    L: L
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "chip" + (type === "event" ? " on" : ""),
+    style: {
+      flex: 1,
+      justifyContent: "center",
+      padding: "11px"
+    },
+    onClick: () => {
+      setType("event");
+      setPersonal(null);
+      setTagged(null);
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trophy",
+    size: 14,
+    color: type === "event" ? "#D9CDFF" : "var(--muted)"
+  }), " ", L.eventT), /*#__PURE__*/React.createElement("button", {
+    className: "chip" + (type === "person" ? " on" : ""),
+    style: {
+      flex: 1,
+      justifyContent: "center",
+      padding: "11px"
+    },
+    onClick: () => setType("person")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 14,
+    color: type === "person" ? "#D9CDFF" : "var(--muted)"
+  }), " ", L.personT)), type === "person" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      flexWrap: "wrap"
+    }
+  }, people.map(p => /*#__PURE__*/React.createElement("button", {
+    key: p,
+    className: "chip" + (tagged === p ? " on" : ""),
+    onClick: () => setTagged(p)
+  }, /*#__PURE__*/React.createElement(Avatar, {
+    name: p,
+    size: 18
+  }), " ", p))), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 12,
+      color: "var(--faint)",
+      marginTop: 9,
+      display: "flex",
+      gap: 5,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 12,
+    color: "var(--no)"
+  }), " ", L.onlyMembers), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: "var(--muted)",
+      margin: "14px 0 9px"
+    }
+  }, L.personalOrGeneral), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "card",
+    onClick: () => setPersonal(true),
+    style: {
+      flex: 1,
+      cursor: "pointer",
+      textAlign: "start",
+      borderColor: personal === true ? "var(--brand)" : "var(--line)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 7,
+      alignItems: "center",
+      fontWeight: 700,
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "lock",
+    size: 14,
+    color: "var(--gold)"
+  }), " ", L.personalT), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--muted)",
+      marginTop: 4
+    }
+  }, L.personalD)), /*#__PURE__*/React.createElement("button", {
+    className: "card",
+    onClick: () => setPersonal(false),
+    style: {
+      flex: 1,
+      cursor: "pointer",
+      textAlign: "start",
+      borderColor: personal === false ? "var(--brand)" : "var(--line)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 7,
+      alignItems: "center",
+      fontWeight: 700,
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 14,
+    color: "var(--no)"
+  }), " ", L.generalT), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--muted)",
+      marginTop: 4
+    }
+  }, L.generalD)))), /*#__PURE__*/React.createElement("textarea", {
+    value: q,
+    onChange: e => setQ(e.target.value),
+    placeholder: type === "person" ? L.phPerson(tagged) : L.phEvent,
+    rows: 3,
+    "aria-label": L.writeQ,
+    style: {
+      width: "100%",
+      background: "var(--ink-3)",
+      border: "1px solid var(--line)",
+      borderRadius: 14,
+      padding: 14,
+      color: "var(--text)",
+      fontFamily: "inherit",
+      fontSize: 16,
+      resize: "none",
+      outline: "none"
+    }
+  }), mismatch && /*#__PURE__*/React.createElement("p", {
+    style: {
+      marginTop: 9,
+      fontSize: 12.5,
+      color: "var(--yes)",
+      fontWeight: 700,
+      display: "flex",
+      gap: 6,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 13,
+    color: "var(--yes)"
+  }), " ", L.mismatch(L[detected])), banned && /*#__PURE__*/React.createElement("p", {
+    style: {
+      marginTop: 9,
+      fontSize: 12.5,
+      color: "var(--yes)",
+      fontWeight: 700,
+      display: "flex",
+      gap: 6,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "shield",
+    size: 13,
+    color: "var(--yes)"
+  }), " ", L.blocked), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: "var(--muted)",
+      margin: "20px 0 9px",
+      display: "flex",
+      gap: 6,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "calendar",
+    size: 14
+  }), " ", L.deadlineLabel), /*#__PURE__*/React.createElement("input", {
+    type: "datetime-local",
+    value: deadline,
+    onChange: e => setDeadline(e.target.value),
+    "aria-label": L.deadlineLabel,
+    style: {
+      width: "100%",
+      background: "var(--ink-3)",
+      border: "1px solid var(--line)",
+      borderRadius: 13,
+      padding: "13px 14px",
+      color: "var(--text)",
+      fontFamily: "inherit",
+      fontSize: 15,
+      outline: "none",
+      colorScheme: "dark"
+    }
+  }), deadline && !futureOk && /*#__PURE__*/React.createElement("p", {
+    style: {
+      marginTop: 8,
+      fontSize: 12,
+      color: "var(--yes)",
+      fontWeight: 700
+    }
+  }, L.needFuture), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginTop: 18,
+      display: "flex",
+      gap: 11,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: method === "auto" ? "search" : method === "group" ? "users" : "camera",
+    size: 20,
+    color: method === "auto" ? "var(--no)" : method === "group" ? "var(--brand-2)" : "var(--gold)",
+    style: {
+      marginTop: 1
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      fontSize: 13.5
+    }
+  }, method === "auto" ? L.methodAuto : method === "group" ? L.methodGroup : L.methodProof), method !== "proof" && /*#__PURE__*/React.createElement("label", {
+    style: {
+      display: "flex",
+      gap: 7,
+      alignItems: "center",
+      marginTop: 9,
+      fontSize: 12,
+      color: "var(--muted)",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    checked: forceProof,
+    onChange: e => setForceProof(e.target.checked)
+  }), L.notOnline))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    style: {
+      marginTop: 22
+    },
+    disabled: !canSubmit,
+    onClick: () => onCreate({
+      group: grp,
+      type,
+      q: q.trim(),
+      subject,
+      tagged,
+      personal: !!personal,
+      forceProof,
+      ends: fmtDeadline(deadline)
+    })
+  }, type === "person" ? /*#__PURE__*/React.createElement(React.Fragment, null, L.sendApprove(tagged), " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "shield",
+    size: 17,
+    color: "#fff"
+  })) : /*#__PURE__*/React.createElement(React.Fragment, null, L.postCall, " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "zap",
+    size: 17,
+    color: "#fff"
+  })))));
+}
+
+/* ---------- Board: staged subject -> group -> ranking ---------- */
+function RankRow({
+  m,
+  place,
+  scoreOf,
+  L
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      padding: 13,
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      borderColor: m.me ? "var(--brand)" : "var(--line)",
+      background: m.me ? "var(--brand-soft)" : "var(--ink-2)"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      width: 22,
+      fontWeight: 800,
+      color: place <= 3 ? "var(--gold)" : "var(--faint)"
+    }
+  }, place), /*#__PURE__*/React.createElement(Avatar, {
+    name: m.name,
+    photo: m.photo,
+    size: 34
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      fontSize: 14.5
+    }
+  }, m.name, m.me ? ` (${L.me})` : ""), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--muted)",
+      display: "flex",
+      gap: 10,
+      marginTop: 2
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "target",
+    size: 11
+  }), " ", m.acc, "%"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 11,
+    color: "var(--gold)"
+  }), " ", m.streak, " ", L.streak))), /*#__PURE__*/React.createElement("span", {
+    className: "tnum disp",
+    style: {
+      fontWeight: 800,
+      fontSize: 17,
+      color: m.me ? "var(--brand-2)" : "var(--text)"
+    }
+  }, scoreOf(m)));
+}
+function Board({
+  members,
+  groups,
+  subjects,
+  currentGroup,
+  L
+}) {
+  const [step, setStep] = useState(0);
+  const [sub, setSub] = useState(null);
+  const [grp, setGrp] = useState(null);
+  const myGroups = groups.filter(g => members.some(m => m.me && (m.g || []).indexOf(g.id) >= 0));
+  const season = (groups.find(x => x.id === grp) || {}).seasonLeft || SEASON_DAYS;
+  const scoreOf = m => sub === "total" ? sumScores(m.s) : m.s[sub] || 0;
+  if (step === 0) {
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: "6px 16px 20px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        fontWeight: 800,
+        color: "var(--brand-2)",
+        margin: "2px 0 12px"
+      }
+    }, L.rankPickSubject), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "card",
+      onClick: () => {
+        setSub("total");
+        setStep(1);
+      },
+      style: {
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: 16,
+        gridColumn: "1 / -1"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 38,
+        height: 38,
+        borderRadius: 11,
+        background: "var(--gold-soft)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "trophy",
+      size: 19,
+      color: "var(--gold)"
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 800,
+        fontSize: 15
+      }
+    }, L.totalPts)), subjects.map(c => /*#__PURE__*/React.createElement("button", {
+      key: c,
+      className: "card",
+      onClick: () => {
+        setSub(c);
+        setStep(1);
+      },
+      style: {
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 36,
+        height: 36,
+        borderRadius: 11,
+        background: SUBJECTS[c].c + "1f",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: SUBJECTS[c].icon,
+      size: 18,
+      color: SUBJECTS[c].c
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 700,
+        fontSize: 14
+      }
+    }, L[c])))));
+  }
+  if (step === 1) {
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        padding: "6px 16px 20px"
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      onClick: () => setStep(0),
+      style: {
+        background: "none",
+        border: "none",
+        color: "var(--muted)",
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        fontWeight: 700,
+        cursor: "pointer",
+        marginBottom: 14,
+        fontFamily: "inherit",
+        fontSize: 14
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "arrowleft",
+      size: 17,
+      cls: "flip-x"
+    }), " ", L.back), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        fontWeight: 800,
+        color: "var(--brand-2)",
+        margin: "2px 0 12px"
+      }
+    }, L.rankPickGroup), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 10
+      }
+    }, myGroups.map(g => /*#__PURE__*/React.createElement("button", {
+      key: g.id,
+      className: "card",
+      onClick: () => {
+        setGrp(g.id);
+        setStep(2);
+      },
+      style: {
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        padding: 14,
+        textAlign: "start"
+      }
+    }, g.photo ? /*#__PURE__*/React.createElement("img", {
+      src: g.photo,
+      alt: g.name,
+      style: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        objectFit: "cover"
+      }
+    }) : /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        background: "var(--brand-soft)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "users",
+      size: 20,
+      color: "var(--brand-2)"
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 800,
+        fontSize: 15
+      }
+    }, g.name), /*#__PURE__*/React.createElement("div", {
+      className: "tnum",
+      style: {
+        fontSize: 12,
+        color: "var(--muted)",
+        display: "flex",
+        gap: 9
+      }
+    }, /*#__PURE__*/React.createElement("span", null, L.membersOf(g.count)), /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 3,
+        color: "var(--gold)"
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "hourglass",
+      size: 10,
+      color: "var(--gold)"
+    }), " ", g.seasonLeft))), /*#__PURE__*/React.createElement(Icon, {
+      name: "chevron",
+      size: 16,
+      color: "var(--faint)",
+      cls: "flip-x"
+    })))));
+  }
+  // step 2: the board
+  const groupMembers = members.filter(m => (m.g || []).indexOf(grp) >= 0);
+  const ranked = [...groupMembers].sort((a, b) => scoreOf(b) - scoreOf(a));
+  const podiumColor = ["#FFC23C", "#C7CBD6", "#E0915B"];
+  const g = groups.find(x => x.id === grp);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "6px 16px 20px"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setStep(1),
+    style: {
+      background: "none",
+      border: "none",
+      color: "var(--muted)",
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 10,
+      fontFamily: "inherit",
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "arrowleft",
+    size: 17,
+    cls: "flip-x"
+  }), " ", L.back), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 4
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 7,
+      fontWeight: 800,
+      fontSize: 15
+    }
+  }, sub !== "total" && /*#__PURE__*/React.createElement(Icon, {
+    name: SUBJECTS[sub].icon,
+    size: 16,
+    color: SUBJECTS[sub].c
+  }), sub === "total" ? L.totalPts : L[sub], " \xB7 ", g && g.name)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      margin: "4px 0 16px",
+      padding: "9px 14px",
+      borderRadius: 13,
+      background: "var(--gold-soft)",
+      border: "1px solid rgba(255,194,60,.32)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "hourglass",
+    size: 15,
+    color: "var(--gold)"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 800,
+      fontSize: 13.5,
+      color: "var(--gold)"
+    }
+  }, L.seasonLeft(season))), ranked.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      color: "var(--faint)",
+      padding: "40px 0"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 28,
+    style: {
+      marginBottom: 8
+    }
+  }), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontWeight: 700,
+      color: "var(--muted)"
+    }
+  }, L.emptyBoard), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 13
+    }
+  }, L.emptyBoardSub)) : ranked.length < 3 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 9
+    }
+  }, ranked.map((m, i) => /*#__PURE__*/React.createElement(RankRow, {
+    key: m.name,
+    m: m,
+    place: i + 1,
+    scoreOf: scoreOf,
+    L: L
+  }))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "flex-end",
+      justifyContent: "center",
+      gap: 10,
+      margin: "6px 0 22px"
+    }
+  }, [ranked[1], ranked[0], ranked[2]].map((m, i) => {
+    const place = i === 1 ? 0 : i === 0 ? 1 : 2;
+    const h = place === 0 ? 92 : place === 1 ? 70 : 58;
+    return /*#__PURE__*/React.createElement("div", {
+      key: m.name,
+      style: {
+        flex: 1,
+        textAlign: "center"
+      }
+    }, place === 0 && /*#__PURE__*/React.createElement(Icon, {
+      name: "crown",
+      size: 20,
+      color: "var(--gold)",
+      style: {
+        marginBottom: 4
+      }
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement(Avatar, {
+      name: m.name,
+      photo: m.photo,
+      size: place === 0 ? 46 : 38,
+      ring: true
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "disp",
+      style: {
+        fontWeight: 700,
+        fontSize: 14,
+        marginTop: 6
+      }
+    }, m.name), /*#__PURE__*/React.createElement("div", {
+      className: "tnum",
+      style: {
+        color: podiumColor[place],
+        fontWeight: 800,
+        fontSize: 15
+      }
+    }, scoreOf(m)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        height: h,
+        marginTop: 8,
+        borderRadius: "12px 12px 0 0",
+        background: `linear-gradient(180deg, ${podiumColor[place]}33, ${podiumColor[place]}08)`,
+        border: `1px solid ${podiumColor[place]}44`,
+        borderBottom: "none",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        paddingTop: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "disp tnum",
+      style: {
+        fontSize: 22,
+        fontWeight: 800,
+        color: podiumColor[place]
+      }
+    }, place + 1)));
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 9
+    }
+  }, ranked.slice(3).map((m, i) => /*#__PURE__*/React.createElement(RankRow, {
+    key: m.name,
+    m: m,
+    place: i + 4,
+    scoreOf: scoreOf,
+    L: L
+  })))));
+}
+
+/* ---------- Rules ---------- */
+function RulesScreen({
+  L
+}) {
+  const Section = ({
+    icon,
+    color,
+    title,
+    children
+  }) => /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 9,
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 34,
+      height: 34,
+      borderRadius: 10,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: color + "1f"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: icon,
+    size: 18,
+    color: color
+  })), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      margin: 0,
+      fontSize: 17,
+      fontWeight: 800
+    }
+  }, title)), children);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "6px 16px 20px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 14,
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      background: "linear-gradient(135deg, var(--gold-soft), transparent)",
+      borderColor: "rgba(255,194,60,.3)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "hourglass",
+    size: 20,
+    color: "var(--gold)"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13.5,
+      fontWeight: 700
+    }
+  }, L.seasonRule)), /*#__PURE__*/React.createElement(Section, {
+    icon: "scale",
+    color: "var(--gold)",
+    title: L.rulesScoreT
+  }, (L.rulesScore || []).map(([k, v], i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: 12,
+      padding: "10px 0",
+      borderBottom: i < L.rulesScore.length - 1 ? "1px solid var(--line)" : "none"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13.5,
+      color: "var(--muted)"
+    }
+  }, k), /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      fontWeight: 800,
+      color: v && v !== "★" && v !== "↻" ? "var(--gold)" : "var(--brand-2)",
+      whiteSpace: "nowrap"
+    }
+  }, v || "—")))), /*#__PURE__*/React.createElement(Section, {
+    icon: "check",
+    color: "var(--no)",
+    title: L.rulesAllowedT
+  }, /*#__PURE__*/React.createElement("ul", {
+    style: {
+      margin: 0,
+      paddingInlineStart: 18,
+      color: "var(--muted)",
+      fontSize: 13.5,
+      lineHeight: 1.9
+    }
+  }, (L.rulesAllowed || []).map((t, i) => /*#__PURE__*/React.createElement("li", {
+    key: i
+  }, t)))), /*#__PURE__*/React.createElement(Section, {
+    icon: "x",
+    color: "var(--yes)",
+    title: L.rulesForbiddenT
+  }, /*#__PURE__*/React.createElement("ul", {
+    style: {
+      margin: 0,
+      paddingInlineStart: 18,
+      color: "var(--muted)",
+      fontSize: 13.5,
+      lineHeight: 1.9
+    }
+  }, (L.rulesForbidden || []).map((t, i) => /*#__PURE__*/React.createElement("li", {
+    key: i
+  }, t)))), /*#__PURE__*/React.createElement("p", {
+    style: {
+      textAlign: "center",
+      color: "var(--faint)",
+      fontSize: 11.5,
+      fontWeight: 700,
+      marginTop: 8,
+      display: "flex",
+      gap: 6,
+      justifyContent: "center",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "shield",
+    size: 13,
+    color: "var(--faint)"
+  }), " ", L.pointsOnly));
+}
+
+/* ---------- Profile ---------- */
+function Profile({
+  me,
+  subjects,
+  L,
+  onEdit,
+  onSignOut
+}) {
+  const total = sumScores(me.s);
+  const lvl = levelOf(total);
+  const toNext = lvl * 50 - total;
+  const lvlPct = Math.round((total - levelFloor(lvl)) / 50 * 100);
+  const history = [{
+    q: "העוגה של אמא יצאה מושלמת?",
+    win: true,
+    pts: "+8",
+    minority: true
+  }, {
+    q: "מכבי תנצח את הפועל?",
+    win: null,
+    pts: L.live
+  }, {
+    q: "אמא תאשר את הטיול?",
+    win: null,
+    pts: L.live
+  }, {
+    q: "ירד גשם בטיול?",
+    win: false,
+    pts: "0"
+  }];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "10px 16px 20px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 14,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement(Avatar, {
+    name: me.name,
+    photo: me.photo,
+    size: 58,
+    ring: true
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "disp",
+    style: {
+      fontSize: 22,
+      fontWeight: 800
+    }
+  }, me.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: "var(--muted)"
+    }
+  }, L.profileSub(lvl))), /*#__PURE__*/React.createElement("button", {
+    className: "chip",
+    onClick: onEdit,
+    "aria-label": L.editProfile
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "edit",
+    size: 14
+  }), " ", L.editProfile)), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      color: "var(--muted)",
+      fontWeight: 700
+    }
+  }, L.totalPts), /*#__PURE__*/React.createElement("div", {
+    className: "disp tnum",
+    style: {
+      fontSize: 32,
+      fontWeight: 900,
+      color: "var(--gold)"
+    }
+  }, total)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center"
+    },
+    title: L.levelHelp
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 50,
+      height: 50,
+      borderRadius: 15,
+      background: "var(--brand-soft)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      border: "1px solid rgba(138,107,255,.4)"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "disp tnum",
+    style: {
+      fontWeight: 900,
+      fontSize: 22,
+      color: "var(--brand-2)"
+    }
+  }, lvl)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: "var(--muted)",
+      fontWeight: 700,
+      marginTop: 3
+    }
+  }, L.level))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 7,
+      borderRadius: 99,
+      background: "var(--ink-3)",
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: `${lvlPct}%`,
+      height: "100%",
+      background: "linear-gradient(90deg,var(--brand),var(--brand-2))"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--faint)",
+      marginTop: 6,
+      display: "flex",
+      justifyContent: "space-between"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "target",
+    size: 11,
+    color: "var(--no)"
+  }), " ", me.acc, "%"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 11,
+    color: "var(--yes)"
+  }), " ", me.streak, " ", L.streak)), /*#__PURE__*/React.createElement("span", null, L.toNext(toNext)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      fontWeight: 800,
+      color: "var(--muted)",
+      textTransform: "uppercase",
+      letterSpacing: ".05em",
+      marginBottom: 10
+    }
+  }, L.perSubject), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 10,
+      marginBottom: 22
+    }
+  }, subjects.map(k => /*#__PURE__*/React.createElement("div", {
+    key: k,
+    className: "card",
+    style: {
+      padding: 14,
+      display: "flex",
+      alignItems: "center",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 36,
+      height: 36,
+      borderRadius: 11,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: SUBJECTS[k].c + "1f"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: SUBJECTS[k].icon,
+    size: 18,
+    color: SUBJECTS[k].c
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "disp tnum",
+    style: {
+      fontSize: 20,
+      fontWeight: 800,
+      color: SUBJECTS[k].c
+    }
+  }, me.s[k]), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--muted)",
+      fontWeight: 600
+    }
+  }, L[k]))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      fontWeight: 800,
+      color: "var(--muted)",
+      textTransform: "uppercase",
+      letterSpacing: ".05em",
+      marginBottom: 11
+    }
+  }, L.recent), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 9,
+      marginBottom: 18
+    }
+  }, history.map((h, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "card",
+    style: {
+      padding: 13,
+      display: "flex",
+      alignItems: "center",
+      gap: 11
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 30,
+      height: 30,
+      borderRadius: 9,
+      flexShrink: 0,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: h.win === true ? "var(--no-soft)" : h.win === false ? "var(--yes-soft)" : "var(--ink-3)"
+    }
+  }, h.win === true ? /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 16,
+    color: "var(--no)"
+  }) : h.win === false ? /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 16,
+    color: "var(--yes)"
+  }) : /*#__PURE__*/React.createElement(Icon, {
+    name: "clock",
+    size: 15,
+    color: "var(--faint)"
+  })), /*#__PURE__*/React.createElement("span", {
+    style: {
+      flex: 1,
+      fontSize: 13.5,
+      fontWeight: 600
+    }
+  }, h.q), h.minority && /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 13,
+    color: "var(--gold)"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      fontWeight: 800,
+      fontSize: 13,
+      color: h.win === true ? "var(--no)" : h.win === false ? "var(--faint)" : "var(--brand-2)"
+    }
+  }, h.pts)))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: onSignOut
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "logout",
+    size: 16,
+    color: "var(--muted)",
+    cls: "flip-x"
+  }), " ", L.signOut));
+}
+
+/* ---------- overlays ---------- */
+function ConsentSheet({
+  poll,
+  onApprove,
+  onDecline,
+  onReport,
+  onClose,
+  L
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 54,
+      height: 54,
+      borderRadius: 16,
+      background: "var(--brand-soft)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "shield",
+    size: 28,
+    color: "var(--brand-2)"
+  }))), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: 800,
+      margin: "0 0 6px"
+    }
+  }, L.consentT), /*#__PURE__*/React.createElement("p", {
+    style: {
+      textAlign: "center",
+      color: "var(--muted)",
+      fontSize: 13.5,
+      margin: "0 0 16px"
+    }
+  }, L.consentS(poll.by)), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 18
+    }
+  }, /*#__PURE__*/React.createElement(SubjectTag, {
+    subject: poll.subject,
+    L: L
+  }), /*#__PURE__*/React.createElement("p", {
+    className: "disp",
+    style: {
+      fontSize: 18,
+      fontWeight: 700,
+      margin: "10px 0 0",
+      lineHeight: 1.3
+    }
+  }, poll.q)), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    onClick: () => onApprove(poll),
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 18,
+    color: "#fff"
+  }), " ", L.approve), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: () => onDecline(poll),
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 17,
+    color: "var(--text)"
+  }), " ", L.decline), /*#__PURE__*/React.createElement("button", {
+    onClick: () => onReport(poll),
+    style: {
+      width: "100%",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: "var(--yes)",
+      fontFamily: "inherit",
+      fontWeight: 700,
+      fontSize: 13,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 6,
+      padding: 4
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flag",
+    size: 14,
+    color: "var(--yes)"
+  }), " ", L.reportUnkind)));
+}
+function ResolveSheet({
+  poll,
+  onConfirm,
+  onClose,
+  L
+}) {
+  const [outcome, setOutcome] = useState(null);
+  const [proof, setProof] = useState(null);
+  const fileRef = useRef(null);
+  const method = resolveMethod(poll);
+  const onFile = e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => setProof(r.result);
+    r.readAsDataURL(f);
+  };
+  const ready = outcome && (method !== "proof" || proof);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation(),
+    style: {
+      maxHeight: "86%",
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), method === "auto" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 7,
+      background: "rgba(45,212,191,.12)",
+      color: "var(--no)",
+      padding: "7px 13px",
+      borderRadius: 999,
+      fontSize: 12.5,
+      fontWeight: 800
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "search",
+    size: 14,
+    color: "var(--no)"
+  }), " ", L.verifyingTitle), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--faint)",
+      marginTop: 6
+    }
+  }, L.verifyingNote)), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: 800,
+      margin: "0 0 6px"
+    }
+  }, L.resolveT), /*#__PURE__*/React.createElement("p", {
+    style: {
+      textAlign: "center",
+      color: "var(--muted)",
+      fontSize: 13,
+      margin: "0 0 16px"
+    }
+  }, poll.q), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn",
+    onClick: () => setOutcome("yes"),
+    style: {
+      background: outcome === "yes" ? "var(--yes)" : "var(--ink-3)",
+      border: "1px solid var(--line)",
+      color: outcome === "yes" ? "#fff" : "var(--yes)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 17,
+    color: outcome === "yes" ? "#fff" : "var(--yes)"
+  }), " ", L.yes), /*#__PURE__*/React.createElement("button", {
+    className: "btn",
+    onClick: () => setOutcome("no"),
+    style: {
+      background: outcome === "no" ? "var(--no)" : "var(--ink-3)",
+      border: "1px solid var(--line)",
+      color: outcome === "no" ? "#06302b" : "var(--no)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 17,
+    color: outcome === "no" ? "#06302b" : "var(--no)"
+  }), " ", L.no)), method === "proof" && /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 16,
+      textAlign: "center",
+      borderStyle: "dashed",
+      borderColor: "var(--line-2)"
+    }
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 12.5,
+      color: "var(--muted)",
+      margin: "0 0 11px",
+      display: "flex",
+      gap: 6,
+      justifyContent: "center",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "camera",
+    size: 14,
+    color: "var(--gold)"
+  }), " ", L.proofNeeded), proof ? /*#__PURE__*/React.createElement("img", {
+    src: proof,
+    alt: "proof",
+    style: {
+      maxWidth: "100%",
+      maxHeight: 160,
+      borderRadius: 12,
+      marginBottom: 8
+    }
+  }) : null, /*#__PURE__*/React.createElement("input", {
+    ref: fileRef,
+    type: "file",
+    accept: "image/*",
+    onChange: onFile,
+    style: {
+      display: "none"
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: () => fileRef.current && fileRef.current.click()
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "image",
+    size: 16,
+    color: "var(--brand-2)"
+  }), " ", L.resolveProofBtn)), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    disabled: !ready,
+    onClick: () => onConfirm(poll, outcome, proof)
+  }, L.confirm, " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 17,
+    color: "#fff"
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: () => onConfirm(poll, "void"),
+    style: {
+      width: "100%",
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      color: "var(--faint)",
+      fontFamily: "inherit",
+      fontWeight: 700,
+      fontSize: 13,
+      marginTop: 12,
+      padding: 4
+    }
+  }, L.voidBtn)));
+}
+function ResultSheet({
+  poll,
+  streakBefore,
+  onClose,
+  onShare,
+  onReact,
+  L
+}) {
+  const p0 = poll.result && poll.result !== "void" ? payout(poll, streakBefore) : null;
+  useEffect(() => {
+    if (!p0) return;
+    if (p0.myWin) SOUND.win(p0.streakBonus > 0 ? 3 : p0.bonus > 0 ? 2 : 1);else SOUND.lose();
+  }, []);
+  if (poll.result === "void") {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "sheet",
+      onClick: onClose
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "sheetcard",
+      onClick: e => e.stopPropagation()
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "grab"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 56,
+        height: 56,
+        borderRadius: 17,
+        background: "var(--ink-3)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "x",
+      size: 28,
+      color: "var(--faint)"
+    }))), /*#__PURE__*/React.createElement("h3", {
+      className: "disp",
+      style: {
+        textAlign: "center",
+        fontSize: 21,
+        fontWeight: 800,
+        margin: "0 0 6px"
+      }
+    }, L.voidedTag), /*#__PURE__*/React.createElement("p", {
+      style: {
+        textAlign: "center",
+        color: "var(--muted)",
+        fontSize: 13.5,
+        margin: "0 0 18px"
+      }
+    }, poll.q), /*#__PURE__*/React.createElement("p", {
+      style: {
+        textAlign: "center",
+        color: "var(--faint)",
+        fontSize: 13,
+        margin: "0 0 18px"
+      }
+    }, L.voidedToast), /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-pri",
+      onClick: onClose
+    }, L.nice)));
+  }
+  const p = p0;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation(),
+    style: {
+      maxHeight: "90%",
+      overflowY: "auto",
+      position: "relative"
+    }
+  }, p.myWin && /*#__PURE__*/React.createElement(Confetti, null), /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "spark",
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 56,
+      height: 56,
+      borderRadius: 17,
+      background: "var(--gold-soft)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trophy",
+    size: 28,
+    color: "var(--gold)"
+  }))), p.myWin ? /*#__PURE__*/React.createElement("div", {
+    className: "disp jackpot",
+    style: {
+      textAlign: "center",
+      fontSize: 32,
+      fontWeight: 900,
+      margin: "0 0 2px",
+      lineHeight: 1.05
+    }
+  }, L.winBang) : null, !p.myWin && /*#__PURE__*/React.createElement("div", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: 22,
+      fontWeight: 900,
+      margin: "0 0 2px",
+      color: "var(--faint)"
+    }
+  }, L.lostBang), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: p.myWin ? 16 : 16,
+      fontWeight: 800,
+      margin: "0 0 4px",
+      color: "var(--muted)"
+    }
+  }, L.itWas(p.won)), /*#__PURE__*/React.createElement("p", {
+    style: {
+      textAlign: "center",
+      color: "var(--muted)",
+      fontSize: 13.5,
+      margin: "0 0 12px"
+    }
+  }, poll.q), p.conf > 1 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "tag",
+    style: {
+      background: "var(--gold-soft)",
+      color: "var(--gold)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 11,
+    color: "var(--gold)"
+  }), " ", L.convLine(p.conf))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      flex: 1,
+      textAlign: "center",
+      padding: 13
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--muted)",
+      fontWeight: 700,
+      marginBottom: 4
+    }
+  }, L.yourPick), /*#__PURE__*/React.createElement("div", {
+    className: "disp",
+    style: {
+      fontSize: 18,
+      fontWeight: 800,
+      color: poll.mine === "yes" ? "var(--yes)" : poll.mine === "no" ? "var(--no)" : "var(--faint)"
+    }
+  }, poll.mine ? poll.mine === "yes" ? L.yes : L.no : "—")), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      flex: 1,
+      textAlign: "center",
+      padding: 13
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11.5,
+      color: "var(--muted)",
+      fontWeight: 700,
+      marginBottom: 4
+    }
+  }, L.actualWas), /*#__PURE__*/React.createElement("div", {
+    className: "disp",
+    style: {
+      fontSize: 18,
+      fontWeight: 800,
+      color: p.won === "yes" ? "var(--yes)" : "var(--no)"
+    }
+  }, p.won === "yes" ? L.yes : L.no))), poll.proof && /*#__PURE__*/React.createElement("img", {
+    src: poll.proof,
+    alt: "proof",
+    style: {
+      width: "100%",
+      maxHeight: 180,
+      objectFit: "cover",
+      borderRadius: 14,
+      marginBottom: 16
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10,
+      marginBottom: 18
+    }
+  }, /*#__PURE__*/React.createElement(PayRow, {
+    label: L.correctCall,
+    val: "+" + p.base,
+    on: p.myWin
+  }), /*#__PURE__*/React.createElement(PayRow, {
+    label: L.minorityBonus,
+    val: "+" + p.bonus,
+    on: p.myWin && p.bonus > 0,
+    gold: true
+  }), /*#__PURE__*/React.createElement(PayRow, {
+    label: L.streakBonusL,
+    val: "+" + p.streakBonus,
+    on: p.myWin && p.streakBonus > 0,
+    gold: true
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 1,
+      background: "var(--line)"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 800,
+      fontSize: 15
+    }
+  }, L.earned), /*#__PURE__*/React.createElement("span", {
+    className: "disp tnum" + (p.myWin ? " win-num goldglow" : ""),
+    style: {
+      fontWeight: 900,
+      fontSize: p.myWin ? 34 : 26,
+      color: p.myWin ? "var(--gold)" : p.cost > 0 ? "var(--yes)" : "var(--faint)"
+    }
+  }, p.myWin ? /*#__PURE__*/React.createElement(CountUp, {
+    to: p.earned,
+    prefix: "+"
+  }) : p.cost > 0 ? "−" + p.cost : "0"))), p.myWin && p.streakBonus > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 9,
+      alignItems: "center",
+      padding: 13,
+      borderRadius: 14,
+      background: "var(--yes-soft)",
+      marginBottom: 12,
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 18,
+    color: "var(--yes)"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#FFD0DA"
+    }
+  }, L.streakLine(p.streakAfter))), p.myWin && p.bonus > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 9,
+      alignItems: "center",
+      padding: 13,
+      borderRadius: 14,
+      background: "var(--gold-soft)",
+      marginBottom: 12,
+      fontSize: 13
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 18,
+    color: "var(--gold)"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "#FFE0A6"
+    }
+  }, L.braveLine)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      fontSize: 11.5,
+      color: "var(--faint)",
+      marginBottom: 14,
+      display: "flex",
+      gap: 5,
+      justifyContent: "center",
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: resolveMethod(poll) === "auto" ? "search" : "users",
+    size: 12
+  }), resolveMethod(poll) === "auto" ? L.resolvedByAuto : L.resolvedByGroup), onReact && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement(ReactionBar, {
+    poll: poll,
+    onReact: onReact
+  })), p.myWin && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      marginBottom: 10
+    },
+    onClick: () => onShare(poll, p)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "share",
+    size: 16,
+    color: "var(--brand-2)"
+  }), " ", L.shareBtn), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    onClick: onClose
+  }, L.nice, " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "sparkles",
+    size: 16,
+    color: "#fff"
+  }))));
+}
+function PayRow({
+  label,
+  val,
+  on,
+  gold
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      opacity: on ? 1 : .4
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 14,
+      color: "var(--muted)",
+      display: "flex",
+      alignItems: "center",
+      gap: 7
+    }
+  }, gold ? /*#__PURE__*/React.createElement(Icon, {
+    name: "flame",
+    size: 14,
+    color: "var(--gold)"
+  }) : /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 14,
+    color: "var(--no)"
+  }), label), /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      fontWeight: 800,
+      color: gold ? "var(--gold)" : "var(--no)"
+    }
+  }, val));
+}
+function EditProfileSheet({
+  me,
+  onSave,
+  onClose,
+  L
+}) {
+  const [name, setName] = useState(me.name);
+  const [photo, setPhoto] = useState(me.photo);
+  const fileRef = useRef(null);
+  const onFile = e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => setPhoto(r.result);
+    r.readAsDataURL(f);
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation(),
+    style: {
+      maxHeight: "88%",
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: 800,
+      margin: "0 0 18px"
+    }
+  }, L.editProfile), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement(Avatar, {
+    name: name,
+    photo: photo,
+    size: 84,
+    ring: true
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => fileRef.current && fileRef.current.click(),
+    "aria-label": L.choosePhoto,
+    style: {
+      position: "absolute",
+      bottom: -4,
+      insetInlineEnd: -4,
+      width: 32,
+      height: 32,
+      borderRadius: 10,
+      border: "2px solid var(--ink-2)",
+      background: "var(--brand)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "camera",
+    size: 15,
+    color: "#fff"
+  })))), /*#__PURE__*/React.createElement("input", {
+    ref: fileRef,
+    type: "file",
+    accept: "image/*",
+    onChange: onFile,
+    style: {
+      display: "none"
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      marginBottom: 16
+    },
+    onClick: () => fileRef.current && fileRef.current.click()
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "image",
+    size: 16,
+    color: "var(--brand-2)"
+  }), " ", L.choosePhoto), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: "var(--muted)",
+      margin: "0 0 7px"
+    }
+  }, L.nameL), /*#__PURE__*/React.createElement("input", {
+    value: name,
+    onChange: e => setName(e.target.value),
+    "aria-label": L.nameL,
+    style: {
+      width: "100%",
+      background: "var(--ink-3)",
+      border: "1px solid var(--line)",
+      borderRadius: 13,
+      padding: "13px 14px",
+      color: "var(--text)",
+      fontFamily: "inherit",
+      fontSize: 16,
+      outline: "none",
+      marginBottom: 20
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    disabled: !name.trim(),
+    onClick: () => onSave({
+      name: name.trim(),
+      photo
+    })
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 17,
+    color: "#fff"
+  }), " ", L.save)));
+}
+function LangSheet({
+  lang,
+  onPick,
+  onClose,
+  L
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation(),
+    style: {
+      maxHeight: "80%",
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: 800,
+      margin: "0 0 18px"
+    }
+  }, L.langT), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 10
+    }
+  }, LANGS.map(lg => /*#__PURE__*/React.createElement("button", {
+    key: lg.code,
+    className: "card",
+    onClick: () => onPick(lg.code),
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      cursor: "pointer",
+      padding: 14,
+      textAlign: "start",
+      borderColor: lang === lg.code ? "var(--brand)" : "var(--line)",
+      background: lang === lg.code ? "var(--brand-soft)" : "var(--ink-2)"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 22
+    }
+  }, lg.flag), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      fontSize: 14.5,
+      flex: 1
+    }
+  }, lg.label), lang === lg.code && /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 16,
+    color: "var(--brand-2)"
+  }))))));
+}
+
+/* ---------- Group sheet: switch / create / join / invite ---------- */
+function GroupSheet({
+  groups,
+  current,
+  onPick,
+  onCreate,
+  onJoin,
+  onInvite,
+  onClose,
+  L
+}) {
+  const [mode, setMode] = useState("list");
+  const [name, setName] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [code, setCode] = useState("");
+  const fileRef = useRef(null);
+  const onFile = e => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => setPhoto(r.result);
+    r.readAsDataURL(f);
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation(),
+    style: {
+      maxHeight: "86%",
+      overflowY: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: 20,
+      fontWeight: 800,
+      margin: "0 0 16px"
+    }
+  }, L.group), mode === "list" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10,
+      marginBottom: 14
+    }
+  }, groups.map(g => /*#__PURE__*/React.createElement("div", {
+    key: g.id,
+    className: "card",
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      padding: 12,
+      borderColor: current === g.id ? "var(--brand)" : "var(--line)",
+      background: current === g.id ? "var(--brand-soft)" : "var(--ink-2)"
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => onPick(g.id),
+    style: {
+      flex: 1,
+      display: "flex",
+      alignItems: "center",
+      gap: 12,
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      textAlign: "start",
+      padding: 0
+    }
+  }, g.photo ? /*#__PURE__*/React.createElement("img", {
+    src: g.photo,
+    alt: g.name,
+    style: {
+      width: 40,
+      height: 40,
+      borderRadius: 12,
+      objectFit: "cover"
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 40,
+      height: 40,
+      borderRadius: 12,
+      background: "var(--brand-soft)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 20,
+    color: "var(--brand-2)"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 800,
+      fontSize: 15,
+      color: "var(--text)"
+    }
+  }, g.name), /*#__PURE__*/React.createElement("div", {
+    className: "tnum",
+    style: {
+      fontSize: 12,
+      color: "var(--muted)",
+      display: "flex",
+      gap: 8,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", null, L.membersOf(g.count), " \xB7 ", g.code), /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 3,
+      color: "var(--gold)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "hourglass",
+    size: 10,
+    color: "var(--gold)"
+  }), " ", g.seasonLeft))), current === g.id && /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 18,
+    color: "var(--brand-2)"
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: () => onInvite(g),
+    "aria-label": L.inviteWa,
+    title: L.inviteWa,
+    style: {
+      background: "rgba(37,211,102,.14)",
+      border: "none",
+      borderRadius: 11,
+      width: 38,
+      height: 38,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "share",
+    size: 16,
+    color: "#25D366"
+  }))))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    style: {
+      marginBottom: 10
+    },
+    onClick: () => setMode("create")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "plus",
+    size: 17,
+    color: "#fff"
+  }), " ", L.createGroup), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: () => setMode("join")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 16,
+    color: "var(--text)"
+  }), " ", L.joinGroup)), mode === "create" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setMode("list"),
+    style: {
+      background: "none",
+      border: "none",
+      color: "var(--muted)",
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 14,
+      fontFamily: "inherit",
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "arrowleft",
+    size: 17,
+    cls: "flip-x"
+  }), " ", L.back), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative"
+    }
+  }, photo ? /*#__PURE__*/React.createElement("img", {
+    src: photo,
+    alt: "",
+    style: {
+      width: 76,
+      height: 76,
+      borderRadius: 18,
+      objectFit: "cover"
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 76,
+      height: 76,
+      borderRadius: 18,
+      background: "var(--brand-soft)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 34,
+    color: "var(--brand-2)"
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: () => fileRef.current && fileRef.current.click(),
+    style: {
+      position: "absolute",
+      bottom: -4,
+      insetInlineEnd: -4,
+      width: 30,
+      height: 30,
+      borderRadius: 9,
+      border: "2px solid var(--ink-2)",
+      background: "var(--brand)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "camera",
+    size: 14,
+    color: "#fff"
+  })))), /*#__PURE__*/React.createElement("input", {
+    ref: fileRef,
+    type: "file",
+    accept: "image/*",
+    onChange: onFile,
+    style: {
+      display: "none"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: "var(--muted)",
+      margin: "0 0 7px"
+    }
+  }, L.groupName), /*#__PURE__*/React.createElement("input", {
+    value: name,
+    onChange: e => setName(e.target.value),
+    placeholder: L.groupName,
+    "aria-label": L.groupName,
+    style: {
+      width: "100%",
+      background: "var(--ink-3)",
+      border: "1px solid var(--line)",
+      borderRadius: 13,
+      padding: "13px 14px",
+      color: "var(--text)",
+      fontFamily: "inherit",
+      fontSize: 16,
+      outline: "none",
+      marginBottom: 18
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    disabled: !name.trim(),
+    onClick: () => onCreate(name.trim(), photo)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "plus",
+    size: 17,
+    color: "#fff"
+  }), " ", L.createBtn)), mode === "join" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    onClick: () => setMode("list"),
+    style: {
+      background: "none",
+      border: "none",
+      color: "var(--muted)",
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 14,
+      fontFamily: "inherit",
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "arrowleft",
+    size: 17,
+    cls: "flip-x"
+  }), " ", L.back), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: "var(--muted)",
+      margin: "0 0 7px"
+    }
+  }, L.enterCode), /*#__PURE__*/React.createElement("input", {
+    value: code,
+    onChange: e => setCode(e.target.value.toUpperCase()),
+    placeholder: "K7M2QX",
+    "aria-label": L.enterCode,
+    style: {
+      width: "100%",
+      background: "var(--ink-3)",
+      border: "1px solid var(--line)",
+      borderRadius: 13,
+      padding: "13px 14px",
+      color: "var(--text)",
+      fontFamily: "inherit",
+      fontSize: 18,
+      letterSpacing: "2px",
+      textAlign: "center",
+      outline: "none",
+      marginBottom: 18
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    disabled: code.trim().length < 4,
+    onClick: () => onJoin(code.trim())
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 17,
+    color: "#fff"
+  }), " ", L.joinBtn))));
+}
+function GroupCreatedSheet({
+  group,
+  onInvite,
+  onCopy,
+  onClose,
+  L
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "spark",
+    style: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: 12
+    }
+  }, group.photo ? /*#__PURE__*/React.createElement("img", {
+    src: group.photo,
+    alt: "",
+    style: {
+      width: 64,
+      height: 64,
+      borderRadius: 18,
+      objectFit: "cover"
+    }
+  }) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 64,
+      height: 64,
+      borderRadius: 18,
+      background: "var(--brand-soft)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 30,
+    color: "var(--brand-2)"
+  }))), /*#__PURE__*/React.createElement("h3", {
+    className: "disp",
+    style: {
+      textAlign: "center",
+      fontSize: 21,
+      fontWeight: 800,
+      margin: "0 0 4px"
+    }
+  }, L.shareGroupT), /*#__PURE__*/React.createElement("p", {
+    style: {
+      textAlign: "center",
+      color: "var(--muted)",
+      fontSize: 13.5,
+      margin: "0 0 14px"
+    }
+  }, L.shareGroupS), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      textAlign: "center",
+      marginBottom: 18
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 800,
+      fontSize: 16
+    }
+  }, group.name), /*#__PURE__*/React.createElement("div", {
+    className: "tnum disp",
+    style: {
+      fontSize: 26,
+      fontWeight: 900,
+      letterSpacing: "3px",
+      color: "var(--brand-2)",
+      marginTop: 4
+    }
+  }, group.code)), /*#__PURE__*/React.createElement("button", {
+    className: "btn",
+    style: {
+      background: "#25D366",
+      marginBottom: 10
+    },
+    onClick: () => onInvite(group)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "share",
+    size: 17,
+    color: "#fff"
+  }), " ", L.inviteWa), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      marginBottom: 10
+    },
+    onClick: () => onCopy(group)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "image",
+    size: 16,
+    color: "var(--brand-2)"
+  }), " ", L.copyLink), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    onClick: onClose
+  }, L.doneBtn, " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 16,
+    color: "#fff"
+  }))));
+}
+
+/* ---------- Sign-in gate (Google) ---------- */
+function SignIn({
+  onSignIn,
+  lang,
+  onLang,
+  L
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "hunch-root"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stage"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "device",
+    style: {
+      justifyContent: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "glow"
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "chip",
+    onClick: onLang,
+    "aria-label": L.langT,
+    style: {
+      position: "absolute",
+      top: 18,
+      insetInlineEnd: 18,
+      zIndex: 3
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "globe",
+    size: 14
+  }), " ", LANGS.find(l => l.code === lang).label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 30,
+      position: "relative",
+      zIndex: 2,
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 78,
+      height: 78,
+      borderRadius: 22,
+      background: "linear-gradient(180deg,var(--brand-2),var(--brand))",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 22,
+      boxShadow: "0 16px 40px rgba(138,107,255,.45)"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trophy",
+    size: 38,
+    color: "#fff"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "disp",
+    style: {
+      fontWeight: 900,
+      fontSize: 40,
+      letterSpacing: "-.04em",
+      marginBottom: 10
+    }
+  }, "Eyevos", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "var(--yes)"
+    }
+  }, ".")), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "var(--muted)",
+      fontSize: 15,
+      maxWidth: 280,
+      margin: "0 0 36px",
+      lineHeight: 1.5
+    }
+  }, L.tagline), /*#__PURE__*/React.createElement("button", {
+    onClick: onSignIn,
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 11,
+      width: "100%",
+      maxWidth: 320,
+      background: "#fff",
+      color: "#1f1f1f",
+      border: "none",
+      borderRadius: 14,
+      padding: "15px",
+      fontFamily: "inherit",
+      fontWeight: 800,
+      fontSize: 15.5,
+      cursor: "pointer",
+      boxShadow: "0 8px 22px rgba(0,0,0,.3)"
+    }
+  }, /*#__PURE__*/React.createElement(GoogleG, {
+    size: 20
+  }), " ", L.continueGoogle), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "var(--faint)",
+      fontSize: 12,
+      marginTop: 18,
+      display: "flex",
+      gap: 6,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "shield",
+    size: 13,
+    color: "var(--faint)"
+  }), " ", L.signInPriv)))));
+}
+
+/* ---------- root ---------- */
+const STORE = "hunch_user_v4";
+function genCode(taken) {
+  const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s;
+  do {
+    s = "";
+    for (let i = 0; i < 6; i++) s += A[Math.floor(Math.random() * A.length)];
+  } while (taken && taken.indexOf(s) >= 0);
+  return s;
+}
+function App() {
+  const [lang, setLang] = useState(() => {
+    try {
+      return localStorage.getItem("hunch_lang") || "he";
+    } catch (e) {
+      return "he";
+    }
+  });
+  const embedded = (() => {
+    try {
+      return document.body.classList.contains("embed");
+    } catch (e) {
+      return false;
+    }
+  })();
+  const [signedIn, setSignedIn] = useState(embedded);
+  const [me, setMe] = useState(ME_SEED);
+  const [tab, setTab] = useState("feed");
+  const [group, setGroup] = useState("squad");
+  const [groups, setGroups] = useState(INIT_GROUPS);
+  const [polls, setPolls] = useState(SEED);
+  const [filter, setFilter] = useState("all");
+  const [consent, setConsent] = useState(null);
+  const [reveal, setReveal] = useState(null);
+  const [resolveP, setResolveP] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const [groupOpen, setGroupOpen] = useState(false);
+  const [sharedGroup, setSharedGroup] = useState(null);
+  const [soundOn, setSoundOn] = useState(SOUND.on);
+  const [daily, setDaily] = useState(0);
+  const [toast, setToast] = useState(null);
+  const L = dict(lang);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (raw) {
+        const u = JSON.parse(raw);
+        setMe(m => ({
+          ...m,
+          name: u.name || m.name,
+          photo: u.photo || null
+        }));
+        setSignedIn(true);
+      }
+    } catch (e) {}
+  }, []);
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (LANGS.find(l => l.code === lang) || {}).dir || "ltr";
+    try {
+      localStorage.setItem("hunch_lang", lang);
+    } catch (e) {}
+  }, [lang]);
+  useEffect(() => {
+    if (!toast) return;
+    const id = setTimeout(() => setToast(null), 2200);
+    return () => clearTimeout(id);
+  }, [toast]);
+
+  // daily login bonus — once per day, points only, a small celebration (never below zero, no purchase)
+  useEffect(() => {
+    if (!signedIn || embedded) return;
+    let today, last;
+    try {
+      today = new Date().toISOString().slice(0, 10);
+    } catch (e) {
+      return;
+    }
+    try {
+      last = localStorage.getItem("eyevos_daily");
+    } catch (e) {}
+    if (last !== today) {
+      const t = setTimeout(() => setDaily(5), 600);
+      return () => clearTimeout(t);
+    }
+  }, [signedIn]);
+  const claimDaily = () => {
+    setMe(m => ({
+      ...m,
+      s: {
+        ...m.s,
+        life: (m.s.life || 0) + daily
+      }
+    }));
+    try {
+      localStorage.setItem("eyevos_daily", new Date().toISOString().slice(0, 10));
+    } catch (e) {}
+    SOUND.win(2);
+    setDaily(0);
+    setToast(L.dailyT);
+  };
+  const subjects = SUBJECT_KEYS;
+  const members = [me, ...SEED_MEMBERS];
+  const groupPolls = polls.filter(p => p.group === group);
+  // a pending (consent) person-poll is visible ONLY to its author and the tagged person
+  const visiblePolls = groupPolls.filter(p => p.status !== "pending" || p.by === me.name || p.tagged === me.name);
+  const pendingForMe = groupPolls.filter(p => p.status === "pending" && p.tagged === me.name);
+  const pendingCount = pendingForMe.length;
+  const curGroup = groups.find(g => g.id === group) || groups[0];
+  const signIn = () => {
+    setSignedIn(true);
+    try {
+      localStorage.setItem(STORE, JSON.stringify({
+        name: me.name,
+        photo: me.photo
+      }));
+    } catch (e) {}
+  };
+  const signOut = () => {
+    try {
+      localStorage.removeItem(STORE);
+    } catch (e) {}
+    setSignedIn(false);
+    setTab("feed");
+  };
+  const vote = (id, side, conf) => {
+    const p = polls.find(x => x.id === id);
+    if (!p) return;
+    if (p.tagged && p.tagged === me.name) return setToast(L.cantVoteSelf);
+    if (p.status !== "live") return setToast(L.voteClosed);
+    if (p.mine) return setToast(L.already);
+    setPolls(ps => ps.map(x => x.id === id ? {
+      ...x,
+      mine: side,
+      mineConf: conf || 1,
+      [side]: x[side] + 1
+    } : x));
+    SOUND.tick();
+  };
+  const create = d => {
+    if (d.q.trim().length <= 4) return setToast(L.needLong);
+    const id = Date.now();
+    const ends = d.ends || "בקרוב";
+    if (d.type === "person") {
+      setPolls(ps => [{
+        id,
+        ...d,
+        by: me.name,
+        yes: 0,
+        no: 0,
+        mine: null,
+        ends,
+        status: "pending"
+      }, ...ps]);
+      setToast(L.sent);
+    } else {
+      setPolls(ps => [{
+        id,
+        ...d,
+        by: me.name,
+        yes: 0,
+        no: 0,
+        mine: null,
+        ends,
+        status: "live"
+      }, ...ps]);
+      setToast(L.created);
+    }
+    setGroup(d.group);
+    setTab("feed");
+  };
+
+  // only the tagged person may approve/decline a poll about them
+  const approve = poll => {
+    if (poll.tagged !== me.name) return setToast(L.cantVoteSelf);
+    setPolls(ps => ps.map(p => p.id === poll.id ? {
+      ...p,
+      status: "live"
+    } : p));
+    setConsent(null);
+    setTab("feed");
+    setToast(L.approved);
+  };
+  const decline = poll => {
+    if (poll.tagged !== me.name) return;
+    setPolls(ps => ps.filter(p => p.id !== poll.id));
+    setConsent(null);
+    setToast(L.declined);
+  };
+  const confirmResolve = (poll, outcome, proof) => {
+    if (outcome === "void") {
+      setPolls(ps => ps.map(p => p.id === poll.id ? {
+        ...p,
+        status: "void",
+        result: "void"
+      } : p));
+      setResolveP(null);
+      setToast(L.voidedToast);
+      return;
+    }
+    if (!outcome) return setToast(L.pickOutcome);
+    if (resolveMethod(poll) === "proof" && !proof) return setToast(L.proofMissing);
+    setPolls(ps => ps.map(p => p.id === poll.id ? {
+      ...p,
+      status: "resolved",
+      result: outcome,
+      proof: proof || null
+    } : p));
+    setResolveP(null);
+    setToast(L.resolvedToast);
+    revealAndCredit({
+      ...poll,
+      status: "resolved",
+      result: outcome,
+      proof: proof || null
+    });
+  };
+
+  // open the result AND actually pay the points into your account (once) — the real game loop
+  const revealAndCredit = poll => {
+    const before = poll._sb != null ? poll._sb : me.streak; // streak captured at credit time (stable on re-open)
+    if (poll.result && poll.result !== "void" && poll.mine && !poll.credited) {
+      const p = payout(poll, before);
+      if (p.myWin) {
+        setMe(m => ({
+          ...m,
+          s: {
+            ...m.s,
+            [poll.subject]: (m.s[poll.subject] || 0) + p.earned
+          },
+          streak: p.streakAfter
+        }));
+      } else if (p.cost > 0) {
+        // wrong high-conviction bet costs points — but NEVER below zero (no debt, ever)
+        setMe(m => ({
+          ...m,
+          s: {
+            ...m.s,
+            [poll.subject]: Math.max(0, (m.s[poll.subject] || 0) - p.cost)
+          },
+          streak: 0
+        }));
+      } else {
+        setMe(m => ({
+          ...m,
+          streak: 0
+        }));
+      }
+      setPolls(ps => ps.map(x => x.id === poll.id ? {
+        ...x,
+        credited: true,
+        _sb: before
+      } : x));
+    }
+    setReveal({
+      ...poll,
+      _streakBefore: before
+    });
+  };
+  const react = (id, emoji) => {
+    setPolls(ps => ps.map(p => {
+      if (p.id !== id) return p;
+      const r = {
+        ...(p.reactions || {})
+      };
+      r[emoji] = (r[emoji] || 0) + 1;
+      return {
+        ...p,
+        reactions: r
+      };
+    }));
+  };
+  const report = () => {
+    setConsent(null);
+    setToast(L.reported);
+  };
+  const share = (poll, p) => {
+    const side = p.won === "yes" ? L.yes : L.no;
+    const url = (typeof location !== "undefined" ? location.origin : "") + "/";
+    const text = L.shareText(poll.q, side, p.earned) + " " + url;
+    try {
+      if (navigator.share) {
+        navigator.share({
+          title: "Eyevos",
+          text
+        });
+        return;
+      }
+    } catch (e) {}
+    let ok = false;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+        ok = true;
+      }
+    } catch (e) {}
+    if (!ok) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch (e) {}
+    }
+    setToast(L.shareCopied);
+  };
+  const saveProfile = d => {
+    setMe(m => ({
+      ...m,
+      name: d.name,
+      photo: d.photo
+    }));
+    try {
+      localStorage.setItem(STORE, JSON.stringify({
+        name: d.name,
+        photo: d.photo
+      }));
+    } catch (e) {}
+    setEditing(false);
+    setToast(L.savedProfile);
+  };
+  const createGroup = (name, photo) => {
+    const id = "g" + Date.now();
+    const code = genCode(groups.map(g => g.code));
+    const g = {
+      id,
+      name,
+      code,
+      count: 1,
+      photo: photo || null,
+      seasonLeft: SEASON_DAYS
+    };
+    setGroups(gs => [...gs, g]);
+    setMe(m => ({
+      ...m,
+      g: [...(m.g || []), id]
+    }));
+    setGroup(id);
+    setGroupOpen(false);
+    setSharedGroup(g); // -> share/invite step
+  };
+  const copyInvite = g => {
+    const url = (typeof location !== "undefined" ? location.origin : "") + "/";
+    const text = L.inviteText(g.name, g.code, url);
+    let ok = false;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+        ok = true;
+      }
+    } catch (e) {}
+    if (!ok) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch (e) {}
+    }
+    setToast(L.shareCopied);
+  };
+  const joinGroup = code => {
+    const g = groups.find(x => x.code.toUpperCase() === code.toUpperCase());
+    if (!g) return setToast(L.badCode);
+    setMe(m => ({
+      ...m,
+      g: (m.g || []).indexOf(g.id) >= 0 ? m.g : [...(m.g || []), g.id]
+    }));
+    setGroups(gs => gs.map(x => x.id === g.id ? {
+      ...x,
+      count: x.count + 1
+    } : x));
+    setGroup(g.id);
+    setGroupOpen(false);
+    setToast(L.joinedGroup);
+  };
+  const inviteGroup = g => {
+    const url = (typeof location !== "undefined" ? location.origin : "") + "/";
+    const text = L.inviteText(g.name, g.code, url);
+    const wa = "https://wa.me/?text=" + encodeURIComponent(text);
+    try {
+      window.open(wa, "_blank");
+    } catch (e) {}
+  };
+  if (!signedIn) {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SignIn, {
+      onSignIn: signIn,
+      lang: lang,
+      onLang: () => setLangOpen(true),
+      L: L
+    }), langOpen && /*#__PURE__*/React.createElement(LangSheet, {
+      lang: lang,
+      onPick: c => {
+        setLang(c);
+        setLangOpen(false);
+      },
+      onClose: () => setLangOpen(false),
+      L: L
+    }));
+  }
+  const total = sumScores(me.s);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "hunch-root"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stage"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "device"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "glow"
+  }), tab !== "create" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "16px 16px 8px",
+      position: "relative",
+      zIndex: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 9
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "disp",
+    style: {
+      fontWeight: 800,
+      fontSize: 22,
+      letterSpacing: "-.03em"
+    }
+  }, "Eyevos", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "var(--yes)"
+    }
+  }, ".")), tab === "feed" && /*#__PURE__*/React.createElement("button", {
+    className: "chip",
+    style: {
+      padding: "4px 10px",
+      fontSize: 12
+    },
+    onClick: () => setGroupOpen(true)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "users",
+    size: 12
+  }), " ", curGroup.name, " ", /*#__PURE__*/React.createElement("span", {
+    className: "tnum",
+    style: {
+      opacity: .65
+    }
+  }, L.membersOf(curGroup.count)), " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "chevron",
+    size: 12,
+    cls: "flip-x"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "chip",
+    style: {
+      padding: "6px 8px"
+    },
+    onClick: () => setSoundOn(SOUND.toggle()),
+    "aria-label": "sound"
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: soundOn ? "volume" : "mute",
+    size: 13,
+    color: soundOn ? "var(--brand-2)" : "var(--faint)"
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "chip",
+    style: {
+      padding: "6px 9px",
+      fontSize: 11.5
+    },
+    onClick: () => setLangOpen(true),
+    "aria-label": L.langT
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "globe",
+    size: 13
+  }), " ", (LANGS.find(l => l.code === lang) || {}).flag), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      background: "var(--gold-soft)",
+      padding: "6px 11px",
+      borderRadius: 999,
+      boxShadow: "0 0 16px rgba(255,194,60,.25)"
+    },
+    title: L.totalPts
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trophy",
+    size: 14,
+    color: "var(--gold)"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "tnum goldglow",
+    style: {
+      fontWeight: 800,
+      fontSize: 14,
+      color: "var(--gold)"
+    }
+  }, total)), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      if (pendingForMe[0]) setConsent(pendingForMe[0]);else setToast(L.noNotifs);
+    },
+    style: {
+      position: "relative",
+      background: "var(--ink-3)",
+      border: "1px solid var(--line)",
+      borderRadius: 12,
+      width: 38,
+      height: 38,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      color: "var(--text)"
+    },
+    "aria-label": "notifications"
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "bell",
+    size: 17
+  }), pendingCount > 0 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      top: -4,
+      insetInlineEnd: -4,
+      background: "var(--yes)",
+      color: "#fff",
+      fontSize: 10,
+      fontWeight: 800,
+      borderRadius: 99,
+      minWidth: 17,
+      height: 17,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "0 4px"
+    }
+  }, pendingCount)))), tab === "feed" && /*#__PURE__*/React.createElement("p", {
+    className: "disp",
+    style: {
+      fontSize: 26,
+      fontWeight: 800,
+      margin: "14px 0 0",
+      lineHeight: 1.1
+    }
+  }, L.headline1, /*#__PURE__*/React.createElement("br", null), L.headline2), tab === "board" && /*#__PURE__*/React.createElement("p", {
+    className: "disp",
+    style: {
+      fontSize: 24,
+      fontWeight: 800,
+      margin: "12px 0 2px"
+    }
+  }, L.boardHeadline), tab === "rules" && /*#__PURE__*/React.createElement("p", {
+    className: "disp",
+    style: {
+      fontSize: 24,
+      fontWeight: 800,
+      margin: "12px 0 2px"
+    }
+  }, L.rulesT)), /*#__PURE__*/React.createElement("div", {
+    className: "scroll"
+  }, tab === "feed" && /*#__PURE__*/React.createElement(Feed, {
+    polls: visiblePolls,
+    meName: me.name,
+    members: members.filter(m => (m.g || []).indexOf(group) >= 0),
+    filter: filter,
+    setFilter: setFilter,
+    subjects: subjects,
+    season: curGroup.seasonLeft,
+    onVote: vote,
+    onOpenConsent: setConsent,
+    onReveal: revealAndCredit,
+    onResolve: setResolveP,
+    onReport: report,
+    onReact: react,
+    L: L
+  }), tab === "create" && /*#__PURE__*/React.createElement(CreateFlow, {
+    onCreate: create,
+    onCancel: () => setTab("feed"),
+    onOpenGroups: () => setGroupOpen(true),
+    myGroups: groups.filter(g => (me.g || []).indexOf(g.id) >= 0),
+    members: members,
+    subjects: subjects,
+    L: L
+  }), tab === "board" && /*#__PURE__*/React.createElement(Board, {
+    members: members,
+    groups: groups,
+    subjects: subjects,
+    currentGroup: group,
+    L: L
+  }), tab === "rules" && /*#__PURE__*/React.createElement(RulesScreen, {
+    L: L
+  }), tab === "profile" && /*#__PURE__*/React.createElement(Profile, {
+    me: me,
+    subjects: subjects,
+    L: L,
+    onEdit: () => setEditing(true),
+    onSignOut: signOut
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "navb" + (tab === "feed" ? " on" : ""),
+    onClick: () => setTab("feed")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "home",
+    size: 21
+  }), " ", L.feed), /*#__PURE__*/React.createElement("button", {
+    className: "navb" + (tab === "board" ? " on" : ""),
+    onClick: () => setTab("board")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trophy",
+    size: 21
+  }), " ", L.ranks), /*#__PURE__*/React.createElement("button", {
+    className: "fab",
+    onClick: () => setTab("create"),
+    "aria-label": L.createNav
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "plus",
+    size: 26,
+    color: "#fff"
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "navb" + (tab === "rules" ? " on" : ""),
+    onClick: () => setTab("rules")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "book",
+    size: 21
+  }), " ", L.rules), /*#__PURE__*/React.createElement("button", {
+    className: "navb" + (tab === "profile" ? " on" : ""),
+    onClick: () => setTab("profile")
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "user",
+    size: 21
+  }), " ", L.you)), consent && /*#__PURE__*/React.createElement(ConsentSheet, {
+    poll: consent,
+    onApprove: approve,
+    onDecline: decline,
+    onReport: report,
+    onClose: () => setConsent(null),
+    L: L
+  }), resolveP && /*#__PURE__*/React.createElement(ResolveSheet, {
+    poll: resolveP,
+    onConfirm: confirmResolve,
+    onClose: () => setResolveP(null),
+    L: L
+  }), reveal && /*#__PURE__*/React.createElement(ResultSheet, {
+    poll: reveal,
+    streakBefore: reveal._streakBefore != null ? reveal._streakBefore : me.streak,
+    onClose: () => setReveal(null),
+    onShare: share,
+    onReact: react,
+    L: L
+  }), editing && /*#__PURE__*/React.createElement(EditProfileSheet, {
+    me: me,
+    onSave: saveProfile,
+    onClose: () => setEditing(false),
+    L: L
+  }), langOpen && /*#__PURE__*/React.createElement(LangSheet, {
+    lang: lang,
+    onPick: c => {
+      setLang(c);
+      setLangOpen(false);
+    },
+    onClose: () => setLangOpen(false),
+    L: L
+  }), groupOpen && /*#__PURE__*/React.createElement(GroupSheet, {
+    groups: groups.filter(g => (me.g || []).indexOf(g.id) >= 0),
+    current: group,
+    onPick: id => {
+      setGroup(id);
+      setGroupOpen(false);
+    },
+    onCreate: createGroup,
+    onJoin: joinGroup,
+    onInvite: inviteGroup,
+    onClose: () => setGroupOpen(false),
+    L: L
+  }), sharedGroup && /*#__PURE__*/React.createElement(GroupCreatedSheet, {
+    group: sharedGroup,
+    onInvite: inviteGroup,
+    onCopy: copyInvite,
+    onClose: () => setSharedGroup(null),
+    L: L
+  }), daily > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "sheet",
+    onClick: claimDaily
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheetcard",
+    onClick: e => e.stopPropagation(),
+    style: {
+      position: "relative",
+      textAlign: "center"
+    }
+  }, /*#__PURE__*/React.createElement(Confetti, null), /*#__PURE__*/React.createElement("div", {
+    className: "grab"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 48,
+      margin: "4px 0 2px"
+    }
+  }, "\uD83C\uDF81"), /*#__PURE__*/React.createElement("h3", {
+    className: "disp jackpot",
+    style: {
+      fontSize: 26,
+      fontWeight: 900,
+      margin: "0 0 4px"
+    }
+  }, L.dailyT), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: "var(--muted)",
+      fontSize: 13.5,
+      margin: "0 0 6px"
+    }
+  }, L.dailyS(daily)), /*#__PURE__*/React.createElement("div", {
+    className: "disp tnum win-num goldglow",
+    style: {
+      fontSize: 42,
+      fontWeight: 900,
+      color: "var(--gold)",
+      margin: "2px 0 18px"
+    }
+  }, "+", daily), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-pri",
+    onClick: claimDaily
+  }, L.dailyClaim, " ", /*#__PURE__*/React.createElement(Icon, {
+    name: "sparkles",
+    size: 16,
+    color: "#fff"
+  })))), toast && /*#__PURE__*/React.createElement("div", {
+    className: "toast"
+  }, toast))));
+}
+ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<title>Eyevos · LIVE</title>
+<meta name="theme-color" content="#0C0A14" />
+<meta name="color-scheme" content="dark" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/svg+xml" href="icon.svg" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap');
+:root{--ink:#15121E;--ink-2:#1E1A2C;--ink-3:#272138;--ink-4:#322A47;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);
+  --text:#F4F1FA;--muted:#A79EBE;--faint:#6E6786;--yes:#FF4D6D;--yes-soft:rgba(255,77,109,.14);--no:#2DD4BF;--no-soft:rgba(45,212,191,.14);
+  --gold:#FFC23C;--gold-soft:rgba(255,194,60,.14);--brand:#8A6BFF;--brand-2:#A78BFF;--brand-soft:rgba(138,107,255,.16);}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:'Heebo',system-ui,sans-serif}
+.stage{min-height:100vh;background:radial-gradient(900px 500px at 50% -10%,rgba(138,107,255,.16),transparent 60%),radial-gradient(600px 400px at 90% 110%,rgba(255,77,109,.1),transparent 60%),#0C0A14;display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text)}
+.device{position:relative;width:430px;max-width:100%;height:864px;max-height:calc(100vh - 48px);background:var(--ink);border:1px solid var(--line);border-radius:34px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.55);display:flex;flex-direction:column}
+.scroll{flex:1;overflow-y:auto;padding:4px 16px 16px;scrollbar-width:none;position:relative;z-index:1}
+.scroll::-webkit-scrollbar{display:none}
+.disp{font-weight:800;letter-spacing:-.02em}
+.tnum{font-variant-numeric:tabular-nums}
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;cursor:pointer;border-radius:13px;padding:14px;font-family:inherit;font-weight:800;font-size:15px;color:#fff;transition:.15s}
+.btn:active{transform:scale(.97)}
+.btn-pri{background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 10px 24px rgba(138,107,255,.45),0 0 18px rgba(167,139,255,.25)}
+.btn-pri:disabled{opacity:.45;cursor:not-allowed}
+.btn-ghost{background:var(--ink-3);border:1px solid var(--line-2);color:var(--text)}
+.btn-gold{background:linear-gradient(180deg,#FFD466,#F5A623);color:#3a2400;box-shadow:0 10px 24px rgba(255,194,60,.4)}
+.in{width:100%;background:var(--ink-3);border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--text);font-family:inherit;font-size:16px;outline:none}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--ink-3);color:var(--muted);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.chip.on{background:var(--brand-soft);border-color:rgba(138,107,255,.5);color:#D9CDFF}
+.bar{position:relative;height:46px;border-radius:13px;overflow:hidden;display:flex;background:var(--ink-3);border:1px solid var(--line)}
+.bar .side{height:100%;transition:width .55s cubic-bezier(.22,1,.36,1)}
+.bar .lab{position:absolute;top:0;height:100%;display:flex;align-items:center;gap:6px;padding:0 13px;font-weight:800;font-size:14px;background:none;border:none;font-family:inherit;cursor:pointer;color:inherit}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;border-radius:999px;padding:4px 9px}
+.spin{width:34px;height:34px;border:3px solid var(--line-2);border-top-color:var(--brand-2);border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.nav{display:flex;align-items:center;justify-content:space-around;padding:10px 8px 14px;background:rgba(21,18,30,.92);border-top:1px solid var(--line)}
+.navb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--faint);font-family:inherit;font-size:10.5px;font-weight:700;padding:4px 12px}
+.navb.on{color:var(--brand-2)}
+.fab{margin-top:-26px;width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 10px 24px rgba(138,107,255,.5),0 0 22px rgba(255,77,109,.3);border:none;cursor:pointer;color:#fff;font-size:26px}
+.topbar{padding:15px 16px 8px;position:relative;z-index:2}
+.err{background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.3);color:#FFB3C0;border-radius:12px;padding:11px 13px;font-size:13px;font-weight:600;margin-bottom:12px}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--gold-soft);padding:6px 11px;border-radius:999px;color:var(--gold);font-weight:800;font-size:14px;box-shadow:0 0 16px rgba(255,194,60,.25)}
+.goldglow{text-shadow:0 0 14px rgba(255,194,60,.6)}
+.livebadge{display:inline-flex;align-items:center;gap:6px;background:rgba(45,212,191,.12);color:var(--no);border:1px solid rgba(45,212,191,.3);border-radius:999px;padding:3px 9px;font-size:10.5px;font-weight:800}
+.livedot{width:7px;height:7px;border-radius:50%;background:var(--no);box-shadow:0 0 8px var(--no);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.hotcard{box-shadow:0 0 0 1px rgba(255,77,109,.3),0 8px 30px rgba(255,77,109,.16)}
+.sheet{position:absolute;inset:0;z-index:30;display:flex;align-items:flex-end;background:rgba(8,6,14,.6);backdrop-filter:blur(3px)}
+.sheetcard{width:100%;background:var(--ink-2);border-top:1px solid var(--line-2);border-radius:26px 26px 0 0;padding:22px 18px;animation:rise .3s cubic-bezier(.22,1,.36,1);max-height:88%;overflow-y:auto}
+@keyframes rise{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.grab{width:40px;height:4px;border-radius:9px;background:var(--line-2);margin:0 auto 18px}
+.jackpot{background:linear-gradient(90deg,#FFC23C,#FF4D6D,#FFC23C);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.2s linear infinite}
+@keyframes shine{to{background-position:200% 0}}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40;border-radius:34px}
+.confetti i{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;animation:cf 1.3s cubic-bezier(.4,.6,.6,1) forwards}
+@keyframes cf{0%{transform:translateY(-14px) rotate(0);opacity:1}100%{transform:translateY(720px) rotate(620deg);opacity:0}}
+.neon{text-shadow:0 0 18px rgba(167,139,255,.65),0 0 40px rgba(138,107,255,.4);animation:neonpulse 2.8s ease-in-out infinite}
+@keyframes neonpulse{0%,100%{text-shadow:0 0 16px rgba(167,139,255,.55),0 0 38px rgba(138,107,255,.32)}50%{text-shadow:0 0 28px rgba(167,139,255,.95),0 0 64px rgba(138,107,255,.55)}}
+.logob{width:78px;height:78px;border-radius:22px;background:linear-gradient(150deg,var(--brand-2),var(--brand) 55%,var(--yes));display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 18px 46px rgba(138,107,255,.5),0 0 30px rgba(255,77,109,.25);animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.ticker{overflow:hidden;white-space:nowrap;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.ticker .run{display:inline-flex;gap:10px;animation:tick 26s linear infinite}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tk{display:inline-flex;align-items:center;gap:7px;background:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.stat{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:11px 8px;text-align:center}
+.why{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
+.whyi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.coins{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.coin{position:absolute;font-size:27px;animation:drift linear infinite}
+@keyframes drift{0%{transform:translateY(0) rotate(0);opacity:0}12%{opacity:.15}88%{opacity:.15}100%{transform:translateY(-560px) rotate(48deg);opacity:0}}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;background:#fff;color:#1f1f1f;border:none;border-radius:13px;padding:14px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.gbtn:active{transform:scale(.97)}
+@media (max-width:480px){.stage{padding:0}.device{width:100%;height:100vh;height:100dvh;max-height:100dvh;border-radius:0;border:none}.confetti{border-radius:0}}
+@media (prefers-reduced-motion:reduce){.spin,.jackpot,.confetti,.neon,.logob,.ticker .run,.livedot,.coin{animation:none!important}.coin{opacity:.12}}
+/* ===== premium polish layer (real-betting-site feel; visual only) ===== */
+.device{box-shadow:0 50px 130px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.05)}
+.device::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:
+  radial-gradient(700px 360px at 50% -8%,rgba(138,107,255,.14),transparent 60%),
+  radial-gradient(520px 360px at 100% 102%,rgba(255,77,109,.10),transparent 60%)}
+.topbar{background:linear-gradient(180deg,rgba(30,26,44,.72),rgba(21,18,30,.55));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.card{background:linear-gradient(180deg,rgba(38,33,56,.55),rgba(30,26,44,.75));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border:1px solid var(--line-2);box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.hotcard{box-shadow:0 0 0 1px rgba(255,77,109,.34),0 14px 40px rgba(255,77,109,.18)!important}
+.bar{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03)}
+.bar .side{box-shadow:0 0 22px rgba(255,255,255,.06)}
+.nav{background:linear-gradient(0deg,rgba(15,12,22,.96),rgba(21,18,30,.86));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.btn-pri{background:linear-gradient(180deg,#b49bff,var(--brand));box-shadow:0 12px 30px rgba(138,107,255,.5),0 0 22px rgba(167,139,255,.28),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-gold{box-shadow:0 12px 30px rgba(255,194,60,.45),inset 0 1px 0 rgba(255,255,255,.4)}
+.gbtn{box-shadow:0 12px 30px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.6)}
+.pill{background:linear-gradient(180deg,rgba(255,194,60,.22),rgba(255,194,60,.08));box-shadow:0 0 20px rgba(255,194,60,.3),inset 0 1px 0 rgba(255,255,255,.15)}
+.chip{transition:.15s} .chip:hover{border-color:var(--line-2)}
+.fab{box-shadow:0 14px 30px rgba(138,107,255,.55),0 0 26px rgba(255,77,109,.32),inset 0 1px 0 rgba(255,255,255,.3)}
+.fab:hover{filter:brightness(1.08)}
+@media(hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.05)}.btn:hover{filter:brightness(1.06)}.navb:hover{color:var(--muted)}}
+input:focus,textarea:focus{border-color:rgba(138,107,255,.6);box-shadow:0 0 0 3px rgba(138,107,255,.18)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@babel/standalone@7.25.9/babel.min.js"></script>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+const SB = window.supabase.createClient("https://nsnbdgudqtygxaalhjsn.supabase.co", "sb_publishable_C6Z1uW15YbRH2kKQzSxTOA_Zb4w4nNc",
+  { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+const REDIRECT = location.origin + location.pathname;
+
+// ?fresh=1 — start as a brand-new user: wipe saved session + language, then load a clean URL.
+const _FRESH = (function(){ try{ return new URLSearchParams(location.search).get("fresh")==="1"; }catch(e){ return false; } })();
+if(_FRESH){
+  try{ Object.keys(localStorage).forEach(function(k){ if(/eyevos|^sb-|supabase/i.test(k)) localStorage.removeItem(k); }); }catch(e){}
+  SB.auth.signOut().catch(function(){}).finally(function(){ location.replace(location.pathname); });
+}
+
+/* ===================== i18n ===================== */
+const LANGS=[{c:"he",n:"עברית",d:"rtl"},{c:"en",n:"English",d:"ltr"},{c:"ar",n:"العربية",d:"rtl"},{c:"es",n:"Español",d:"ltr"},{c:"fr",n:"Français",d:"ltr"},{c:"pt",n:"Português",d:"ltr"},{c:"ru",n:"Русский",d:"ltr"},{c:"de",n:"Deutsch",d:"ltr"},{c:"hi",n:"हिन्दी",d:"ltr"},{c:"zh",n:"中文",d:"ltr"}];
+const STR={
+he:{live:"LIVE",liveBadge:"חי · בזמן אמת",heroT1:"תנחש. תצדק.",heroT2:"תשלוט בקבוצה.",heroSub:"נחש לפני כולם, תפוס את הצד החזק, ותטפס לראש. כל יום ניחוש חדש — והניצחון נשאר רשום.",stFree:"0 ₪",stFreeL:"תמיד",stAges:"10–90",stAgesL:"כל גיל",stBets:"∞",stBetsL:"ניחושים",signinCard:"היכנס ותתחיל לנחש 🎯",continueGoogle:"המשך עם Google",orEmail:"או עם מייל",emailPh:"המייל שלך",sendLink:"📧 שלח לי קישור כניסה",sending:"שולח…",staysLogged:"🔒 מתחברים פעם אחת — ונשארים מחוברים תמיד",linkSentT:"הקישור בדרך אליך!",linkSentB:"פתח את המייל ל‑{email} ולחץ על הקישור — ותיכנס ישר פנימה.",resend:"שליחה שוב / מייל אחר",whyTitle:"למה אי אפשר להפסיק",why1t:"הרגע שלפני התוצאה",why1b:"אתה נועל ניחוש — ועוצר נשימה עד שזה נסגר",why2t:"צודק כשכולם טעו",why2b:"ניחוש נכון במיעוט שווה יותר נקודות",why3t:"לטפס בראש הקבוצה",why3b:"רצף ניצחונות בונה אגדה — וכולם זוכרים",footerNote:"נקודות בלבד · אף פעם לא כסף אמיתי · לכל הגילאים",googleOff:"Google עדיין לא הופעל. היכנס עם מייל למעלה — זה עובד מיד 👆",navFeed:"פיד",navBoard:"דירוג",navRules:"חוקים",navProfile:"אני",tbBet:"תנחש. תנצח.",tbFor:"על",boardH:"מי שולט בקבוצה? 👑",rulesH:"חוקים",profileH:"הפרופיל שלי",newBet:"🎯 ניחוש חדש",allCat:"🎲 הכל",emptyFeed:"🎲 עוד אין ניחושים כאן. תהיה הראשון!",locking:"נועל את הניחוש…",betsN:"{n} ניחשו",locked:"ננעל",pickSide:"בחר צד — ונעל",closesIn:"נסגר בעוד",closedW:"נסגר",minPays:"מיעוט משלם יותר",minOpens:"בונוס מיעוט מ‑6 מנחשים",hotNow:"🔥 הכי חם עכשיו",autoTag:"אוטומטי",resolveBtn:"⚖️ הכרע עכשיו",wonB:"✅ צדקת! הנקודות נכנסו לך",lostB:"❌ לא הפעם — מחכה לך ניחוש הבא",yes:"כן",no:"לא",back:"‹ חזרה",newBetT:"ניחוש חדש 🎯",qPh:"הקבוצה שלנו תנצח בשבת?",subjectL:"נושא",whenClose:"מתי נסגר?",d1h:"שעה",d6h:"6 שעות",d1d:"יום",d3d:"3 ימים",d1w:"שבוע",placeBet:"🎯 שלח את הניחוש",totalCat:"🏆 סך הכל",emptyRanks:"🏆 עוד אין נקודות. שלח ניחוש ותתחיל לטפס 🚀",levelL:"רמה",totalPts:"סך הנקודות",toNext:"עוד {n} נקודות לרמה {l}",ptsBySub:"ניקוד לפי נושא",editBtn:"✏️ ערוך",signOut:"התנתק",editProfile:"עריכת פרופיל",nameL:"שם",pickAvatar:"בחר אווטאר",orUrl:"או הדבק קישור לתמונה (לא חובה)",urlHint:"הקישור צריך להתחיל ב‑http:// או https:// — אחרת נשתמש באווטאר שבחרת",saveBtn:"💾 שמור שינויים",savingW:"שומר…",nameMin:"שם חייב להיות לפחות 2 תווים",saveBlocked:"השמירה נחסמה ע\"י ה‑DB — צריך להריץ פקודת הרשאה קצרה.",howEarn:"🎯 איך צוברים",rCorrect:"ניחוש נכון",rMin:"נכון ובמיעוט",r3:"3 ברצף",r5:"5 ברצף",rWrong:"טעות",seasonReset:"לכל קבוצה עונה של 30 יום, ואז איפוס",allowedT:"✓ מותר",al1:"ניחושים על אירועים שאפשר לאמת",al2:"ניחוש על אדם — רק באישורו",al3:"עד 40 בקבוצה, אתם בוחרים מתי נסגר",forbidT:"✕ אסור",fo1:"תוכן משפיל / קללות",fo2:"הצבעה על ניחוש שהוא עליך",fo3:"כסף אמיתי — אין כזה, אף פעם",groupsT:"קבוצות",createGroup:"+ צור קבוצה",joinWithCode:"הצטרף עם קוד",groupNamePh:"שם הקבוצה",createBtn:"צור קבוצה",joinBtn:"הצטרף",groupCreated:"הקבוצה נוצרה!",inviteWa:"הזמן בוואטסאפ",enterGroup:"כניסה לקבוצה",noGroupT:"אין לך עדיין קבוצה",noGroupB:"צור קבוצה או הצטרף עם קוד כדי להתחיל לנחש.",createOrJoin:"+ צור / הצטרף לקבוצה",inviteText:"בוא לקבוצה \"{name}\" ב‑Eyevos! קוד: {code}. {url}",shareBtn:"📤 שתף",shareWin:"ניצחתי בניחוש \"{q}\" ב‑Eyevos 🏆 בוא תנסה לנצח אותי: {url}",shareBet:"ניחוש חדש ב‑Eyevos: \"{q}\" — כן או לא? {url}",connecting:"מתחבר…",loadingBets:"טוען ניחושים…",loadingRanks:"טוען דירוג…",resolveT:"מה קרה בפועל?",resYes:"✅ קרה — כן",resNo:"❌ לא קרה — לא",resHint:"זה מחלק נקודות לכל מי שניחש.",chooseSubject:"קודם בחר נושא",chooseSubjectSub:"בחר נושא — ואז תראה את כל הקבוצות שלך",yourGroupsIn:"הקבוצות שלך",codeLabel:"קוד",subjectLocked:"נושא הקבוצה"},
+en:{live:"LIVE",liveBadge:"Live · real-time",heroT1:"Predict. Be right.",heroT2:"Rule your group.",heroSub:"Guess before everyone, grab the strong side, climb to the top. A new prediction every day — and the win stays on record.",stFree:"0 ₪",stFreeL:"always",stAges:"10–90",stAgesL:"every age",stBets:"∞",stBetsL:"picks",signinCard:"Sign in and start predicting 🎯",continueGoogle:"Continue with Google",orEmail:"or with email",emailPh:"Your email",sendLink:"📧 Send me a login link",sending:"Sending…",staysLogged:"🔒 Sign in once — stay logged in forever",linkSentT:"Your link is on the way!",linkSentB:"Open the email to {email} and tap the link — you're in.",resend:"Resend / different email",whyTitle:"Why you can't stop",why1t:"The moment before the result",why1b:"You lock a guess — and hold your breath until it closes",why2t:"Right when everyone's wrong",why2b:"A correct guess in the minority is worth more points",why3t:"Climb to the top of the group",why3b:"A winning streak builds a legend — everyone remembers",footerNote:"Points only · never real money · all ages",googleOff:"Google isn't enabled yet. Use email above — it works instantly 👆",navFeed:"Feed",navBoard:"Ranks",navRules:"Rules",navProfile:"Me",tbBet:"Predict. Win.",tbFor:"for",boardH:"Who rules the group? 👑",rulesH:"Rules",profileH:"My profile",newBet:"🎯 New prediction",allCat:"🎲 All",emptyFeed:"🎲 No predictions here yet. Be the first!",locking:"Locking your pick…",betsN:"{n} picks",locked:"Locked",pickSide:"Predict — pick a side",closesIn:"Closes in",closedW:"Closed",minPays:"Minority pays more",minOpens:"Minority bonus opens at 6 players",hotNow:"🔥 Hottest now",autoTag:"auto",resolveBtn:"⚖️ Resolve now",wonB:"✅ Right! The points are yours",lostB:"❌ Not this time — your next prediction is waiting",yes:"Yes",no:"No",back:"‹ Back",newBetT:"New prediction 🎯",qPh:"Will our team win on Saturday?",subjectL:"Subject",whenClose:"When does it close?",d1h:"1 hour",d6h:"6 hours",d1d:"1 day",d3d:"3 days",d1w:"1 week",placeBet:"🎯 Make your pick",totalCat:"🏆 Total",emptyRanks:"🏆 No points yet. Make a pick and start climbing 🚀",levelL:"Level",totalPts:"Total points",toNext:"{n} points to level {l}",ptsBySub:"Points by subject",editBtn:"✏️ Edit",signOut:"Sign out",editProfile:"Edit profile",nameL:"Name",pickAvatar:"Pick an avatar",orUrl:"Or paste an image link (optional)",urlHint:"Link must start with http:// or https:// — otherwise we'll use the avatar you picked",saveBtn:"💾 Save changes",savingW:"Saving…",nameMin:"Name must be at least 2 characters",saveBlocked:"Save was blocked by the database — a short permission command needs to run.",howEarn:"🎯 How you earn",rCorrect:"Correct guess",rMin:"Correct & in the minority",r3:"3 in a row",r5:"5 in a row",rWrong:"Wrong",seasonReset:"Each group has a 30-day season, then it resets",allowedT:"✓ Allowed",al1:"Predictions on events that can be verified",al2:"A prediction about a person — only with their consent",al3:"Up to 40 per group, you choose when it closes",forbidT:"✕ Not allowed",fo1:"Demeaning content / cursing",fo2:"Voting on a prediction that's about you",fo3:"Real money — there is none, ever",groupsT:"Groups",createGroup:"+ Create group",joinWithCode:"Join with a code",groupNamePh:"Group name",createBtn:"Create",joinBtn:"Join",groupCreated:"Group created!",inviteWa:"Invite on WhatsApp",enterGroup:"Enter group",noGroupT:"You don't have a group yet",noGroupB:"Create a group or join with a code to start predicting.",createOrJoin:"+ Create / join a group",inviteText:"Come to the group \"{name}\" on Eyevos! Code: {code}. {url}",shareBtn:"📤 Share",shareWin:"I won the prediction \"{q}\" on Eyevos 🏆 come try to beat me: {url}",shareBet:"New prediction on Eyevos: \"{q}\" — yes or no? {url}",connecting:"Connecting…",loadingBets:"Loading predictions…",loadingRanks:"Loading ranks…",resolveT:"What actually happened?",resYes:"✅ Happened — Yes",resNo:"❌ Didn't happen — No",resHint:"This pays out points to everyone in the prediction.",chooseSubject:"First pick a subject",chooseSubjectSub:"Pick a subject — then you'll see all your groups",yourGroupsIn:"Your groups",codeLabel:"Code",subjectLocked:"Group subject"},
+es:{live:"EN VIVO",liveBadge:"En vivo · tiempo real",heroT1:"Predice. Acierta.",heroT2:"Domina tu grupo.",heroSub:"Adivina antes que todos, agarra el lado fuerte y sube hasta lo más alto. Una predicción nueva cada día — y la victoria queda registrada.",stFree:"0 ₪",stFreeL:"siempre",stAges:"10–90",stAgesL:"toda edad",stBets:"∞",stBetsL:"predicciones",signinCard:"Entra y empieza a predecir 🎯",continueGoogle:"Continuar con Google",orEmail:"o con correo",emailPh:"Tu correo",sendLink:"📧 Envíame un enlace de acceso",sending:"Enviando…",staysLogged:"🔒 Inicia sesión una vez — y quédate dentro para siempre",linkSentT:"¡Tu enlace va en camino!",linkSentB:"Abre el correo en {email} y toca el enlace — ya estás dentro.",resend:"Reenviar / otro correo",whyTitle:"Por qué no podrás parar",why1t:"El instante antes del resultado",why1b:"Bloqueas tu pronóstico — y aguantas la respiración hasta que cierra",why2t:"Acertar cuando todos fallan",why2b:"Un acierto en minoría vale más puntos",why3t:"Sube a la cima del grupo",why3b:"Una racha ganadora crea una leyenda — todos la recuerdan",footerNote:"Solo puntos · nunca dinero real · todas las edades",googleOff:"Google aún no está activo. Usa el correo de arriba — funciona al instante 👆",navFeed:"Feed",navBoard:"Ranking",navRules:"Reglas",navProfile:"Yo",tbBet:"Predice. Gana.",tbFor:"por",boardH:"¿Quién domina el grupo? 👑",rulesH:"Reglas",profileH:"Mi perfil",newBet:"🎯 Nueva predicción",allCat:"🎲 Todo",emptyFeed:"🎲 Aún no hay predicciones aquí. ¡Sé el primero!",locking:"Bloqueando tu predicción…",betsN:"{n} predicciones",locked:"Bloqueada",pickSide:"Predice — elige un lado",closesIn:"Cierra en",closedW:"Cerrada",minPays:"La minoría paga más",minOpens:"El bonus de minoría se abre con 6 jugadores",hotNow:"🔥 Lo más caliente ahora",autoTag:"auto",resolveBtn:"⚖️ Resolver ahora",wonB:"✅ ¡Acertaste! Los puntos son tuyos",lostB:"❌ Esta vez no — tu próxima predicción te espera",yes:"Sí",no:"No",back:"‹ Atrás",newBetT:"Nueva predicción 🎯",qPh:"¿Ganará nuestro equipo el sábado?",subjectL:"Tema",whenClose:"¿Cuándo cierra?",d1h:"1 hora",d6h:"6 horas",d1d:"1 día",d3d:"3 días",d1w:"1 semana",placeBet:"🎯 Hacer la predicción",totalCat:"🏆 Total",emptyRanks:"🏆 Aún no hay puntos. Haz una predicción y empieza a subir 🚀",levelL:"Nivel",totalPts:"Puntos totales",toNext:"{n} puntos para el nivel {l}",ptsBySub:"Puntos por tema",editBtn:"✏️ Editar",signOut:"Cerrar sesión",editProfile:"Editar perfil",nameL:"Nombre",pickAvatar:"Elige un avatar",orUrl:"O pega un enlace de imagen (opcional)",urlHint:"El enlace debe empezar con http:// o https:// — si no, usaremos el avatar que elegiste",saveBtn:"💾 Guardar cambios",savingW:"Guardando…",nameMin:"El nombre debe tener al menos 2 caracteres",saveBlocked:"La base de datos bloqueó el guardado — hay que ejecutar un comando de permisos corto.",howEarn:"🎯 Cómo ganas puntos",rCorrect:"Pronóstico acertado",rMin:"Acierto en minoría",r3:"3 seguidas",r5:"5 seguidas",rWrong:"Fallo",seasonReset:"Cada grupo tiene una temporada de 30 días, luego se reinicia",allowedT:"✓ Permitido",al1:"Predicciones sobre eventos verificables",al2:"Una predicción sobre una persona — solo con su consentimiento",al3:"Hasta 40 por grupo, tú eliges cuándo cierra",forbidT:"✕ Prohibido",fo1:"Contenido humillante / insultos",fo2:"Votar en una predicción que es sobre ti",fo3:"Dinero real — no existe, nunca",groupsT:"Grupos",createGroup:"+ Crear grupo",joinWithCode:"Unirse con código",groupNamePh:"Nombre del grupo",createBtn:"Crear",joinBtn:"Unirse",groupCreated:"¡Grupo creado!",inviteWa:"Invitar por WhatsApp",enterGroup:"Entrar al grupo",noGroupT:"Todavía no tienes un grupo",noGroupB:"Crea un grupo o únete con un código para empezar a predecir.",createOrJoin:"+ Crear / unirse a un grupo",inviteText:"¡Únete al grupo \"{name}\" en Eyevos! Código: {code}. {url}",shareBtn:"📤 Compartir",shareWin:"Gané la predicción \"{q}\" en Eyevos 🏆 ven a ver si me ganas: {url}",shareBet:"Nueva predicción en Eyevos: \"{q}\" — ¿sí o no? {url}",connecting:"Conectando…",loadingBets:"Cargando predicciones…",loadingRanks:"Cargando ranking…",resolveT:"¿Qué pasó en realidad?",resYes:"✅ Pasó — Sí",resNo:"❌ No pasó — No",resHint:"Esto reparte puntos a todos los de la predicción."},
+fr:{live:"EN DIRECT",liveBadge:"En direct · temps réel",heroT1:"Pronostique. Vois juste.",heroT2:"Règne sur ton groupe.",heroSub:"Devine avant tout le monde, choisis le bon camp et grimpe au sommet. Un nouveau pronostic chaque jour — et la victoire reste gravée.",stFree:"0 ₪",stFreeL:"toujours",stAges:"10–90",stAgesL:"tout âge",stBets:"∞",stBetsL:"pronostics",signinCard:"Connecte-toi et commence à pronostiquer 🎯",continueGoogle:"Continuer avec Google",orEmail:"ou par e-mail",emailPh:"Ton e-mail",sendLink:"📧 Envoie-moi un lien de connexion",sending:"Envoi…",staysLogged:"🔒 Connecte-toi une fois — reste connecté pour toujours",linkSentT:"Ton lien arrive !",linkSentB:"Ouvre l'e-mail envoyé à {email} et clique sur le lien — et te voilà dedans.",resend:"Renvoyer / autre e-mail",whyTitle:"Pourquoi tu ne pourras plus t'arrêter",why1t:"L'instant juste avant le résultat",why1b:"Tu verrouilles ton pronostic — et tu retiens ton souffle jusqu'à la clôture",why2t:"Avoir raison quand tout le monde a tort",why2b:"Un bon pronostic en minorité rapporte plus de points",why3t:"Grimpe en tête du groupe",why3b:"Une série de victoires bâtit une légende — tout le monde s'en souvient",footerNote:"Points uniquement · jamais d'argent réel · tous âges",googleOff:"Google n'est pas encore activé. Utilise l'e-mail ci-dessus — ça marche tout de suite 👆",navFeed:"Fil",navBoard:"Classement",navRules:"Règles",navProfile:"Moi",tbBet:"Pronostique. Gagne.",tbFor:"pour",boardH:"Qui règne sur le groupe ? 👑",rulesH:"Règles",profileH:"Mon profil",newBet:"🎯 Nouveau pronostic",allCat:"🎲 Tout",emptyFeed:"🎲 Aucun pronostic ici pour l'instant. Sois le premier !",locking:"Verrouillage de ton pronostic…",betsN:"{n} pronostics",locked:"Verrouillé",pickSide:"Pronostique — choisis un camp",closesIn:"Clôture dans",closedW:"Clôturé",minPays:"La minorité paie plus",minOpens:"Le bonus minorité s'ouvre à 6 joueurs",hotNow:"🔥 Le plus chaud maintenant",autoTag:"auto",resolveBtn:"⚖️ Trancher maintenant",wonB:"✅ Bien vu ! Les points sont à toi",lostB:"❌ Pas cette fois — ton prochain pronostic t'attend",yes:"Oui",no:"Non",back:"‹ Retour",newBetT:"Nouveau pronostic 🎯",qPh:"Notre équipe va-t-elle gagner samedi ?",subjectL:"Sujet",whenClose:"Clôture quand ?",d1h:"1 heure",d6h:"6 heures",d1d:"1 jour",d3d:"3 jours",d1w:"1 semaine",placeBet:"🎯 Placer le pronostic",totalCat:"🏆 Total",emptyRanks:"🏆 Pas encore de points. Place un pronostic et commence à grimper 🚀",levelL:"Niveau",totalPts:"Points totaux",toNext:"{n} points jusqu'au niveau {l}",ptsBySub:"Points par sujet",editBtn:"✏️ Modifier",signOut:"Déconnexion",editProfile:"Modifier le profil",nameL:"Nom",pickAvatar:"Choisis un avatar",orUrl:"Ou colle un lien d'image (facultatif)",urlHint:"Le lien doit commencer par http:// ou https:// — sinon on utilisera l'avatar que tu as choisi",saveBtn:"💾 Enregistrer",savingW:"Enregistrement…",nameMin:"Le nom doit faire au moins 2 caractères",saveBlocked:"L'enregistrement a été bloqué par la base de données — une courte commande de permission doit être exécutée.",howEarn:"🎯 Comment gagner des points",rCorrect:"Bon pronostic",rMin:"Bon pronostic en minorité",r3:"3 d'affilée",r5:"5 d'affilée",rWrong:"Faux",seasonReset:"Chaque groupe a une saison de 30 jours, puis remise à zéro",allowedT:"✓ Autorisé",al1:"Des pronostics sur des événements vérifiables",al2:"Un pronostic sur une personne — seulement avec son accord",al3:"Jusqu'à 40 par groupe, tu choisis quand ça clôture",forbidT:"✕ Interdit",fo1:"Contenu humiliant / insultes",fo2:"Voter sur un pronostic qui te concerne",fo3:"De l'argent réel — il n'y en a pas, jamais",groupsT:"Groupes",createGroup:"+ Créer un groupe",joinWithCode:"Rejoindre avec un code",groupNamePh:"Nom du groupe",createBtn:"Créer",joinBtn:"Rejoindre",groupCreated:"Groupe créé !",inviteWa:"Inviter sur WhatsApp",enterGroup:"Entrer dans le groupe",noGroupT:"Tu n'as pas encore de groupe",noGroupB:"Crée un groupe ou rejoins-en un avec un code pour commencer à pronostiquer.",createOrJoin:"+ Créer / rejoindre un groupe",inviteText:"Rejoins le groupe \"{name}\" sur Eyevos ! Code : {code}. {url}",shareBtn:"📤 Partager",shareWin:"J'ai gagné le pronostic \"{q}\" sur Eyevos 🏆 viens essayer de me battre : {url}",shareBet:"Nouveau pronostic sur Eyevos : \"{q}\" — oui ou non ? {url}",connecting:"Connexion…",loadingBets:"Chargement des pronostics…",loadingRanks:"Chargement du classement…",resolveT:"Qu'est-ce qui s'est vraiment passé ?",resYes:"✅ C'est arrivé — Oui",resNo:"❌ Ce n'est pas arrivé — Non",resHint:"Ceci distribue les points à tous les participants du pronostic."},
+pt:{live:"AO VIVO",liveBadge:"Ao vivo · em tempo real",heroT1:"Dê o palpite. Acerte.",heroT2:"Mande no grupo.",heroSub:"Adivinhe antes de todos, pegue o lado forte e suba até o topo. Um palpite novo todo dia — e a vitória fica registrada.",stFree:"0 ₪",stFreeL:"sempre",stAges:"10–90",stAgesL:"toda idade",stBets:"∞",stBetsL:"palpites",signinCard:"Entre e comece a dar palpites 🎯",continueGoogle:"Continuar com o Google",orEmail:"ou com e-mail",emailPh:"Seu e-mail",sendLink:"📧 Me manda um link de acesso",sending:"Enviando…",staysLogged:"🔒 Faça login uma vez — e fique conectado para sempre",linkSentT:"Seu link está a caminho!",linkSentB:"Abra o e-mail em {email} e toque no link — você já está dentro.",resend:"Reenviar / outro e-mail",whyTitle:"Por que você não vai conseguir parar",why1t:"O instante antes do resultado",why1b:"Você trava seu palpite — e prende a respiração até fechar",why2t:"Acertar quando todos erram",why2b:"Um palpite certo na minoria vale mais pontos",why3t:"Suba ao topo do grupo",why3b:"Uma sequência de vitórias cria uma lenda — todo mundo lembra",footerNote:"Só pontos · nunca dinheiro de verdade · todas as idades",googleOff:"O Google ainda não está ativado. Use o e-mail acima — funciona na hora 👆",navFeed:"Feed",navBoard:"Ranking",navRules:"Regras",navProfile:"Eu",tbBet:"Dê o palpite. Vença.",tbFor:"em",boardH:"Quem manda no grupo? 👑",rulesH:"Regras",profileH:"Meu perfil",newBet:"🎯 Novo palpite",allCat:"🎲 Tudo",emptyFeed:"🎲 Ainda não tem palpite aqui. Seja o primeiro!",locking:"Travando seu palpite…",betsN:"{n} palpites",locked:"Travada",pickSide:"Dê o palpite — escolha um lado",closesIn:"Fecha em",closedW:"Fechada",minPays:"A minoria paga mais",minOpens:"O bônus de minoria abre com 6 jogadores",hotNow:"🔥 Mais quente agora",autoTag:"auto",resolveBtn:"⚖️ Resolver agora",wonB:"✅ Acertou! Os pontos são seus",lostB:"❌ Dessa vez não — seu próximo palpite já está esperando",yes:"Sim",no:"Não",back:"‹ Voltar",newBetT:"Novo palpite 🎯",qPh:"Nosso time vai ganhar no sábado?",subjectL:"Assunto",whenClose:"Quando fecha?",d1h:"1 hora",d6h:"6 horas",d1d:"1 dia",d3d:"3 dias",d1w:"1 semana",placeBet:"🎯 Dar o palpite",totalCat:"🏆 Total",emptyRanks:"🏆 Ainda sem pontos. Dê um palpite e comece a subir 🚀",levelL:"Nível",totalPts:"Pontos totais",toNext:"{n} pontos para o nível {l}",ptsBySub:"Pontos por assunto",editBtn:"✏️ Editar",signOut:"Sair",editProfile:"Editar perfil",nameL:"Nome",pickAvatar:"Escolha um avatar",orUrl:"Ou cole um link de imagem (opcional)",urlHint:"O link precisa começar com http:// ou https:// — senão usamos o avatar que você escolheu",saveBtn:"💾 Salvar alterações",savingW:"Salvando…",nameMin:"O nome precisa ter pelo menos 2 caracteres",saveBlocked:"O salvamento foi bloqueado pelo banco de dados — é preciso rodar um comando curto de permissão.",howEarn:"🎯 Como ganhar pontos",rCorrect:"Palpite certo",rMin:"Certo e na minoria",r3:"3 seguidas",r5:"5 seguidas",rWrong:"Errou",seasonReset:"Cada grupo tem uma temporada de 30 dias, depois zera",allowedT:"✓ Permitido",al1:"Palpites em eventos que dá para verificar",al2:"Um palpite sobre uma pessoa — só com o consentimento dela",al3:"Até 40 por grupo, você escolhe quando fecha",forbidT:"✕ Proibido",fo1:"Conteúdo humilhante / xingamentos",fo2:"Votar num palpite que é sobre você",fo3:"Dinheiro de verdade — não existe, nunca",groupsT:"Grupos",createGroup:"+ Criar grupo",joinWithCode:"Entrar com código",groupNamePh:"Nome do grupo",createBtn:"Criar",joinBtn:"Entrar",groupCreated:"Grupo criado!",inviteWa:"Convidar no WhatsApp",enterGroup:"Entrar no grupo",noGroupT:"Você ainda não tem um grupo",noGroupB:"Crie um grupo ou entre com um código para começar a dar palpites.",createOrJoin:"+ Criar / entrar em um grupo",inviteText:"Vem pro grupo \"{name}\" no Eyevos! Código: {code}. {url}",shareBtn:"📤 Compartilhar",shareWin:"Ganhei o palpite \"{q}\" no Eyevos 🏆 vem tentar me vencer: {url}",shareBet:"Novo palpite no Eyevos: \"{q}\" — sim ou não? {url}",connecting:"Conectando…",loadingBets:"Carregando palpites…",loadingRanks:"Carregando ranking…",resolveT:"O que aconteceu de verdade?",resYes:"✅ Aconteceu — Sim",resNo:"❌ Não aconteceu — Não",resHint:"Isso distribui pontos para todos do palpite."},
+ru:{live:"В ЭФИРЕ",liveBadge:"В эфире · в реальном времени",heroT1:"Прогнозируй. Угадывай.",heroT2:"Правь своей компанией.",heroSub:"Угадай раньше всех, займи сильную сторону и заберись на вершину. Каждый день новый прогноз — а победа остаётся в истории.",stFree:"0 ₪",stFreeL:"всегда",stAges:"10–90",stAgesL:"любой возраст",stBets:"∞",stBetsL:"прогнозов",signinCard:"Войди и начинай прогнозировать 🎯",continueGoogle:"Продолжить с Google",orEmail:"или по почте",emailPh:"Твоя почта",sendLink:"📧 Пришли мне ссылку для входа",sending:"Отправляем…",staysLogged:"🔒 Войди один раз — и оставайся в игре навсегда",linkSentT:"Ссылка уже летит к тебе!",linkSentB:"Открой письмо на {email} и нажми на ссылку — и ты внутри.",resend:"Отправить снова / другая почта",whyTitle:"Почему не оторваться",why1t:"Миг перед результатом",why1b:"Ты фиксируешь догадку — и затаиваешь дыхание до самого закрытия",why2t:"Прав, когда все ошиблись",why2b:"Верная догадка в меньшинстве стоит больше очков",why3t:"Заберись на вершину компании",why3b:"Серия побед рождает легенду — её все запомнят",footerNote:"Только очки · никогда не настоящие деньги · для всех возрастов",googleOff:"Google пока не подключён. Используй почту выше — работает сразу 👆",navFeed:"Лента",navBoard:"Рейтинг",navRules:"Правила",navProfile:"Я",tbBet:"Прогнозируй. Побеждай.",tbFor:"на",boardH:"Кто правит компанией? 👑",rulesH:"Правила",profileH:"Мой профиль",newBet:"🎯 Новый прогноз",allCat:"🎲 Все",emptyFeed:"🎲 Здесь пока нет прогнозов. Будь первым!",locking:"Фиксируем твой прогноз…",betsN:"прогнозов: {n}",locked:"Зафиксировано",pickSide:"Прогнозируй — выбери сторону",closesIn:"Закроется через",closedW:"Закрыто",minPays:"Меньшинство платит больше",minOpens:"Бонус меньшинства открывается с 6 игроков",hotNow:"🔥 Сейчас в огне",autoTag:"авто",resolveBtn:"⚖️ Решить сейчас",wonB:"✅ В точку! Очки твои",lostB:"❌ Не в этот раз — следующий прогноз уже ждёт",yes:"Да",no:"Нет",back:"‹ Назад",newBetT:"Новый прогноз 🎯",qPh:"Наша команда победит в субботу?",subjectL:"Тема",whenClose:"Когда закрывается?",d1h:"1 час",d6h:"6 часов",d1d:"1 день",d3d:"3 дня",d1w:"1 неделя",placeBet:"🎯 Сделать прогноз",totalCat:"🏆 Всего",emptyRanks:"🏆 Очков пока нет. Сделай прогноз и начинай подниматься 🚀",levelL:"Уровень",totalPts:"Всего очков",toNext:"ещё {n} очков до уровня {l}",ptsBySub:"Очки по темам",editBtn:"✏️ Изменить",signOut:"Выйти",editProfile:"Редактировать профиль",nameL:"Имя",pickAvatar:"Выбери аватар",orUrl:"Или вставь ссылку на картинку (необязательно)",urlHint:"Ссылка должна начинаться с http:// или https:// — иначе используем выбранный тобой аватар",saveBtn:"💾 Сохранить изменения",savingW:"Сохраняем…",nameMin:"Имя должно быть не короче 2 символов",saveBlocked:"Сохранение заблокировано базой данных — нужно выполнить короткую команду для прав доступа.",howEarn:"🎯 Как зарабатывать очки",rCorrect:"Верная догадка",rMin:"Верно и в меньшинстве",r3:"3 подряд",r5:"5 подряд",rWrong:"Ошибка",seasonReset:"У каждой компании сезон 30 дней, затем сброс",allowedT:"✓ Можно",al1:"Прогнозы на события, которые можно проверить",al2:"Прогноз о человеке — только с его согласия",al3:"До 40 в компании, ты сам выбираешь, когда закроется",forbidT:"✕ Нельзя",fo1:"Унизительный контент / ругань",fo2:"Голосовать в прогнозе, который о тебе",fo3:"Настоящие деньги — их нет, никогда",groupsT:"Компании",createGroup:"+ Создать компанию",joinWithCode:"Войти по коду",groupNamePh:"Название компании",createBtn:"Создать",joinBtn:"Войти",groupCreated:"Компания создана!",inviteWa:"Пригласить в WhatsApp",enterGroup:"Войти в компанию",noGroupT:"У тебя пока нет компании",noGroupB:"Создай компанию или войди по коду, чтобы начать прогнозировать.",createOrJoin:"+ Создать / войти в компанию",inviteText:"Заходи в компанию «{name}» в Eyevos! Код: {code}. {url}",shareBtn:"📤 Поделиться",shareWin:"Я выиграл прогноз «{q}» в Eyevos 🏆 попробуй обыграть меня: {url}",shareBet:"Новый прогноз в Eyevos: «{q}» — да или нет? {url}",connecting:"Подключаемся…",loadingBets:"Загружаем прогнозы…",loadingRanks:"Загружаем рейтинг…",resolveT:"Что на самом деле случилось?",resYes:"✅ Случилось — Да",resNo:"❌ Не случилось — Нет",resHint:"Это распределит очки всем участникам прогноза."},
+de:{live:"LIVE",liveBadge:"Live · in Echtzeit",heroT1:"Tippe. Lieg richtig.",heroT2:"Herrsche über deine Gruppe.",heroSub:"Tippe vor allen anderen, schnapp dir die starke Seite und klettere ganz nach oben. Jeden Tag ein neuer Tipp — und der Sieg bleibt für immer notiert.",stFree:"0 ₪",stFreeL:"immer",stAges:"10–90",stAgesL:"jedes Alter",stBets:"∞",stBetsL:"Tipps",signinCard:"Einloggen und lostippen 🎯",continueGoogle:"Mit Google fortfahren",orEmail:"oder per E-Mail",emailPh:"Deine E-Mail",sendLink:"📧 Schick mir einen Login-Link",sending:"Wird gesendet…",staysLogged:"🔒 Einmal einloggen — für immer eingeloggt bleiben",linkSentT:"Dein Link ist unterwegs!",linkSentB:"Öffne die E-Mail an {email} und tipp auf den Link — und schon bist du drin.",resend:"Erneut senden / andere E-Mail",whyTitle:"Warum du nicht aufhören kannst",why1t:"Der Moment vor dem Ergebnis",why1b:"Du legst deinen Tipp fest — und hältst den Atem an, bis sie schließt",why2t:"Recht haben, wenn alle danebenliegen",why2b:"Ein richtiger Tipp in der Minderheit bringt mehr Punkte",why3t:"Klettere an die Spitze der Gruppe",why3b:"Eine Siegesserie macht dich zur Legende — alle erinnern sich",footerNote:"Nur Punkte · niemals echtes Geld · für jedes Alter",googleOff:"Google ist noch nicht aktiv. Nutz die E-Mail oben — das geht sofort 👆",navFeed:"Feed",navBoard:"Rangliste",navRules:"Regeln",navProfile:"Ich",tbBet:"Tippe. Gewinne.",tbFor:"auf",boardH:"Wer herrscht über die Gruppe? 👑",rulesH:"Regeln",profileH:"Mein Profil",newBet:"🎯 Neuer Tipp",allCat:"🎲 Alle",emptyFeed:"🎲 Hier gibt's noch keine Tipps. Sei der Erste!",locking:"Dein Tipp wird festgelegt…",betsN:"{n} Tipps",locked:"Festgelegt",pickSide:"Tippe — wähl eine Seite",closesIn:"Schließt in",closedW:"Geschlossen",minPays:"Die Minderheit zahlt mehr",minOpens:"Minderheits-Bonus ab 6 Spielern",hotNow:"🔥 Gerade am heißesten",autoTag:"auto",resolveBtn:"⚖️ Jetzt entscheiden",wonB:"✅ Richtig getippt! Die Punkte gehören dir",lostB:"❌ Diesmal nicht — dein nächster Tipp wartet schon",yes:"Ja",no:"Nein",back:"‹ Zurück",newBetT:"Neuer Tipp 🎯",qPh:"Gewinnt unser Team am Samstag?",subjectL:"Thema",whenClose:"Wann schließt sie?",d1h:"1 Stunde",d6h:"6 Stunden",d1d:"1 Tag",d3d:"3 Tage",d1w:"1 Woche",placeBet:"🎯 Tipp abgeben",totalCat:"🏆 Gesamt",emptyRanks:"🏆 Noch keine Punkte. Gib einen Tipp ab und kletter los 🚀",levelL:"Level",totalPts:"Punkte gesamt",toNext:"noch {n} Punkte bis Level {l}",ptsBySub:"Punkte nach Thema",editBtn:"✏️ Bearbeiten",signOut:"Abmelden",editProfile:"Profil bearbeiten",nameL:"Name",pickAvatar:"Wähl einen Avatar",orUrl:"Oder füg einen Bild-Link ein (optional)",urlHint:"Der Link muss mit http:// oder https:// beginnen — sonst nehmen wir den Avatar, den du gewählt hast",saveBtn:"💾 Änderungen speichern",savingW:"Wird gespeichert…",nameMin:"Der Name muss mindestens 2 Zeichen haben",saveBlocked:"Das Speichern wurde von der Datenbank blockiert — ein kurzer Berechtigungsbefehl muss ausgeführt werden.",howEarn:"🎯 So sammelst du Punkte",rCorrect:"Richtig getippt",rMin:"Richtig und in der Minderheit",r3:"3 in Folge",r5:"5 in Folge",rWrong:"Falsch",seasonReset:"Jede Gruppe hat eine 30-Tage-Saison, dann wird zurückgesetzt",allowedT:"✓ Erlaubt",al1:"Tipps auf überprüfbare Ereignisse",al2:"Ein Tipp über eine Person — nur mit ihrer Zustimmung",al3:"Bis zu 40 pro Gruppe, du wählst, wann er schließt",forbidT:"✕ Nicht erlaubt",fo1:"Erniedrigende Inhalte / Beschimpfungen",fo2:"Bei einem Tipp abstimmen, der über dich ist",fo3:"Echtes Geld — gibt's nicht, niemals",groupsT:"Gruppen",createGroup:"+ Gruppe erstellen",joinWithCode:"Mit Code beitreten",groupNamePh:"Gruppenname",createBtn:"Erstellen",joinBtn:"Beitreten",groupCreated:"Gruppe erstellt!",inviteWa:"Per WhatsApp einladen",enterGroup:"Gruppe betreten",noGroupT:"Du hast noch keine Gruppe",noGroupB:"Erstell eine Gruppe oder tritt mit einem Code bei, um loszutippen.",createOrJoin:"+ Gruppe erstellen / beitreten",inviteText:"Komm in die Gruppe \"{name}\" bei Eyevos! Code: {code}. {url}",shareBtn:"📤 Teilen",shareWin:"Ich hab den Tipp \"{q}\" bei Eyevos gewonnen 🏆 versuch mal, mich zu schlagen: {url}",shareBet:"Neuer Tipp bei Eyevos: \"{q}\" — ja oder nein? {url}",connecting:"Verbinden…",loadingBets:"Tipps werden geladen…",loadingRanks:"Rangliste wird geladen…",resolveT:"Was ist wirklich passiert?",resYes:"✅ Passiert — Ja",resNo:"❌ Nicht passiert — Nein",resHint:"Das verteilt Punkte an alle beim Tipp."},
+hi:{live:"लाइव",liveBadge:"लाइव · रियल-टाइम",heroT1:"अनुमान लगाओ। सही बनो।",heroT2:"अपने ग्रुप पर राज करो।",heroSub:"सबसे पहले अंदाज़ा लगाओ, मज़बूत साइड पकड़ो और टॉप तक चढ़ो। हर दिन नया अनुमान — और जीत हमेशा के लिए दर्ज हो जाती है।",stFree:"0 ₪",stFreeL:"हमेशा",stAges:"10–90",stAgesL:"हर उम्र",stBets:"∞",stBetsL:"अनुमान",signinCard:"साइन इन करो और अनुमान शुरू करो 🎯",continueGoogle:"Google से जारी रखें",orEmail:"या ईमेल से",emailPh:"आपका ईमेल",sendLink:"📧 मुझे लॉगिन लिंक भेजो",sending:"भेज रहे हैं…",staysLogged:"🔒 एक बार साइन इन करो — हमेशा लॉग इन रहो",linkSentT:"आपका लिंक रास्ते में है!",linkSentB:"{email} पर आया ईमेल खोलो और लिंक पर टैप करो — आप अंदर।",resend:"दोबारा भेजो / दूसरा ईमेल",whyTitle:"क्यों आप रुक नहीं पाओगे",why1t:"नतीजे से ठीक पहले का पल",why1b:"आप अपना अंदाज़ा लॉक करते हो — और बंद होने तक सांस रोके रहते हो",why2t:"जब सब गलत हों तब सही होना",why2b:"अल्पमत में सही अंदाज़ा ज़्यादा पॉइंट्स का होता है",why3t:"ग्रुप में सबसे ऊपर चढ़ो",why3b:"जीत की लड़ी एक लीजेंड बनाती है — सबको याद रहता है",footerNote:"सिर्फ़ पॉइंट्स · कभी असली पैसा नहीं · हर उम्र के लिए",googleOff:"Google अभी चालू नहीं है। ऊपर ईमेल इस्तेमाल करो — तुरंत काम करता है 👆",navFeed:"फ़ीड",navBoard:"रैंक",navRules:"नियम",navProfile:"मैं",tbBet:"अनुमान लगाओ। जीतो।",tbFor:"पर",boardH:"ग्रुप पर कौन राज करता है? 👑",rulesH:"नियम",profileH:"मेरी प्रोफ़ाइल",newBet:"🎯 नया अनुमान",allCat:"🎲 सभी",emptyFeed:"🎲 यहाँ अभी कोई अनुमान नहीं। पहले बनो!",locking:"आपका अनुमान लॉक कर रहे हैं…",betsN:"{n} अनुमान",locked:"लॉक्ड",pickSide:"अनुमान लगाओ — एक साइड चुनो",closesIn:"बंद होगा",closedW:"बंद",minPays:"अल्पमत ज़्यादा देता है",minOpens:"अल्पमत बोनस 6 खिलाड़ियों पर खुलता है",hotNow:"🔥 अभी सबसे हॉट",autoTag:"ऑटो",resolveBtn:"⚖️ अभी फ़ैसला करो",wonB:"✅ सही! पॉइंट्स आपके",lostB:"❌ इस बार नहीं — आपका अगला अनुमान इंतज़ार में है",yes:"हाँ",no:"नहीं",back:"‹ वापस",newBetT:"नया अनुमान 🎯",qPh:"क्या हमारी टीम शनिवार को जीतेगी?",subjectL:"विषय",whenClose:"कब बंद होगा?",d1h:"1 घंटा",d6h:"6 घंटे",d1d:"1 दिन",d3d:"3 दिन",d1w:"1 हफ़्ता",placeBet:"🎯 अनुमान लगाओ",totalCat:"🏆 कुल",emptyRanks:"🏆 अभी कोई पॉइंट नहीं। एक अनुमान लगाओ और चढ़ना शुरू करो 🚀",levelL:"लेवल",totalPts:"कुल पॉइंट्स",toNext:"लेवल {l} तक {n} पॉइंट्स",ptsBySub:"विषय के हिसाब से पॉइंट्स",editBtn:"✏️ एडिट",signOut:"साइन आउट",editProfile:"प्रोफ़ाइल एडिट करो",nameL:"नाम",pickAvatar:"एक अवतार चुनो",orUrl:"या एक इमेज लिंक पेस्ट करो (वैकल्पिक)",urlHint:"लिंक http:// या https:// से शुरू होना चाहिए — वरना हम आपका चुना अवतार इस्तेमाल करेंगे",saveBtn:"💾 बदलाव सेव करो",savingW:"सेव कर रहे हैं…",nameMin:"नाम कम से कम 2 अक्षरों का होना चाहिए",saveBlocked:"सेव करना डेटाबेस ने रोक दिया — एक छोटी परमिशन कमांड चलानी होगी।",howEarn:"🎯 पॉइंट्स कैसे कमाओ",rCorrect:"सही अंदाज़ा",rMin:"सही और अल्पमत में",r3:"लगातार 3",r5:"लगातार 5",rWrong:"गलत",seasonReset:"हर ग्रुप का 30-दिन का सीज़न होता है, फिर रीसेट",allowedT:"✓ अनुमति है",al1:"ऐसी घटनाओं पर अनुमान जिन्हें वेरिफ़ाई किया जा सके",al2:"किसी व्यक्ति पर अनुमान — सिर्फ़ उसकी सहमति से",al3:"हर ग्रुप में 40 तक, कब बंद हो आप चुनो",forbidT:"✕ अनुमति नहीं",fo1:"अपमानजनक कंटेंट / गालियाँ",fo2:"ऐसे अनुमान पर वोट देना जो आप पर है",fo3:"असली पैसा — ऐसा कुछ नहीं, कभी नहीं",groupsT:"ग्रुप्स",createGroup:"+ ग्रुप बनाओ",joinWithCode:"कोड से जॉइन करो",groupNamePh:"ग्रुप का नाम",createBtn:"बनाओ",joinBtn:"जॉइन",groupCreated:"ग्रुप बन गया!",inviteWa:"WhatsApp पर इनवाइट करो",enterGroup:"ग्रुप में जाओ",noGroupT:"आपका अभी कोई ग्रुप नहीं है",noGroupB:"अनुमान शुरू करने के लिए ग्रुप बनाओ या कोड से जॉइन करो।",createOrJoin:"+ ग्रुप बनाओ / जॉइन करो",inviteText:"Eyevos पर \"{name}\" ग्रुप में आओ! कोड: {code}. {url}",shareBtn:"📤 शेयर",shareWin:"मैंने Eyevos पर अनुमान \"{q}\" जीता 🏆 आओ मुझे हराकर दिखाओ: {url}",shareBet:"Eyevos पर नया अनुमान: \"{q}\" — हाँ या नहीं? {url}",connecting:"कनेक्ट हो रहे हैं…",loadingBets:"अनुमान लोड हो रहे हैं…",loadingRanks:"रैंक लोड हो रही है…",resolveT:"असल में क्या हुआ?",resYes:"✅ हुआ — हाँ",resNo:"❌ नहीं हुआ — नहीं",resHint:"इससे अनुमान में शामिल सभी को पॉइंट्स बँटते हैं।"},
+zh:{live:"直播",liveBadge:"直播 · 实时",heroT1:"预测。猜对。",heroT2:"称霸你的小圈子。",heroSub:"抢在所有人之前猜中，押中强势一方，一路爬到顶。每天一场新竞猜——赢了就永久记录在案。",stFree:"0 ₪",stFreeL:"永远",stAges:"10–90",stAgesL:"全年龄",stBets:"∞",stBetsL:"次",signinCard:"登录，开始预测 🎯",continueGoogle:"使用 Google 继续",orEmail:"或用邮箱",emailPh:"你的邮箱",sendLink:"📧 给我发个登录链接",sending:"发送中…",staysLogged:"🔒 登录一次——永远保持登录",linkSentT:"链接正在飞向你！",linkSentB:"打开发到 {email} 的邮件，点一下链接——你就进来了。",resend:"重新发送 / 换个邮箱",whyTitle:"为什么你会停不下来",why1t:"揭晓结果前的那一刻",why1b:"你锁定一个猜测——然后屏住呼吸，直到截止",why2t:"所有人都错时只有你对",why2b:"押在少数派又猜对，能拿更多分",why3t:"爬到小圈子的顶端",why3b:"连胜造就传奇——人人都记得",footerNote:"只有积分 · 永远不涉及真钱 · 全年龄",googleOff:"Google 还没开通。用上面的邮箱吧——立刻就能用 👆",navFeed:"动态",navBoard:"排名",navRules:"规则",navProfile:"我",tbBet:"预测。赢。",tbFor:"·",boardH:"谁称霸这个圈子？👑",rulesH:"规则",profileH:"我的资料",newBet:"🎯 新竞猜",allCat:"🎲 全部",emptyFeed:"🎲 这里还没有竞猜。来当第一个吧！",locking:"正在锁定你的预测…",betsN:"{n} 人预测",locked:"已锁定",pickSide:"预测——选一边",closesIn:"还有",closedW:"已截止",minPays:"少数派赢得更多",minOpens:"满 6 人预测开启少数派加成",hotNow:"🔥 现在最火",autoTag:"自动",resolveBtn:"⚖️ 立即裁定",wonB:"✅ 猜对了！积分归你",lostB:"❌ 这次没中——下一场已经等着你了",yes:"是",no:"否",back:"‹ 返回",newBetT:"新竞猜 🎯",qPh:"我们队周六会赢吗？",subjectL:"主题",whenClose:"什么时候截止？",d1h:"1 小时",d6h:"6 小时",d1d:"1 天",d3d:"3 天",d1w:"1 周",placeBet:"🎯 提交预测",totalCat:"🏆 总计",emptyRanks:"🏆 还没有积分。来一次预测，开始往上爬 🚀",levelL:"等级",totalPts:"总积分",toNext:"还差 {n} 分升到 {l} 级",ptsBySub:"按主题分类的积分",editBtn:"✏️ 编辑",signOut:"退出登录",editProfile:"编辑资料",nameL:"昵称",pickAvatar:"选个头像",orUrl:"或粘贴一个图片链接（可选）",urlHint:"链接必须以 http:// 或 https:// 开头——否则就用你选的头像",saveBtn:"💾 保存更改",savingW:"保存中…",nameMin:"昵称至少要 2 个字符",saveBlocked:"保存被数据库拦下了——需要运行一条简短的权限命令。",howEarn:"🎯 怎么赚积分",rCorrect:"猜对",rMin:"猜对且在少数派",r3:"连对 3 次",r5:"连对 5 次",rWrong:"猜错",seasonReset:"每个圈子一个赛季 30 天，然后重置",allowedT:"✓ 可以",al1:"对可以核实的事件做预测",al2:"关于某个人的竞猜——必须经本人同意",al3:"每个圈子最多 40 次，由你决定何时截止",forbidT:"✕ 不可以",fo1:"羞辱性内容 / 骂人",fo2:"给关于你自己的竞猜投票",fo3:"真钱——根本没有，永远不会有",groupsT:"圈子",createGroup:"+ 创建圈子",joinWithCode:"用邀请码加入",groupNamePh:"圈子名称",createBtn:"创建",joinBtn:"加入",groupCreated:"圈子创建成功！",inviteWa:"用 WhatsApp 邀请",enterGroup:"进入圈子",noGroupT:"你还没有圈子",noGroupB:"创建一个圈子，或用邀请码加入，开始预测吧。",createOrJoin:"+ 创建 / 加入圈子",inviteText:"快来 Eyevos 上的「{name}」圈子！邀请码：{code}。{url}",shareBtn:"📤 分享",shareWin:"我在 Eyevos 上赢了竞猜「{q}」🏆 来试试能不能赢我：{url}",shareBet:"Eyevos 上的新竞猜：「{q}」——是还是否？{url}",connecting:"连接中…",loadingBets:"正在加载竞猜…",loadingRanks:"正在加载排名…",resolveT:"实际发生了什么？",resYes:"✅ 发生了——是",resNo:"❌ 没发生——否",resHint:"这会给竞猜里的所有人结算积分。"},
+ar:{live:"مباشر",liveBadge:"مباشر · في الوقت الفعلي",heroT1:"توقّع. وأصِب.",heroT2:"تحكّم بمجموعتك.",heroSub:"خمّن قبل الجميع، اختر الجانب الأقوى، واصعد إلى القمة. توقّع جديد كل يوم — والفوز يبقى مسجّلاً.",stFree:"0 ₪",stFreeL:"دائماً",stAges:"10–90",stAgesL:"كل الأعمار",stBets:"∞",stBetsL:"توقّعات",signinCard:"سجّل دخولك وابدأ التوقّع 🎯",continueGoogle:"المتابعة عبر Google",orEmail:"أو عبر البريد",emailPh:"بريدك الإلكتروني",sendLink:"📧 أرسل لي رابط دخول",sending:"جارٍ الإرسال…",staysLogged:"🔒 سجّل دخولك مرة واحدة — وابقَ مسجّلاً للأبد",linkSentT:"رابطك في الطريق إليك!",linkSentB:"افتح البريد المُرسَل إلى {email} واضغط على الرابط — وستكون بالداخل.",resend:"إعادة الإرسال / بريد آخر",whyTitle:"لماذا لن تستطيع التوقّف",why1t:"اللحظة التي تسبق النتيجة",why1b:"تثبّت تخمينك — وتحبس أنفاسك حتى يُغلَق",why2t:"أن تكون مصيباً حين يخطئ الجميع",why2b:"التخمين الصحيح ضمن الأقلية يساوي نقاطاً أكثر",why3t:"اصعد إلى قمة المجموعة",why3b:"سلسلة انتصارات تصنع أسطورة — والجميع يتذكّرها",footerNote:"نقاط فقط · لا مال حقيقي أبداً · لكل الأعمار",googleOff:"خدمة Google غير مُفعّلة بعد. استخدم البريد أعلاه — يعمل فوراً 👆",navFeed:"الموجز",navBoard:"الترتيب",navRules:"القواعد",navProfile:"أنا",tbBet:"توقّع. وافُز.",tbFor:"على",boardH:"من يتحكّم بالمجموعة؟ 👑",rulesH:"القواعد",profileH:"ملفي الشخصي",newBet:"🎯 توقّع جديد",allCat:"🎲 الكل",emptyFeed:"🎲 لا توقّعات هنا بعد. كن الأول!",locking:"جارٍ تثبيت توقّعك…",betsN:"{n} توقّعات",locked:"مُثبَّت",pickSide:"توقّع — اختر جانباً",closesIn:"يُغلَق خلال",closedW:"مُغلَق",minPays:"الأقلية تدفع أكثر",minOpens:"مكافأة الأقلية تُفتَح عند 6 لاعبين",hotNow:"🔥 الأكثر سخونة الآن",autoTag:"تلقائي",resolveBtn:"⚖️ احسم الآن",wonB:"✅ أصبت! النقاط لك",lostB:"❌ ليس هذه المرة — توقّعك التالي بانتظارك",yes:"نعم",no:"لا",back:"‹ رجوع",newBetT:"توقّع جديد 🎯",qPh:"هل سيفوز فريقنا يوم السبت؟",subjectL:"الموضوع",whenClose:"متى يُغلَق؟",d1h:"ساعة",d6h:"6 ساعات",d1d:"يوم",d3d:"3 أيام",d1w:"أسبوع",placeBet:"🎯 أرسل التوقّع",totalCat:"🏆 الإجمالي",emptyRanks:"🏆 لا نقاط بعد. أرسل توقّعاً وابدأ الصعود 🚀",levelL:"المستوى",totalPts:"مجموع النقاط",toNext:"{n} نقطة للوصول إلى المستوى {l}",ptsBySub:"النقاط حسب الموضوع",editBtn:"✏️ تعديل",signOut:"تسجيل الخروج",editProfile:"تعديل الملف الشخصي",nameL:"الاسم",pickAvatar:"اختر صورة رمزية",orUrl:"أو الصق رابط صورة (اختياري)",urlHint:"يجب أن يبدأ الرابط بـ http:// أو https:// — وإلا سنستخدم الصورة الرمزية التي اخترتها",saveBtn:"💾 حفظ التغييرات",savingW:"جارٍ الحفظ…",nameMin:"يجب ألا يقل الاسم عن حرفين",saveBlocked:"تم منع الحفظ من قِبل قاعدة البيانات — يلزم تنفيذ أمر صلاحيات قصير.",howEarn:"🎯 كيف تكسب النقاط",rCorrect:"تخمين صحيح",rMin:"صحيح وضمن الأقلية",r3:"3 متتالية",r5:"5 متتالية",rWrong:"خطأ",seasonReset:"لكل مجموعة موسم مدته 30 يوماً، ثم يُعاد ضبطه",allowedT:"✓ مسموح",al1:"توقّعات على أحداث يمكن التحقّق منها",al2:"توقّع عن شخص — فقط بموافقته",al3:"حتى 40 لكل مجموعة، وأنت تختار متى يُغلَق",forbidT:"✕ ممنوع",fo1:"محتوى مهين / شتائم",fo2:"التصويت على توقّع يخصّك أنت",fo3:"مال حقيقي — لا وجود له، أبداً",groupsT:"المجموعات",createGroup:"+ إنشاء مجموعة",joinWithCode:"الانضمام برمز",groupNamePh:"اسم المجموعة",createBtn:"إنشاء",joinBtn:"انضمام",groupCreated:"تم إنشاء المجموعة!",inviteWa:"دعوة عبر WhatsApp",enterGroup:"دخول المجموعة",noGroupT:"ليس لديك مجموعة بعد",noGroupB:"أنشئ مجموعة أو انضم برمز لتبدأ التوقّع.",createOrJoin:"+ إنشاء / الانضمام إلى مجموعة",inviteText:"تعال إلى مجموعة \"{name}\" على Eyevos! الرمز: {code}. {url}",shareBtn:"📤 مشاركة",shareWin:"فزت بالتوقّع \"{q}\" على Eyevos 🏆 تعال وحاول أن تهزمني: {url}",shareBet:"توقّع جديد على Eyevos: \"{q}\" — نعم أم لا؟ {url}",connecting:"جارٍ الاتصال…",loadingBets:"جارٍ تحميل التوقّعات…",loadingRanks:"جارٍ تحميل الترتيب…",resolveT:"ماذا حدث فعلاً؟",resYes:"✅ حدث — نعم",resNo:"❌ لم يحدث — لا",resHint:"هذا يوزّع النقاط على كل المشاركين في التوقّع."}
+};
+// group-screen strings for the 8 non-he/en languages (he/en already in STR)
+const _GX={
+es:{chooseSubject:"Primero elige un tema",chooseSubjectSub:"Elige un tema — y verás todos tus grupos",yourGroupsIn:"Tus grupos",codeLabel:"Código",subjectLocked:"Tema del grupo"},
+fr:{chooseSubject:"Choisis d'abord un sujet",chooseSubjectSub:"Choisis un sujet — puis tu verras tous tes groupes",yourGroupsIn:"Tes groupes",codeLabel:"Code",subjectLocked:"Sujet du groupe"},
+pt:{chooseSubject:"Primeiro escolha um assunto",chooseSubjectSub:"Escolha um assunto — e verá todos os seus grupos",yourGroupsIn:"Seus grupos",codeLabel:"Código",subjectLocked:"Assunto do grupo"},
+ru:{chooseSubject:"Сначала выбери тему",chooseSubjectSub:"Выбери тему — и увидишь все свои компании",yourGroupsIn:"Твои компании",codeLabel:"Код",subjectLocked:"Тема компании"},
+de:{chooseSubject:"Wähl zuerst ein Thema",chooseSubjectSub:"Wähl ein Thema — dann siehst du alle deine Gruppen",yourGroupsIn:"Deine Gruppen",codeLabel:"Code",subjectLocked:"Gruppenthema"},
+hi:{chooseSubject:"पहले एक विषय चुनो",chooseSubjectSub:"एक विषय चुनो — फिर आपके सारे ग्रुप दिखेंगे",yourGroupsIn:"आपके ग्रुप्स",codeLabel:"कोड",subjectLocked:"ग्रुप का विषय"},
+zh:{chooseSubject:"先选个主题",chooseSubjectSub:"选个主题——然后就能看到你所有的圈子",yourGroupsIn:"你的圈子",codeLabel:"邀请码",subjectLocked:"圈子主题"},
+ar:{chooseSubject:"اختر موضوعاً أولاً",chooseSubjectSub:"اختر موضوعاً — وستظهر لك كل مجموعاتك",yourGroupsIn:"مجموعاتك",codeLabel:"الرمز",subjectLocked:"موضوع المجموعة"}
+};
+for(const _c in _GX){ if(STR[_c]) Object.assign(STR[_c],_GX[_c]); }
+const _GX2={ he:{settings:"הגדרות",langRow:"שפה",soundRow:"צליל",onW:"פועל",offW:"כבוי",autoCheck:"🔮 בדוק תוצאה אוטומטית (גוגל)",checking:"בודק באינטרנט…",cantVerify:"לא הצלחתי לאמת אוטומטית — בחר ידנית או צרף קישור לתמונה",proofUrl:"קישור לתמונת הוכחה (לא חובה)"}, en:{settings:"Settings",langRow:"Language",soundRow:"Sound",onW:"On",offW:"Off",autoCheck:"🔮 Auto-check result (Google)",checking:"Checking the web…",cantVerify:"Couldn't auto-verify — choose manually or add a proof image link",proofUrl:"Proof image link (optional)"} };
+for(const _c in _GX2){ if(STR[_c]) Object.assign(STR[_c],_GX2[_c]); }
+const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
+const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
+function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
+function t(k,vars){ let s=(STR[CUR.lang]&&STR[CUR.lang][k]); if(s===undefined) s=STR.en[k]; if(s===undefined) s=k; if(vars){ for(const p in vars) s=s.split("{"+p+"}").join(vars[p]); } return s; }
+
+/* ===================== subjects ===================== */
+const SK=["sport","screen","reality","weather","news","food","family","life"];
+const SEMO={sport:"⚽",screen:"🎬",reality:"📺",weather:"🌦️",news:"📰",food:"🍔",family:"👨‍👩‍👧",life:"🎯"};
+const SC={sport:"#FF8A4D",screen:"#9D7BFF",reality:"#FF4D9D",weather:"#5BC8FF",news:"#FFC23C",food:"#46D36A",family:"#2DD4BF",life:"#C77DFF"};
+const SUBN={
+he:{sport:"ספורט",screen:"מסך",reality:"ריאליטי",weather:"מזג אוויר",news:"אקטואליה",food:"אוכל",family:"משפחה",life:"חיים"},
+en:{sport:"Sports",screen:"Movies",reality:"Reality",weather:"Weather",news:"News",food:"Food",family:"Family",life:"Life"},
+es:{sport:"Deportes",screen:"Cine",reality:"Reality",weather:"Clima",news:"Noticias",food:"Comida",family:"Familia",life:"Vida"},
+fr:{sport:"Sport",screen:"Cinéma",reality:"Téléréalité",weather:"Météo",news:"Actu",food:"Bouffe",family:"Famille",life:"Vie"},
+pt:{sport:"Esportes",screen:"Cinema",reality:"Reality",weather:"Clima",news:"Notícias",food:"Comida",family:"Família",life:"Vida"},
+ru:{sport:"Спорт",screen:"Кино",reality:"Реалити",weather:"Погода",news:"Новости",food:"Еда",family:"Семья",life:"Жизнь"},
+de:{sport:"Sport",screen:"Filme",reality:"Reality",weather:"Wetter",news:"News",food:"Essen",family:"Familie",life:"Leben"},
+hi:{sport:"खेल",screen:"फ़िल्में",reality:"रियलिटी",weather:"मौसम",news:"समाचार",food:"खाना",family:"परिवार",life:"ज़िंदगी"},
+zh:{sport:"体育",screen:"影视",reality:"真人秀",weather:"天气",news:"新闻",food:"美食",family:"家庭",life:"生活"},
+ar:{sport:"رياضة",screen:"أفلام",reality:"واقع",weather:"الطقس",news:"أخبار",food:"طعام",family:"العائلة",life:"الحياة"}
+};
+const subName=(k)=>((SUBN[CUR.lang]||SUBN.en)[k]||k);
+const slabel=(k)=>SEMO[k]+" "+subName(k);
+// group's subject: from DB once migrated, else a local bridge set at creation, else default
+function grpSub(g){ if(!g)return "sport"; try{ return g.subject || localStorage.getItem("eyevos_gsub_"+g.id) || "sport"; }catch(e){ return g.subject||"sport"; } }
+
+const pct=(a,b)=>(a+b===0?50:Math.round(a/(a+b)*100));
+const lvl=(x)=>Math.floor(x/50)+1;
+const AVATARS=["😎","🦊","🐯","🦁","🐼","🦄","🐲","🦅","🐺","🐙","🎯","🔥","👑","⚡","🎲","🏆","🌟","💎","🚀","🍀"];
+function Avatar({p,size}){
+  const s=size||58, st={width:s,height:s,borderRadius:Math.round(s*.26),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0};
+  if(p&&p.photo_url){ if(/^https?:/.test(p.photo_url)) return <div style={{...st,background:"var(--ink-3)"}}><img src={p.photo_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>;
+    return <div style={{...st,background:"var(--brand-soft)",fontSize:Math.round(s*.52)}}>{p.photo_url}</div>; }
+  return <div style={{...st,background:"linear-gradient(150deg,var(--brand-2),var(--brand))",color:"#fff",fontWeight:800,fontSize:Math.round(s*.36),boxShadow:"0 10px 24px rgba(138,107,255,.4)"}}>{((p&&p.display_name)||"?").slice(0,2).toUpperCase()}</div>;
+}
+
+const SND={
+  on: localStorage.getItem("eyevos_sound")!=="off", ctx:null,
+  ac(){ if(!this.ctx){ try{ this.ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return this.ctx; },
+  beep(f,d,t,v){ if(!this.on)return; const c=this.ac(); if(!c)return; const o=c.createOscillator(),g=c.createGain(); o.type=t||"sine"; o.frequency.value=f; g.gain.value=v||.07; o.connect(g); g.connect(c.destination); const n=c.currentTime; o.start(n); g.gain.exponentialRampToValueAtTime(.0001,n+d); o.stop(n+d); },
+  tap(){ this.beep(440,.07,"triangle",.05); },
+  lock(){ this.beep(300,.1,"sawtooth",.05); setTimeout(()=>this.beep(520,.12,"sawtooth",.05),80); },
+  win(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>this.beep(f,.18,"triangle",.08),i*85)); },
+  toggle(){ this.on=!this.on; localStorage.setItem("eyevos_sound",this.on?"on":"off"); if(this.on)this.tap(); return this.on; }
+};
+function CountUp({value,dur=650}){
+  const [n,setN]=useState(value); const prev=useRef(value);
+  useEffect(()=>{ const from=prev.current,to=value; prev.current=value; if(from===to){setN(to);return;} const start=performance.now(); let raf;
+    const tick=(x)=>{ const p=Math.min(1,(x-start)/dur); setN(Math.round(from+(to-from)*(1-Math.pow(1-p,3)))); if(p<1)raf=requestAnimationFrame(tick); };
+    raf=requestAnimationFrame(tick); return ()=>cancelAnimationFrame(raf); },[value,dur]);
+  return <span className="tnum">{n}</span>;
+}
+function Countdown({to}){
+  const [now,setNow]=useState(Date.now());
+  useEffect(()=>{const id=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(id);},[]);
+  const ms=new Date(to).getTime()-now;
+  if(isNaN(ms))return null;
+  if(ms<=0)return <span style={{color:"var(--gold)",fontWeight:700}}>{t("closedW")}</span>;
+  const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),ss=s%60,p=n=>String(n).padStart(2,"0");
+  return <span className="tnum" style={{fontWeight:700,color:s<3600?"var(--yes)":"var(--muted)"}}>{d>0?d+"d ":""}{p(h)}:{p(m)}:{p(ss)}</span>;
+}
+function payouts(t2){
+  const gate=(t2.yes+t2.no)>=6 && t2.yes>=2 && t2.no>=2;
+  const min = gate ? (t2.yes<t2.no?"yes":(t2.no<t2.yes?"no":null)) : null;
+  return { yes: min==="yes"?8:5, no: min==="no"?8:5, gate, min };
+}
+function fmtClose(iso){ try{ return new Date(iso).toLocaleString(CUR.lang,{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; } }
+function shareWa(text){ window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank"); }
+function Spinner({label}){return <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,padding:"60px 0",color:"var(--muted)"}}><div className="spin"/><div style={{fontSize:13,fontWeight:700}}>{label||t("connecting")}</div></div>;}
+function Confetti(){const c=["#FF4D6D","#2DD4BF","#FFC23C","#8A6BFF","#5BC8FF"];return <div className="confetti">{Array.from({length:22},(_,i)=><i key={i} style={{left:Math.round(Math.random()*100)+"%",background:c[i%c.length],animationDelay:(Math.random()*.4).toFixed(2)+"s"}}/>)}</div>;}
+function LangSheet({cur,onPick,onClose}){
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
+    <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 16px"}}>🌐 Language · שפה · اللغة</h3>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {LANGS.map(l=><button key={l.c} onClick={()=>onPick(l.c)} className={"chip"+(cur===l.c?" on":"")} style={{justifyContent:"center",padding:"13px",fontSize:14.5}}>{l.n}</button>)}
+    </div>
+  </div></div>;
+}
+
+/* ---------- sign in ---------- */
+function Coins(){
+  const set=[["🪙","7%","-1s","13s"],["🎲","80%","-8s","16s"],["💎","22%","-5s","15s"],["🏆","90%","-11s","14s"],["🔥","46%","-3s","17s"],["⭐","64%","-6s","12s"],["🪙","34%","-9s","18s"],["💰","54%","-2s","15s"]];
+  return <div className="coins">{set.map((c,i)=><span key={i} className="coin" style={{left:c[1],bottom:"-40px",animationDelay:c[2],animationDuration:c[3]}}>{c[0]}</span>)}</div>;
+}
+const TICK=["⚽ ⚽?","📺 📺?","🌦️ 🌦️?","🍔 🍔?","📰 📰?","🎯 🎯?","🏀 🏀?","🎬 🎬?"];
+function SignIn({onOpenLang}){
+  const [email,setEmail]=useState(""),[sent,setSent]=useState(false),[busy,setBusy]=useState(false),[msg,setMsg]=useState(null);
+  const emRef=useRef(null);
+  const ticks=[t("qPh"),"⚽ "+subName("sport")+"?","📺 "+subName("reality")+"?","🌦️ "+subName("weather")+"?","🍔 "+subName("food")+"?","📰 "+subName("news")+"?","🎬 "+subName("screen")+"?","🎯 "+subName("life")+"?"];
+  const google=async()=>{ setMsg(null); SND.tap();
+    try{ const r=await fetch("https://nsnbdgudqtygxaalhjsn.supabase.co/auth/v1/settings",{headers:{apikey:"sb_publishable_C6Z1uW15YbRH2kKQzSxTOA_Zb4w4nNc"}}); const s=await r.json();
+      if(!(s&&s.external&&s.external.google)){ setMsg(t("googleOff")); if(emRef.current)emRef.current.focus(); return; }
+    }catch(e){}
+    const{error}=await SB.auth.signInWithOAuth({provider:"google",options:{redirectTo:REDIRECT}});
+    if(error)setMsg(error.message);
+  };
+  const magic=async()=>{ if(!email.includes("@"))return; setBusy(true); setMsg(null); SND.tap();
+    const{error}=await SB.auth.signInWithOtp({email:email.trim(),options:{emailRedirectTo:REDIRECT}});
+    setBusy(false); if(error)setMsg(error.message); else setSent(true);
+  };
+  return <div className="scroll" style={{paddingTop:14,textAlign:"center"}}>
+    <div style={{display:"flex",justifyContent:"flex-end",marginBottom:8}}><button onClick={onOpenLang} className="chip" style={{padding:"6px 11px",fontSize:13}}>🌐 {LANGS.find(l=>l.c===CUR.lang).n}</button></div>
+    <div className="ticker" style={{marginBottom:20}}><div className="run">{[...ticks,...ticks].map((x,i)=><span className="tk" key={i}>{x}</span>)}</div></div>
+    <div style={{display:"flex",justifyContent:"center",marginBottom:14}}><div className="logob">🎯</div></div>
+    <div className="disp neon" style={{fontSize:42,fontWeight:900,marginBottom:6}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></div>
+    <div className="livebadge" style={{marginBottom:16}}><span className="livedot"/> {t("liveBadge")}</div>
+    {sent?
+      <div className="card" style={{maxWidth:330,margin:"10px auto"}}><div style={{fontSize:44,marginBottom:8}}>📧</div><div style={{fontWeight:800,fontSize:17,marginBottom:6}}>{t("linkSentT")}</div><div style={{color:"var(--muted)",fontSize:13.5,lineHeight:1.6}}>{t("linkSentB",{email:email})}</div>
+        <button className="btn btn-ghost" style={{marginTop:14}} onClick={()=>setSent(false)}>{t("resend")}</button></div>
+      :<>
+      <h1 className="disp" style={{fontSize:30,fontWeight:900,lineHeight:1.15,margin:"4px 0 8px"}}>{t("heroT1")}<br/><span className="jackpot">{t("heroT2")}</span></h1>
+      <p style={{color:"var(--muted)",fontSize:14.5,maxWidth:300,margin:"0 auto 18px",lineHeight:1.55}}>{t("heroSub")}</p>
+      <div style={{display:"flex",gap:8,maxWidth:330,margin:"0 auto 20px"}}>
+        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--gold)"}}>{t("stFree")}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{t("stFreeL")}</div></div>
+        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--brand-2)"}}>{t("stAges")}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{t("stAgesL")}</div></div>
+        <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--no)"}}>{t("stBets")}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{t("stBetsL")}</div></div>
+      </div>
+      {msg&&<div className="err" style={{maxWidth:330,margin:"0 auto 12px",textAlign:"start"}}>{msg}</div>}
+      <div className="card" style={{maxWidth:330,margin:"0 auto",textAlign:"start"}}>
+        <div style={{fontWeight:800,fontSize:15,marginBottom:12,textAlign:"center"}}>{t("signinCard")}</div>
+        <button onClick={google} className="gbtn">
+          <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5c-2 1.5-4.7 2.5-7.6 2.5-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C41.4 36.3 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>{t("continueGoogle")}</button>
+        <div style={{display:"flex",alignItems:"center",gap:10,margin:"14px 0",color:"var(--faint)",fontSize:12}}><div style={{flex:1,height:1,background:"var(--line)"}}/>{t("orEmail")}<div style={{flex:1,height:1,background:"var(--line)"}}/></div>
+        <input ref={emRef} className="in" type="email" placeholder={t("emailPh")} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&magic()} style={{marginBottom:10,textAlign:"center"}}/>
+        <button className="btn btn-pri" disabled={busy||!email.includes("@")} onClick={magic}>{busy?t("sending"):t("sendLink")}</button>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:13,color:"var(--no)",fontSize:12,fontWeight:700}}>{t("staysLogged")}</div>
+      </div>
+      <div style={{maxWidth:330,margin:"22px auto 0",textAlign:"start"}}>
+        <div style={{fontSize:12.5,fontWeight:800,color:"var(--faint)",textTransform:"uppercase",letterSpacing:".04em",marginBottom:4}}>{t("whyTitle")}</div>
+        <div className="why"><div className="whyi" style={{background:"var(--yes-soft)"}}>🔥</div><div><div style={{fontWeight:700,fontSize:14}}>{t("why1t")}</div><div style={{fontSize:12.5,color:"var(--muted)"}}>{t("why1b")}</div></div></div>
+        <div className="why"><div className="whyi" style={{background:"var(--gold-soft)"}}>🏆</div><div><div style={{fontWeight:700,fontSize:14}}>{t("why2t")}</div><div style={{fontSize:12.5,color:"var(--muted)"}}>{t("why2b")}</div></div></div>
+        <div className="why" style={{borderBottom:"none"}}><div className="whyi" style={{background:"var(--brand-soft)"}}>👑</div><div><div style={{fontWeight:700,fontSize:14}}>{t("why3t")}</div><div style={{fontSize:12.5,color:"var(--muted)"}}>{t("why3b")}</div></div></div>
+      </div>
+      </>}
+    <p style={{color:"var(--faint)",fontSize:11.5,marginTop:18}}>{t("footerNote")}</p>
+  </div>;
+}
+
+/* ---------- feed ---------- */
+function Bar({poll,tl,onVote,locking}){
+  const total=tl.yes+tl.no,y=pct(tl.yes,tl.no),voted=tl.mine,reveal=(!!voted||poll.status!=="open")&&!locking;
+  return <div>
+    <div className="bar">
+      {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="spin" style={{width:18,height:18,borderWidth:2}}/>{t("locking")}</div>
+      :<><div className="side" style={{width:(reveal?y:50)+"%",background:voted==="yes"?"var(--yes)":"var(--yes-soft)"}}/>
+      <div className="side" style={{width:(reveal?100-y:50)+"%",background:voted==="no"?"var(--no)":"var(--no-soft)"}}/>
+      <button className="lab" style={{insetInlineStart:0,color:voted==="yes"?"#fff":"var(--yes)"}} disabled={reveal} onClick={()=>onVote("yes")}>{t("yes")} {reveal?<span className="tnum"><CountUp value={y} dur={420}/>%</span>:""}</button>
+      <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={reveal} onClick={()=>onVote("no")}>{reveal?<span className="tnum"><CountUp value={100-y} dur={420}/>%</span>:""} {t("no")}</button></>}
+    </div>
+    <div style={{display:"flex",justifyContent:"space-between",marginTop:8,fontSize:12,color:"var(--muted)",fontWeight:600}}>
+      <span className="tnum">{t("betsN",{n:total})}</span><span style={{color:reveal?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{reveal?t("locked"):t("pickSide")}</span></div>
+  </div>;
+}
+function PollCard({poll,tl,me,onVote,onResolve,locking,featured}){
+  const total=tl.yes+tl.no;
+  const hot=poll.status==="open"&&total>=8;
+  const closed=poll.status==="open"&&new Date(poll.closes_at)<new Date();
+  const canResolve=(poll.status==="open"&&closed)||poll.status==="locked";
+  const mayResolve=canResolve&&poll.author_id===me.id;
+  const pay=payouts(tl);
+  const myResult=poll.status==="resolved"&&tl.mine?(tl.mine===poll.resolved_outcome?"win":"lose"):null;
+  const shareBet=()=>shareWa(t("shareBet",{q:poll.question,url:REDIRECT}));
+  const shareWin=()=>shareWa(t("shareWin",{q:poll.question,url:REDIRECT}));
+  return <div className={"card"+(hot?" hotcard":"")} style={featured?{boxShadow:"0 0 0 1px rgba(255,194,60,.45),0 10px 34px rgba(255,194,60,.18)"}:null}>
+    {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}>{t("hotNow")}</div>}
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
+      <span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>
+      <div style={{display:"flex",gap:6,alignItems:"center"}}>{poll.status==="resolved"&&<span className="tag" style={{background:"var(--gold-soft)",color:"var(--gold)"}}>🏆 {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")}>📤</button></div>
+    </div>
+    <p className="disp" style={{fontSize:18,fontWeight:700,margin:"0 0 12px",lineHeight:1.25}}>{poll.question}</p>
+    <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking}/>
+    {poll.status==="open"&&<>
+      <div style={{display:"flex",gap:8,marginTop:10}}>
+        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="yes"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="yes"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--yes)"}}>{t("yes")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="yes"?"var(--gold)":"var(--text)"}}>+{pay.yes}{pay.min==="yes"?" 🔥":""}</span></div>
+        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="no"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="no"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--no)"}}>{t("no")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="no"?"var(--gold)":"var(--text)"}}>+{pay.no}{pay.min==="no"?" 🔥":""}</span></div>
+      </div>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600,gap:8}}>
+        <span>⏱ {closed?t("closedW"):<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
+        <span style={{whiteSpace:"nowrap"}}>{pay.gate?t("minPays"):t("minOpens")}</span>
+      </div>
+    </>}
+    {myResult&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,fontWeight:800,fontSize:13.5,textAlign:"center",background:myResult==="win"?"rgba(255,194,60,.14)":"var(--ink-3)",color:myResult==="win"?"var(--gold)":"var(--muted)"}}>
+      {myResult==="win"?t("wonB"):t("lostB")}
+      {myResult==="win"&&<button onClick={shareWin} className="chip" style={{marginInlineStart:8,padding:"3px 9px",fontSize:12}}>{t("shareBtn")}</button>}
+    </div>}
+    {mayResolve&&<button className="btn btn-gold" style={{marginTop:11,fontSize:14,padding:11}} onClick={()=>onResolve(poll)}>{t("resolveBtn")}</button>}
+  </div>;
+}
+function ResolveSheet({poll,onPick,onClose}){
+  const [checking,setChecking]=useState(false),[msg,setMsg]=useState(null),[proof,setProof]=useState("");
+  const auto=async()=>{ setChecking(true); setMsg(null);
+    try{
+      const r=await fetch("/api/resolve?q="+encodeURIComponent(poll.question));
+      const j=await r.json();
+      if(j.verdict==="yes"||j.verdict==="no"){ onPick(j.verdict, proof.trim()||null); return; }
+      setMsg(t("cantVerify"));
+    }catch(e){ setMsg(t("cantVerify")); }
+    setChecking(false);
+  };
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
+    <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 6px"}}>{t("resolveT")}</h3>
+    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{poll.question}</p>
+    <button className="btn btn-pri" style={{marginBottom:12}} disabled={checking} onClick={auto}>{checking?t("checking"):t("autoCheck")}</button>
+    {msg&&<div className="err" style={{marginBottom:12}}>{msg}</div>}
+    <button className="btn" style={{background:"var(--yes)",marginBottom:10}} onClick={()=>onPick("yes",proof.trim()||null)}>{t("resYes")}</button>
+    <button className="btn" style={{background:"var(--no)",color:"#06302b",marginBottom:12}} onClick={()=>onPick("no",proof.trim()||null)}>{t("resNo")}</button>
+    <input className="in" placeholder={t("proofUrl")} value={proof} onChange={e=>setProof(e.target.value)} style={{marginBottom:12,fontSize:13}}/>
+    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5}}>{t("resHint")}</p>
+  </div></div>;
+}
+function Feed({group,me,onErr,onResolved,startCreate}){
+  const [polls,setPolls]=useState(null),[tally,setTally]=useState({}),[creating,setCreating]=useState(false),[locking,setLocking]=useState(null),[resolving,setResolving]=useState(null);
+  const mounted=useRef(true);
+  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
+  const lastCreate=useRef(startCreate);
+  useEffect(()=>{ if(startCreate!==lastCreate.current){ lastCreate.current=startCreate; SND.tap(); setCreating(true); } },[startCreate]);
+  const load=async()=>{
+    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,force_proof").eq("group_id",group.id).order("created_at",{ascending:false});
+    if(!mounted.current)return;
+    if(error)return onErr(error.message);
+    setPolls(data||[]);
+    if(data&&data.length){const ids=data.map(p=>p.id);const{data:v}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids);
+      if(!mounted.current)return;
+      const tt={};(v||[]).forEach(r=>{tt[r.poll_id]=tt[r.poll_id]||{yes:0,no:0,mine:null};tt[r.poll_id][r.choice]++;if(r.voter_id===me.id)tt[r.poll_id].mine=r.choice;});setTally(tt);}
+    else setTally({});
+  };
+  useEffect(()=>{load();},[group.id]);
+  useEffect(()=>{                       // realtime: refresh when anyone votes / a poll changes (best-effort; needs Realtime replication on)
+    let tmr=null; const schedule=()=>{ if(tmr)clearTimeout(tmr); tmr=setTimeout(()=>{if(mounted.current)load();},400); };
+    const ch=SB.channel("rt-"+group.id)
+      .on("postgres_changes",{event:"*",schema:"public",table:"votes"},schedule)
+      .on("postgres_changes",{event:"*",schema:"public",table:"polls",filter:"group_id=eq."+group.id},schedule)
+      .subscribe();
+    return ()=>{ if(tmr)clearTimeout(tmr); SB.removeChannel(ch); };
+  },[group.id]);
+  const vote=async(poll,choice)=>{
+    if(locking)return;
+    SND.lock(); setLocking(poll.id);
+    const t0=Date.now();
+    const{error}=await SB.rpc("cast_vote",{p_poll:poll.id,p_choice:choice});
+    const wait=Math.max(0,650-(Date.now()-t0)); await new Promise(r=>setTimeout(r,wait));
+    if(!mounted.current)return;
+    setLocking(null);
+    if(error)return onErr(error.message);
+    await load();
+  };
+  const doResolve=async(o,proof)=>{
+    const poll=resolving; setResolving(null); if(!poll)return;
+    const{error}=await SB.rpc("resolve_poll",{p_poll:poll.id,p_outcome:o,p_void:false,p_proof:proof||null});
+    if(!mounted.current)return;
+    if(error)return onErr(error.message);
+    const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win
+    if(won){ SND.win(); onResolved(true); } else { SND.tap(); onResolved(false); }
+    await load();
+  };
+  if(creating)return <CreatePoll group={group} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
+  if(polls===null)return <Spinner label={t("loadingBets")}/>;
+  const gsub=grpSub(group);
+  const list=polls.filter(p=>p.status!=="void");
+  let hottestId=null,hn=2;
+  list.forEach(p=>{if(p.status==="open"){const n=(tally[p.id]||{yes:0,no:0}).yes+(tally[p.id]||{yes:0,no:0}).no;if(n>hn){hn=n;hottestId=p.id;}}});
+  return <div>
+    <div className="card" style={{display:"flex",alignItems:"center",gap:10,padding:"11px 13px",marginBottom:13}}>
+      <div style={{width:38,height:38,borderRadius:11,background:SC[gsub]+"1f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:19}}>{SEMO[gsub]}</div>
+      <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:15}}>{group.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{subName(gsub)} · {t("codeLabel")}: <b className="tnum" style={{color:"var(--text)",letterSpacing:"1px"}}>{group.invite_code}</b></div></div>
+      <button onClick={()=>shareWa(t("inviteText",{name:group.name,code:group.invite_code,url:REDIRECT}))} className="chip" style={{padding:8}} title="WhatsApp">📤</button>
+    </div>
+    <button className="btn btn-pri" onClick={()=>{SND.tap();setCreating(true);}} style={{marginBottom:13}}>{t("newBet")}</button>
+    {list.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyFeed")}</div>}
+    {list.map(p=><PollCard key={p.id} poll={p} tl={tally[p.id]||{yes:0,no:0,mine:null}} me={me} onVote={vote} onResolve={(pl)=>setResolving(pl)} locking={locking===p.id} featured={p.id===hottestId}/>)}
+    {resolving&&<ResolveSheet poll={resolving} onPick={doResolve} onClose={()=>setResolving(null)}/>}
+  </div>;
+}
+function CreatePoll({group,onDone,onCancel,onErr}){
+  const DUR=[{l:"d1h",h:1},{l:"d6h",h:6},{l:"d1d",h:24},{l:"d3d",h:72},{l:"d1w",h:168}];
+  const subject=grpSub(group);
+  const [q,setQ]=useState(""),[dur,setDur]=useState(24),[busy,setBusy]=useState(false);
+  const submit=async()=>{if(q.trim().length<5)return;setBusy(true);
+    const{error}=await SB.rpc("create_poll",{p_group:group.id,p_subject:subject,p_type:"event",p_personal:false,p_question:q.trim(),p_target:null,p_force_proof:false,p_closes_at:new Date(Date.now()+dur*3600000).toISOString()});
+    setBusy(false);if(error)return onErr(error.message);SND.tap();onDone();};
+  return <div>
+    <button onClick={onCancel} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
+    <h2 className="disp" style={{fontSize:22,margin:"0 0 14px"}}>{t("newBetT")}</h2>
+    <textarea className="in" rows="3" placeholder={t("qPh")} value={q} onChange={e=>setQ(e.target.value)} style={{resize:"none",marginBottom:14}}/>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("subjectLocked")}</div>
+    <div className="chip on" style={{marginBottom:18,padding:"9px 13px",fontSize:13.5}}>{SEMO[subject]} {subName(subject)}</div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("whenClose")}</div>
+    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:18}}>{DUR.map(d=><button key={d.h} className={"chip"+(dur===d.h?" on":"")} onClick={()=>setDur(d.h)}>{t(d.l)}</button>)}</div>
+    <button className="btn btn-pri" disabled={busy||q.trim().length<5} onClick={submit}>{t("placeBet")}</button>
+  </div>;
+}
+
+/* ---------- ranks ---------- */
+function Ranks({group,me,onErr}){
+  const [sub,setSub]=useState("total"),[rows,setRows]=useState(null);
+  useEffect(()=>{(async()=>{const{data,error}=await SB.from("member_scores").select("profile_id,subject,points,profiles(display_name,photo_url)").eq("group_id",group.id);
+    if(error)return onErr(error.message);
+    const by={};(data||[]).forEach(r=>{const k=r.profile_id;by[k]=by[k]||{id:k,name:r.profiles?r.profiles.display_name:"—",photo:r.profiles?r.profiles.photo_url:null,total:0,s:{}};by[k].s[r.subject]=r.points;by[k].total+=r.points;});
+    setRows(Object.values(by));})();},[group.id]);
+  if(rows===null)return <Spinner label={t("loadingRanks")}/>;
+  const ranked=[...rows].sort((a,b)=>(sub==="total"?b.total-a.total:(b.s[sub]||0)-(a.s[sub]||0)));
+  const val=(r)=>sub==="total"?r.total:(r.s[sub]||0);
+  const medal=["🥇","🥈","🥉"];
+  return <div>
+    <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:12,scrollbarWidth:"none"}}>
+      {["total",...SK].map(k=><button key={k} className={"chip"+(sub===k?" on":"")} onClick={()=>setSub(k)}>{k==="total"?t("totalCat"):slabel(k)}</button>)}
+    </div>
+    {ranked.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyRanks")}</div>}
+    {ranked.map((r,i)=><div key={r.id} className="card" style={{display:"flex",alignItems:"center",gap:11,padding:11,borderColor:r.id===me.id?"var(--brand)":(i===0?"rgba(255,194,60,.4)":"var(--line)"),background:r.id===me.id?"var(--brand-soft)":"var(--ink-2)"}}>
+      <span style={{width:22,fontWeight:800,fontSize:i<3?18:14,color:i<3?"var(--gold)":"var(--faint)",textAlign:"center"}}>{i<3?medal[i]:i+1}</span>
+      <Avatar p={{display_name:r.name,photo_url:r.photo}} size={34}/>
+      <div style={{flex:1,fontWeight:700,fontSize:14.5}}>{r.name}</div>
+      <span className="tnum disp" style={{fontWeight:800,fontSize:17,color:"var(--gold)"}}>{val(r)}</span></div>)}
+  </div>;
+}
+
+/* ---------- profile ---------- */
+function Profile({group,me,total,scores,onSignOut,onUpdated,onLang,snd,onSound,onRules,langName}){
+  const L=lvl(total),next=L*50,prog=Math.round((total-(L-1)*50)/50*100);
+  const [editing,setEditing]=useState(false);
+  const srow={display:"flex",alignItems:"center",justifyContent:"space-between",width:"100%",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",color:"var(--text)",fontWeight:700,fontSize:14.5,padding:"13px 12px"};
+  return <div>
+    <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:16}}>
+      <Avatar p={me} size={58}/>
+      <div style={{flex:1}}><div className="disp" style={{fontSize:21,fontWeight:800}}>{me.display_name}</div><div style={{fontSize:13,color:"var(--muted)"}}>{t("levelL")} {L} · {group.name}</div></div>
+      <button className="chip" onClick={()=>{SND.tap();setEditing(true);}} style={{padding:"8px 12px"}}>{t("editBtn")}</button>
+    </div>
+    <div className="card" style={{padding:16}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+        <div><div style={{fontSize:12.5,color:"var(--muted)",fontWeight:700}}>{t("totalPts")}</div><div className="disp goldglow" style={{fontSize:34,fontWeight:900,color:"var(--gold)"}}><CountUp value={total}/></div></div>
+        <div style={{width:52,height:52,borderRadius:15,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}><span className="disp tnum" style={{fontWeight:900,fontSize:23,color:"var(--brand-2)"}}>{L}</span></div>
+      </div>
+      <div style={{height:8,borderRadius:9,background:"var(--ink-3)",overflow:"hidden"}}><div style={{width:prog+"%",height:"100%",background:"linear-gradient(90deg,var(--brand),var(--brand-2))",transition:"width .6s"}}/></div>
+      <div style={{fontSize:11.5,color:"var(--faint)",marginTop:6,fontWeight:600}}>{t("toNext",{n:Math.max(0,next-total),l:L+1})}</div>
+    </div>
+    <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("ptsBySub")}</div>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
+      {SK.map(k=><div key={k} className="card" style={{margin:0,padding:13,display:"flex",alignItems:"center",gap:9}}>
+        <div style={{width:32,height:32,borderRadius:9,background:SC[k]+"1f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>{SEMO[k]}</div><div><div className="disp tnum" style={{fontSize:18,fontWeight:800,color:SC[k]}}>{scores[k]||0}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{subName(k)}</div></div></div>)}
+    </div>
+    <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("settings")}</div>
+    <div className="card" style={{padding:4,marginBottom:14}}>
+      <button onClick={onLang} style={srow}><span>🌐 {t("langRow")}</span><span style={{color:"var(--muted)"}}>{langName} ›</span></button>
+      <button onClick={onSound} style={{...srow,borderTop:"1px solid var(--line)"}}><span>{snd?"🔊":"🔇"} {t("soundRow")}</span><span style={{color:"var(--muted)"}}>{snd?t("onW"):t("offW")}</span></button>
+      <button onClick={onRules} style={{...srow,borderTop:"1px solid var(--line)"}}><span>📖 {t("rulesH")}</span><span style={{color:"var(--muted)"}}>›</span></button>
+    </div>
+    <button className="btn btn-ghost" onClick={onSignOut}>{t("signOut")}</button>
+    {editing&&<EditProfile me={me} onClose={()=>setEditing(false)} onUpdated={onUpdated}/>}
+  </div>;
+}
+function EditProfile({me,onClose,onUpdated}){
+  const [name,setName]=useState(me.display_name||"");
+  const isUrl=/^https?:/.test(me.photo_url||"");
+  const [avatar,setAvatar]=useState(isUrl?"":(me.photo_url||""));
+  const [url,setUrl]=useState(isUrl?me.photo_url:"");
+  const [busy,setBusy]=useState(false),[lerr,setLerr]=useState(null);
+  const validUrl=/^https?:\/\//.test(url.trim())?url.trim():"";
+  const preview={display_name:name,photo_url:validUrl||avatar};
+  const save=async()=>{
+    if(name.trim().length<2){setLerr(t("nameMin"));return;}
+    setBusy(true); setLerr(null);
+    const photo=validUrl||(avatar||null);
+    const{data,error}=await SB.from("profiles").update({display_name:name.trim(),photo_url:photo}).eq("id",me.id).select();
+    setBusy(false);
+    if(error){ setLerr(/policy|row-level|permission/i.test(error.message)?t("saveBlocked"):error.message); return; }
+    if(!data||!data.length){ setLerr(t("saveBlocked")); return; }
+    SND.win(); onUpdated({...me,display_name:name.trim(),photo_url:photo}); onClose();
+  };
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
+    <h3 className="disp" style={{textAlign:"center",fontSize:20,fontWeight:800,margin:"0 0 14px"}}>{t("editProfile")}</h3>
+    <div style={{display:"flex",justifyContent:"center",marginBottom:16}}><Avatar p={preview} size={76}/></div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>{t("nameL")}</div>
+    <input className="in" value={name} onChange={e=>setName(e.target.value)} maxLength={24} style={{marginBottom:16}}/>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("pickAvatar")}</div>
+    <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:7,marginBottom:16}}>
+      {AVATARS.map(a=><button key={a} onClick={()=>{setAvatar(a);setUrl("");}} style={{fontSize:21,padding:"5px 0",borderRadius:11,cursor:"pointer",border:"1px solid "+((avatar===a&&!url.trim())?"var(--brand)":"var(--line)"),background:(avatar===a&&!url.trim())?"var(--brand-soft)":"var(--ink-3)"}}>{a}</button>)}
+    </div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>{t("orUrl")}</div>
+    <input className="in" placeholder="https://…" value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:url.trim()&&!validUrl?6:16}}/>
+    {url.trim()&&!validUrl&&<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:14}}>{t("urlHint")}</div>}
+    {lerr&&<div className="err">{lerr}</div>}
+    <button className="btn btn-pri" disabled={busy} onClick={save}>{busy?t("savingW"):t("saveBtn")}</button>
+  </div></div>;
+}
+
+/* ---------- rules ---------- */
+function Rules(){
+  const row=(k,v)=><div style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:"1px solid var(--line)"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{k}</span><span className="tnum" style={{fontWeight:800,color:"var(--gold)"}}>{v}</span></div>;
+  return <div>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>{t("howEarn")}</div>
+      {row(t("rCorrect"),"+5")}{row(t("rMin"),"+3")}{row(t("r3"),"+4")}{row(t("r5"),"+5")}{row(t("rWrong"),"0")}
+      <div style={{display:"flex",justifyContent:"space-between",padding:"9px 0"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{t("seasonReset")}</span><span style={{color:"var(--brand-2)",fontWeight:800}}>↻</span></div></div>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--no)"}}>{t("allowedT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("al1")}</li><li>{t("al2")}</li><li>{t("al3")}</li></ul></div>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--yes)"}}>{t("forbidT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("fo1")}</li><li>{t("fo2")}</li><li>{t("fo3")}</li></ul></div>
+    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700}}>{t("footerNote")}</p>
+  </div>;
+}
+
+/* ---------- groups (subject -> groups) ---------- */
+function Groups({groups,me,active,onErr,reload,onEnter}){
+  const [sub,setSub]=useState(null),[mode,setMode]=useState("list"),[name,setName]=useState(""),[code,setCode]=useState(""),[busy,setBusy]=useState(false),[made,setMade]=useState(null);
+  const create=async()=>{if(!name.trim())return;setBusy(true);
+    let res=await SB.rpc("create_group",{p_name:name.trim(),p_subject:sub});
+    if(res.error&&/function|does not exist|p_subject|schema cache/i.test(res.error.message)) res=await SB.rpc("create_group",{p_name:name.trim()}); // works before the per-subject SQL is run
+    setBusy(false);if(res.error)return onErr(res.error.message);
+    try{localStorage.setItem("eyevos_gsub_"+res.data.id,sub);}catch(e){}   // local bridge: remember this group's subject now; DB takes over after SQL
+    SND.win();setMade(res.data);reload();};
+  const join=async()=>{if(code.trim().length<4)return;setBusy(true);const{error}=await SB.rpc("join_group",{p_code:code.trim().toUpperCase()});setBusy(false);if(error)return onErr(error.message);SND.tap();setCode("");reload();setMode("list");};
+  const wa=(g)=>shareWa(t("inviteText",{name:g.name,code:g.invite_code,url:REDIRECT}));
+  if(!sub)return <div>
+    <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:4}}>{t("chooseSubject")}</div>
+    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("chooseSubjectSub")}</p>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {SK.map(k=><button key={k} onClick={()=>{SND.tap();setSub(k);setMode("list");setMade(null);}} className="card" style={{margin:0,padding:"18px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",border:"1px solid "+SC[k]+"55",background:SC[k]+"14"}}>
+        <span style={{fontSize:30}}>{SEMO[k]}</span><span style={{fontWeight:800,fontSize:14.5,color:SC[k]}}>{subName(k)}</span></button>)}
+    </div>
+  </div>;
+  const inSub=groups.filter(g=>grpSub(g)===sub);
+  return <div>
+    <button onClick={()=>{setSub(null);setMode("list");setMade(null);}} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
+    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14,flexWrap:"wrap"}}><span style={{fontSize:24}}>{SEMO[sub]}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:SC[sub]}}>{subName(sub)}</span><span style={{color:"var(--muted)",fontSize:13}}>· {t("yourGroupsIn")}</span></div>
+    {made?<div className="card" style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>{t("groupCreated")}</div><div className="disp tnum goldglow" style={{fontSize:28,fontWeight:900,color:"var(--brand-2)",letterSpacing:"3px",margin:"4px 0 14px"}}>{made.invite_code}</div>
+      <button className="btn" style={{background:"#25D366",marginBottom:10}} onClick={()=>wa(made)}>{t("inviteWa")}</button>
+      <button className="btn btn-pri" onClick={()=>onEnter(made,sub)}>{t("enterGroup")}</button></div>
+    :mode==="create"?<>
+      <input className="in" placeholder={t("groupNamePh")} value={name} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
+      <button className="btn btn-pri" disabled={busy||!name.trim()} onClick={create} style={{marginBottom:10}}>{t("createBtn")}</button>
+      <button className="btn btn-ghost" onClick={()=>setMode("list")}>{t("back")}</button></>
+    :mode==="join"?<>
+      <input className="in" placeholder="K7M2QX" value={code} onChange={e=>setCode(e.target.value.toUpperCase())} style={{marginBottom:14,textAlign:"center",letterSpacing:"2px",fontSize:18}}/>
+      <button className="btn btn-pri" disabled={busy||code.trim().length<4} onClick={join} style={{marginBottom:10}}>{t("joinBtn")}</button>
+      <button className="btn btn-ghost" onClick={()=>setMode("list")}>{t("back")}</button></>
+    :<>
+      {inSub.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("noGroupB")}</div>}
+      {inSub.map(g=><div key={g.id} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,borderColor:active&&active.id===g.id?"var(--brand)":"var(--line)"}}>
+        <button onClick={()=>onEnter(g,sub)} style={{flex:1,display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer",textAlign:"start",color:"var(--text)",padding:0}}>
+          <div style={{width:38,height:38,borderRadius:11,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
+          <div><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div></button>
+        <button onClick={()=>wa(g)} className="chip" style={{padding:8}} title="WhatsApp">🟢</button></div>)}
+      <button className="btn btn-pri" style={{marginTop:8,marginBottom:10}} onClick={()=>setMode("create")}>{t("createGroup")}</button>
+      <button className="btn btn-ghost" onClick={()=>setMode("join")}>{t("joinWithCode")}</button></>}
+  </div>;
+}
+
+/* ---------- root ---------- */
+function App(){
+  const [session,setSession]=useState(undefined),[me,setMe]=useState(null),[groups,setGroups]=useState(null),[group,setGroup]=useState(null);
+  const [tab,setTab]=useState("feed"),[err,setErr]=useState(null),[startCreate,setStartCreate]=useState(0),[celebrate,setCelebrate]=useState(false);
+  const [scores,setScores]=useState({}),[total,setTotal]=useState(0),[snd,setSnd]=useState(SND.on),[lang,setLang]=useState(CUR.lang),[langOpen,setLangOpen]=useState(false);
+  useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=dirOf(lang);},[lang]);
+  const pickLang=(c)=>{CUR.lang=c;localStorage.setItem("eyevos_lang",c);setLang(c);setLangOpen(false);SND.tap();};
+  useEffect(()=>{SB.auth.getSession().then(({data})=>setSession(data.session||null));const{data:s}=SB.auth.onAuthStateChange((_e,ss)=>setSession(ss||null));return()=>s.subscription.unsubscribe();},[]);
+  useEffect(()=>{if(!session){setMe(null);return;}SB.from("profiles").select("id,display_name,photo_url").eq("id",session.user.id).single().then(({data})=>setMe(data||{id:session.user.id,display_name:(session.user.email||"Player").split("@")[0]}));},[session]);
+  const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("*").order("created_at");if(error){setErr(error.message);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:(list[0]||null));};
+  useEffect(()=>{if(me)loadGroups();},[me]);
+  const loadScores=async()=>{if(!group||!me)return;const{data}=await SB.from("member_scores").select("subject,points").eq("group_id",group.id).eq("profile_id",me.id);const s={};let x=0;(data||[]).forEach(r=>{s[r.subject]=r.points;x+=r.points;});setScores(s);setTotal(x);};
+  useEffect(()=>{loadScores();},[group,me]);
+  const onErr=(m)=>{setErr(m);setTimeout(()=>setErr(null),5000);};
+  const signOut=async()=>{await SB.auth.signOut();setGroup(null);setGroups(null);};
+  const onResolved=(won)=>{loadScores();if(won){setCelebrate(true);setTimeout(()=>setCelebrate(false),1500);}};
+  const langSheet = langOpen?<LangSheet cur={lang} onPick={pickLang} onClose={()=>setLangOpen(false)}/>:null;
+  const langBtn = <button onClick={()=>setLangOpen(true)} className="chip" style={{padding:"6px 9px",fontSize:14}} title="Language">🌐</button>;
+
+  if(session===undefined)return <div className="stage"><div className="device"><Spinner label={t("connecting")}/></div></div>;
+  if(!session)return <div className="stage"><div className="device"><Coins/><SignIn onOpenLang={()=>setLangOpen(true)}/>{langSheet}</div></div>;
+  if(!me||groups===null)return <div className="stage"><div className="device"><Spinner/></div></div>;
+
+  return <div className="stage"><div className="device">
+    {celebrate&&<Confetti/>}
+    <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+      <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
+      <div style={{display:"flex",alignItems:"center",gap:8}}>
+        {group&&tab!=="groups"&&tab!=="feed"&&<button className="chip" onClick={()=>setTab("groups")} style={{padding:"5px 10px",fontSize:12}}>👥 {group.name} ›</button>}
+        <span className="pill" style={{fontSize:13}}>🏆 <CountUp value={total}/></span>
+      </div></div>
+      {tab==="feed"&&<p className="disp" style={{fontSize:24,fontWeight:900,margin:"12px 0 0"}}>{t("tbBet")}<br/>{t("tbFor")} <span className="jackpot">{t("stFree")}</span></p>}
+      {tab==="board"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>{t("boardH")}</p>}
+      {tab==="rules"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>{t("rulesH")}</p>}
+      {tab==="profile"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>{t("profileH")}</p>}
+      {tab==="groups"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>👥 {t("groupsT")}</p>}
+    </div>
+    <div className="scroll">
+      {err&&<div className="err">{err}</div>}
+      {tab==="groups"?
+        <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{setGroup(g);setTab("feed");}}/>
+      :!group?
+        <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎲</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:16}}>{t("noGroupB")}</p><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
+        :tab==="feed"?<Feed group={group} me={me} onErr={onErr} onResolved={onResolved} startCreate={startCreate}/>
+        :tab==="board"?<Ranks group={group} me={me} onErr={onErr}/>
+        :tab==="rules"?<Rules/>
+        :<Profile group={group} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>}
+    </div>
+    <div className="nav">
+      <button className={"navb"+(tab==="feed"?" on":"")} onClick={()=>setTab("feed")}>🏠 {t("navFeed")}</button>
+      <button className={"navb"+(tab==="board"?" on":"")} onClick={()=>setTab("board")}>🏆 {t("navBoard")}</button>
+      <button className="fab" onClick={()=>{ if(group){setTab("feed");setStartCreate(x=>x+1);} else setTab("groups"); }}>+</button>
+      <button className={"navb"+(tab==="groups"?" on":"")} onClick={()=>setTab("groups")}>👥 {t("groupsT")}</button>
+      <button className={"navb"+(tab==="profile"?" on":"")} onClick={()=>setTab("profile")}>👤 {t("navProfile")}</button>
+    </div>
+    {langSheet}
+  </div></div>;
+}
+// Error boundary — never show a blank screen; offer a one-tap reload
+class ErrorBoundary extends React.Component{
+  constructor(p){ super(p); this.state={err:false}; }
+  static getDerivedStateFromError(){ return {err:true}; }
+  componentDidCatch(e,info){ try{ console.error("Eyevos crashed:",e,info); }catch(_){ } }
+  render(){
+    if(this.state.err) return <div className="stage"><div className="device"><div className="scroll" style={{textAlign:"center",paddingTop:80}}>
+      <div style={{fontSize:46,marginBottom:10}}>🎯</div>
+      <h2 className="disp" style={{fontSize:24}}>Eyevos</h2>
+      <p style={{color:"var(--muted)",fontSize:14,margin:"6px 0 18px"}}>Something hiccuped. Tap to reload.</p>
+      <button className="btn btn-pri" style={{maxWidth:240,margin:"0 auto"}} onClick={()=>location.reload()}>↻ Reload</button>
+    </div></div></div>;
+    return this.props.children;
+  }
+}
+if(!_FRESH) ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App/></ErrorBoundary>);
+</script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}</script>
+</body>
+</html>
+
+-- ============================================================
+--  Eyevos — scheduled auto-resolution (system resolver)
+--  auto_resolve_poll: called ONLY by the trusted cron endpoint via the
+--  service-role key. It has no auth.uid()/membership check (the system is
+--  the caller), but it self-guards: it only resolves auto-verifiable
+--  subjects (sport/weather/screen/news), only AFTER closes_at, and is
+--  REVOKED from normal users so nobody can call it from the app.
+--  Run once in Supabase → SQL Editor. Requires FIX-resolve.sql already run.
+-- ============================================================
+
+create or replace function auto_resolve_poll(p_poll uuid, p_outcome vote_choice)
+returns text language plpgsql security definer set search_path=public as $$
+declare
+  v polls%rowtype; v_total int; v_win int; w numeric;
+  v_base int; v_minor int; v_streak_b int; v_new_streak int; r record;
+begin
+  select * into v from polls where id=p_poll for update;
+  if v.id is null or v.status not in ('open','locked') then return 'skip'; end if;
+  if not (v.subject in ('sport','weather','screen','news') and not v.force_proof and v.type='event')
+    then return 'not_auto'; end if;                         -- only publicly-verifiable subjects
+  if now() < v.closes_at then return 'not_closed'; end if;  -- never before the close time
+
+  select count(*), count(*) filter (where choice=p_outcome) into v_total, v_win from votes where poll_id=p_poll;
+  if v_total = 0 then update polls set status='void', resolved_outcome=p_outcome, resolved_by='auto' where id=p_poll; return 'void'; end if;
+  w := v_win::numeric / v_total;
+  update polls set status='resolved', resolved_outcome=p_outcome, resolved_by='auto' where id=p_poll;
+
+  for r in select voter_id, choice from votes where poll_id=p_poll loop
+    if r.choice = p_outcome then
+      v_base := 5;
+      v_minor := case when v.type<>'person' and w < 0.5
+                        and v_total >= 6 and least(v_win, v_total-v_win) >= 2 then 3 else 0 end;
+      select streak into v_streak_b from member_scores
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject and season_no=v.season_no;
+      v_new_streak := coalesce(v_streak_b,0) + 1;
+      v_streak_b := case when v_new_streak=3 then 4 when v_new_streak=5 then 5 else 0 end;
+      insert into score_events(group_id,profile_id,poll_id,subject,season_no,base,minority_bonus,streak_bonus)
+        values (v.group_id,r.voter_id,p_poll,v.subject,v.season_no,v_base,v_minor,v_streak_b)
+        on conflict (poll_id,profile_id) do nothing;
+      insert into member_scores(group_id,profile_id,subject,season_no,points,streak)
+        values (v.group_id,r.voter_id,v.subject,v.season_no, v_base+v_minor+v_streak_b, v_new_streak)
+        on conflict (group_id,profile_id,subject) do update
+          set points = member_scores.points + v_base+v_minor+v_streak_b, streak = v_new_streak;
+    else
+      update member_scores set streak=0
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject;
+    end if;
+  end loop;
+  return 'resolved';
+end; $$;
+
+-- lock it down: only the service role (cron) may run it, never app users
+revoke all on function auto_resolve_poll(uuid, vote_choice) from public, anon, authenticated;
+
+-- FIX: "column v_void does not exist" when resolving a prediction.
+-- Cause: resolve_poll referenced an undeclared identifier `v_void`; the
+-- parameter is `p_void`. One-word fix. Run this whole block once in
+-- Supabase → SQL Editor. (Safe: create-or-replace, same signature.)
+
+create or replace function resolve_poll(p_poll uuid, p_outcome vote_choice, p_void boolean default false, p_proof text default null)
+returns void language plpgsql security definer set search_path=public as $$
+declare
+  v polls%rowtype; v_auto boolean; v_total int; v_win int; w numeric;
+  v_base int; v_minor int; v_streak_b int; v_new_streak int; r record;
+begin
+  select * into v from polls where id=p_poll for update;
+  if v.id is null or v.status not in ('open','locked') then return; end if;
+  v_auto := v.subject in ('sport','weather','screen','news') and not v.force_proof and v.type='event';
+  if not is_member(v.group_id) then raise exception 'Not a member'; end if;
+  if not v_auto and v.author_id <> auth.uid() then
+    raise exception 'Only the author who posted this can answer it';
+  end if;
+  if not v_auto and not p_void and p_proof is null and v.force_proof then   -- FIXED: p_void (was v_void)
+    raise exception 'A proof photo is required'; end if;
+
+  if p_void then update polls set status='void' where id=p_poll; return; end if;
+
+  select count(*), count(*) filter (where choice=p_outcome) into v_total, v_win from votes where poll_id=p_poll;
+  if v_total = 0 then update polls set status='void', resolved_outcome=p_outcome where id=p_poll; return; end if;
+  w := v_win::numeric / v_total;
+  update polls set status='resolved', resolved_outcome=p_outcome,
+    resolved_by = case when v_auto then 'auto' else 'author' end, proof_url=p_proof where id=p_poll;
+
+  for r in select voter_id, choice from votes where poll_id=p_poll loop
+    if r.choice = p_outcome then
+      v_base := 5;
+      v_minor := case when v.type<>'person' and w < 0.5
+                        and v_total >= 6 and least(v_win, v_total-v_win) >= 2 then 3 else 0 end;
+      select streak into v_streak_b from member_scores
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject and season_no=v.season_no;
+      v_new_streak := coalesce(v_streak_b,0) + 1;
+      v_streak_b := case when v_new_streak=3 then 4 when v_new_streak=5 then 5 else 0 end;
+      insert into score_events(group_id,profile_id,poll_id,subject,season_no,base,minority_bonus,streak_bonus)
+        values (v.group_id,r.voter_id,p_poll,v.subject,v.season_no,v_base,v_minor,v_streak_b)
+        on conflict (poll_id,profile_id) do nothing;
+      insert into member_scores(group_id,profile_id,subject,season_no,points,streak)
+        values (v.group_id,r.voter_id,v.subject,v.season_no, v_base+v_minor+v_streak_b, v_new_streak)
+        on conflict (group_id,profile_id,subject) do update
+          set points = member_scores.points + v_base+v_minor+v_streak_b, streak = v_new_streak;
+    else
+      update member_scores set streak=0
+        where group_id=v.group_id and profile_id=r.voter_id and subject=v.subject;
+    end if;
+  end loop;
+end; $$;

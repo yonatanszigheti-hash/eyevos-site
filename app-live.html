@@ -16,7 +16,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&display=swap');
 :root{--ink:#15121E;--ink-2:#1E1A2C;--ink-3:#272138;--ink-4:#322A47;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);
-  --text:#F4F1FA;--muted:#A79EBE;--faint:#6E6786;--yes:#FF4D6D;--yes-soft:rgba(255,77,109,.14);--no:#2DD4BF;--no-soft:rgba(45,212,191,.14);
+  --text:#F4F1FA;--muted:#B3AAC9;--faint:#8E86A8;--yes:#FF4D6D;--yes-soft:rgba(255,77,109,.14);--no:#2DD4BF;--no-soft:rgba(45,212,191,.14);
   --gold:#FFC23C;--gold-soft:rgba(255,194,60,.14);--brand:#8A6BFF;--brand-2:#A78BFF;--brand-soft:rgba(138,107,255,.16);}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -204,6 +204,32 @@ zh:{kindAbout:"关于谁？",kGen:"通用",kPers:"关于某人 🙋",tagWho:"标
 ar:{kindAbout:"عن من؟",kGen:"عام",kPers:"عن شخص 🙋",tagWho:"من تُشير إليه؟",mustTag:"يجب الإشارة إلى شخص",noMembers:"لا يوجد أعضاء آخرون للإشارة",pendInbox:"بانتظار موافقتك",approveW:"موافقة",declineW:"رفض",aboutYou:"🙋 السؤال عنك — لا تصوّت",waitApprove:"⏳ بانتظار الشخص المُشار إليه",resYes:"نعم ✅",resNo:"لا ❌",wonB:"أصبت! 🎉",lostB:"أخطأت 😬",winT:"أصبت! 🏆",winCont:"متابعة",winPts:"+{n} نقطة",winTotal:"المجموع {n}"}
 };
 for(const _c in _GX6){ if(STR[_c]) Object.assign(STR[_c],_GX6[_c]); }
+const _GX7={
+he:{stFree:"חינם",emptyFeed:"🎯 עוד אין ניחושים כאן. תהיה הראשון!",allCat:"🔥 הכל",bonusHint:"מיעוט מנצח = בונוס"},
+en:{stFree:"Free",emptyFeed:"🎯 No predictions here yet. Be the first!",allCat:"🔥 All",bonusHint:"Winning underdog = bonus"},
+es:{settings:"Ajustes",langRow:"Idioma",soundRow:"Sonido",onW:"Activado",offW:"Apagado",proofUrl:"Enlace de imagen de prueba (opcional)",stFree:"Gratis",emptyFeed:"🎯 Aún no hay predicciones aquí. ¡Sé el primero!",allCat:"🔥 Todo",bonusHint:"Minoría ganadora = bonus"},
+fr:{settings:"Paramètres",langRow:"Langue",soundRow:"Son",onW:"Activé",offW:"Désactivé",proofUrl:"Lien d'image de preuve (facultatif)",stFree:"Gratuit",emptyFeed:"🎯 Aucun pronostic ici pour l'instant. Sois le premier !",allCat:"🔥 Tout",bonusHint:"Minorité gagnante = bonus"},
+pt:{settings:"Configurações",langRow:"Idioma",soundRow:"Som",onW:"Ligado",offW:"Desligado",proofUrl:"Link de imagem de prova (opcional)",stFree:"Grátis",emptyFeed:"🎯 Ainda não tem palpite aqui. Seja o primeiro!",allCat:"🔥 Tudo",bonusHint:"Minoria vencedora = bônus"},
+ru:{settings:"Настройки",langRow:"Язык",soundRow:"Звук",onW:"Вкл",offW:"Выкл",proofUrl:"Ссылка на изображение-доказательство (необязательно)",stFree:"Бесплатно",emptyFeed:"🎯 Здесь пока нет прогнозов. Будь первым!",allCat:"🔥 Все",bonusHint:"Победа меньшинства = бонус"},
+de:{settings:"Einstellungen",langRow:"Sprache",soundRow:"Ton",onW:"An",offW:"Aus",proofUrl:"Link zum Beweisbild (optional)",stFree:"Gratis",emptyFeed:"🎯 Hier gibt's noch keine Tipps. Sei der Erste!",allCat:"🔥 Alle",bonusHint:"Minderheit gewinnt = Bonus"},
+hi:{settings:"सेटिंग्स",langRow:"भाषा",soundRow:"ध्वनि",onW:"चालू",offW:"बंद",proofUrl:"प्रमाण इमेज लिंक (वैकल्पिक)",stFree:"मुफ़्त",emptyFeed:"🎯 यहाँ अभी कोई अनुमान नहीं। पहले बनो!",allCat:"🔥 सभी",bonusHint:"अल्पमत जीते = बोनस"},
+zh:{settings:"设置",langRow:"语言",soundRow:"声音",onW:"开",offW:"关",proofUrl:"证据图片链接（可选）",stFree:"免费",emptyFeed:"🎯 这里还没有竞猜。来当第一个吧！",allCat:"🔥 全部",bonusHint:"少数派获胜 = 加成"},
+ar:{settings:"الإعدادات",langRow:"اللغة",soundRow:"الصوت",onW:"تشغيل",offW:"إيقاف",proofUrl:"رابط صورة الإثبات (اختياري)",stFree:"مجاناً",emptyFeed:"🎯 لا توقّعات هنا بعد. كن الأول!",allCat:"🔥 الكل",bonusHint:"فوز الأقلية = مكافأة"}
+};
+for(const _c in _GX7){ if(STR[_c]) Object.assign(STR[_c],_GX7[_c]); }
+const _GX8={
+he:{viewProof:"צפה בהוכחה",awaitResolve:"⏳ ממתין להכרעת היוצר"},
+en:{viewProof:"View proof",awaitResolve:"⏳ Waiting for the author to settle"},
+es:{viewProof:"Ver prueba",awaitResolve:"⏳ Esperando que el autor resuelva"},
+fr:{viewProof:"Voir la preuve",awaitResolve:"⏳ En attente de la décision de l'auteur"},
+pt:{viewProof:"Ver prova",awaitResolve:"⏳ Aguardando o autor resolver"},
+ru:{viewProof:"Смотреть доказательство",awaitResolve:"⏳ Ждём решения автора"},
+de:{viewProof:"Beweis ansehen",awaitResolve:"⏳ Warten auf Auflösung durch den Autor"},
+hi:{viewProof:"प्रमाण देखें",awaitResolve:"⏳ लेखक के फैसले का इंतज़ार"},
+zh:{viewProof:"查看证据",awaitResolve:"⏳ 等待作者裁定"},
+ar:{viewProof:"عرض الإثبات",awaitResolve:"⏳ بانتظار حسم صاحب السؤال"}
+};
+for(const _c in _GX8){ if(STR[_c]) Object.assign(STR[_c],_GX8[_c]); }
 const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
 const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
@@ -232,7 +258,7 @@ function grpSub(g){ if(!g)return "sport"; try{ return g.subject || localStorage.
 
 const pct=(a,b)=>(a+b===0?50:Math.round(a/(a+b)*100));
 const lvl=(x)=>Math.floor(x/50)+1;
-const AVATARS=["😎","🦊","🐯","🦁","🐼","🦄","🐲","🦅","🐺","🐙","🎯","🔥","👑","⚡","🎲","🏆","🌟","💎","🚀","🍀"];
+const AVATARS=["😎","🦊","🐯","🦁","🐼","🦄","🐲","🦅","🐺","🐙","🎯","🔥","👑","⚡","🎮","🏆","🌟","💎","🚀","🍀"];
 function Avatar({p,size}){
   const s=size||58, st={width:s,height:s,borderRadius:Math.round(s*.26),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0};
   if(p&&p.photo_url){ if(/^https?:/.test(p.photo_url)) return <div style={{...st,background:"var(--ink-3)"}}><img src={p.photo_url} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>;
@@ -285,7 +311,7 @@ function LangSheet({cur,onPick,onClose}){
 
 /* ---------- sign in ---------- */
 function Coins(){
-  const set=[["🪙","7%","-1s","13s"],["🎲","80%","-8s","16s"],["💎","22%","-5s","15s"],["🏆","90%","-11s","14s"],["🔥","46%","-3s","17s"],["⭐","64%","-6s","12s"],["🪙","34%","-9s","18s"],["💰","54%","-2s","15s"]];
+  const set=[["🎯","7%","-1s","13s"],["📺","80%","-8s","16s"],["⚽","22%","-5s","15s"],["🏆","90%","-11s","14s"],["🔥","46%","-3s","17s"],["⭐","64%","-6s","12s"],["🌦️","34%","-9s","18s"],["📰","54%","-2s","15s"]];
   return <div className="coins">{set.map((c,i)=><span key={i} className="coin" style={{left:c[1],bottom:"-40px",animationDelay:c[2],animationDuration:c[3]}}>{c[0]}</span>)}</div>;
 }
 const TICK=["⚽ ⚽?","📺 📺?","🌦️ 🌦️?","🍔 🍔?","📰 📰?","🎯 🎯?","🏀 🏀?","🎬 🎬?"];
@@ -363,7 +389,6 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
   const closed=poll.status==="open"&&new Date(poll.closes_at)<new Date();
   const canResolve=(poll.status==="open"&&closed)||poll.status==="locked";
   const mayResolve=canResolve&&poll.author_id===me.id;
-  const pay=payouts(tl);
   const aboutMe=!!poll.target_id&&poll.target_id===me.id;
   const myResult=poll.status==="resolved"&&tl.mine?(tl.mine===poll.resolved_outcome?"win":"lose"):null;
   const shareBet=()=>shareWa(t("shareBet",{q:poll.question,url:REDIRECT}));
@@ -377,20 +402,22 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
     <p className="disp" style={{fontSize:18,fontWeight:700,margin:"0 0 12px",lineHeight:1.25}}>{poll.question}</p>
     <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe}/>
     {poll.status==="open"&&!aboutMe&&<>
-      <div style={{display:"flex",gap:8,marginTop:10}}>
-        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="yes"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="yes"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--yes)"}}>{t("yes")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="yes"?"var(--gold)":"var(--text)"}}>+{pay.yes}{pay.min==="yes"?" 🔥":""}</span></div>
-        <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="no"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="no"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--no)"}}>{t("no")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="no"?"var(--gold)":"var(--text)"}}>+{pay.no}{pay.min==="no"?" 🔥":""}</span></div>
+      <div style={{display:"flex",alignItems:"center",gap:10,marginTop:10,background:"var(--ink-3)",border:"1px solid var(--line)",borderRadius:11,padding:"8px 12px",fontSize:12.5,fontWeight:700}}>
+        <span dir="ltr" style={{color:"var(--gold)",fontWeight:900}}>🎯 +5</span>
+        <span style={{color:"var(--faint)"}}>·</span>
+        <span style={{color:"var(--gold)"}}>🔥 {t("bonusHint")}</span>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600,gap:8}}>
-        <span>⏱ {closed?t("closedW"):<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
-        <span style={{whiteSpace:"nowrap"}}>{pay.gate?t("minPays"):t("minOpens")}</span>
+        <span dir="ltr">⏱ {closed?t("closedW"):<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
       </div>
     </>}
     {poll.status==="open"&&aboutMe&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,background:"var(--brand-soft)",color:"var(--brand-2)",fontWeight:700,fontSize:13,textAlign:"center"}}>{t("aboutYou")}</div>}
+    {canResolve&&!mayResolve&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,background:"var(--ink-3)",color:"var(--muted)",fontWeight:700,fontSize:12.5,textAlign:"center"}}>{t("awaitResolve")}</div>}
     {myResult&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,fontWeight:800,fontSize:13.5,textAlign:"center",background:myResult==="win"?"rgba(255,194,60,.14)":"var(--ink-3)",color:myResult==="win"?"var(--gold)":"var(--muted)"}}>
       {myResult==="win"?t("wonB"):t("lostB")}
       {myResult==="win"&&<button onClick={shareWin} className="chip" style={{marginInlineStart:8,padding:"3px 9px",fontSize:12}}>{t("shareBtn")}</button>}
     </div>}
+    {poll.status==="resolved"&&/^https?:\/\//.test(poll.proof_url||"")&&<a href={poll.proof_url} target="_blank" rel="noopener noreferrer" style={{display:"block",marginTop:10,textAlign:"center",fontSize:12.5,fontWeight:700,color:"var(--brand-2)"}}>🔗 {t("viewProof")}</a>}
     {mayResolve&&<button className="btn btn-gold" style={{marginTop:11,fontSize:14,padding:11}} onClick={()=>onResolve(poll)}>{t("resolveBtn")}</button>}
   </div>;
 }
@@ -414,7 +441,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   const lastCreate=useRef(startCreate);
   useEffect(()=>{ if(startCreate!==lastCreate.current){ lastCreate.current=startCreate; SND.tap(); setCreating(true); } },[startCreate]);
   const load=async()=>{                  // cross-group: RLS already scopes polls to groups I'm a member of
-    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,force_proof,group_id,target_id,personal").order("created_at",{ascending:false});
+    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,force_proof,group_id,target_id,personal,proof_url").order("created_at",{ascending:false});
     if(!mounted.current)return;
     if(error)return onErr(error.message);
     setPolls(data||[]);
@@ -634,10 +661,13 @@ function EditProfile({me,onClose,onUpdated}){
     if(name.trim().length<2){setLerr(t("nameMin"));return;}
     setBusy(true); setLerr(null);
     const photo=validUrl||(avatar||null);
-    const{data,error}=await SB.from("profiles").update({display_name:name.trim(),photo_url:photo}).eq("id",me.id).select();
+    let res=await SB.rpc("update_profile",{p_name:name.trim(),p_photo:photo});   // server validates + blocks banned names
+    if(res.error&&/function|does not exist|schema cache/i.test(res.error.message)){ // fallback before HARDENING.sql is run
+      const up=await SB.from("profiles").update({display_name:name.trim(),photo_url:photo}).eq("id",me.id).select();
+      res={error: up.error || ((!up.data||!up.data.length)?{message:t("saveBlocked")}:null)};
+    }
     setBusy(false);
-    if(error){ setLerr(/policy|row-level|permission/i.test(error.message)?t("saveBlocked"):error.message); return; }
-    if(!data||!data.length){ setLerr(t("saveBlocked")); return; }
+    if(res.error){ setLerr(/policy|row-level|permission/i.test(res.error.message)?t("saveBlocked"):res.error.message); return; }
     SND.win(); onUpdated({...me,display_name:name.trim(),photo_url:photo}); onClose();
   };
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
@@ -766,7 +796,7 @@ function App(){
       {tab==="groups"?
         <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{setGroup(g);setTab("board");}}/>
       :groups.length===0?
-        <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎲</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:16}}>{t("noGroupB")}</p><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
+        <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎯</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:16}}>{t("noGroupB")}</p><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
         :tab==="feed"?<Feed groups={groups} me={me} onErr={onErr} onResolved={onResolved} startCreate={startCreate}/>
         :tab==="board"?(group?<Ranks group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)}/>:<PickGroup groups={groups} onPick={(g)=>setGroup(g)}/>)
         :tab==="rules"?<Rules/>

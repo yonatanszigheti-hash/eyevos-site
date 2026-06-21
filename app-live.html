@@ -418,9 +418,13 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(!mounted.current)return;
     if(error)return onErr(error.message);
     setPolls(data||[]);
-    if(data&&data.length){const ids=data.map(p=>p.id);const{data:v}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids);
+    if(data&&data.length){const ids=data.map(p=>p.id);
+      const tt={};
+      const rpc=await SB.rpc("poll_tally",{p_polls:ids});           // counts only (private); falls back if RPC not created yet
       if(!mounted.current)return;
-      const tt={};(v||[]).forEach(r=>{tt[r.poll_id]=tt[r.poll_id]||{yes:0,no:0,mine:null};tt[r.poll_id][r.choice]++;if(r.voter_id===me.id)tt[r.poll_id].mine=r.choice;});setTally(tt);}
+      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={yes:r.yes||0,no:r.no||0,mine:r.mine||null};}); }
+      else { const{data:v}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids); if(!mounted.current)return; (v||[]).forEach(r=>{tt[r.poll_id]=tt[r.poll_id]||{yes:0,no:0,mine:null};tt[r.poll_id][r.choice]++;if(r.voter_id===me.id)tt[r.poll_id].mine=r.choice;}); }
+      setTally(tt);}
     else setTally({});
   };
   useEffect(()=>{load();},[]);

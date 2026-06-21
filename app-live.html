@@ -18,19 +18,58 @@
 :root{--ink:#15121E;--ink-2:#1E1A2C;--ink-3:#272138;--ink-4:#322A47;--line:rgba(255,255,255,.08);--line-2:rgba(255,255,255,.14);
   --text:#F4F1FA;--muted:#B3AAC9;--faint:#8E86A8;--yes:#FF4D6D;--yes-soft:rgba(255,77,109,.14);--no:#2DD4BF;--no-soft:rgba(45,212,191,.14);
   --gold:#FFC23C;--gold-soft:rgba(255,194,60,.14);--brand:#8A6BFF;--brand-2:#A78BFF;--brand-soft:rgba(138,107,255,.16);}
+:root{
+  --fs-2xs:11px;--fs-xs:12px;--fs-sm:13px;--fs-base:14px;--fs-md:15px;--fs-lg:17px;--fs-xl:20px;--fs-2xl:24px;--fs-3xl:30px;--fs-4xl:42px;
+  --fw-reg:500;--fw-med:600;--fw-bold:700;--fw-x:800;--fw-black:900;
+  --lh-tight:1.15;--lh-snug:1.3;--lh-base:1.5;--lh-loose:1.7;
+  --ls-tight:-.02em;--ls-wide:.04em;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--s8:32px;
+  --r-xs:8px;--r-sm:11px;--r-md:14px;--r-lg:18px;--r-xl:26px;--r-pill:999px;
+  --sh-1:0 4px 14px rgba(0,0,0,.22);--sh-2:0 10px 30px rgba(0,0,0,.28);--sh-3:0 18px 46px rgba(0,0,0,.4);
+  --sh-brand:0 12px 30px rgba(138,107,255,.5);--sh-gold:0 12px 30px rgba(255,194,60,.45);
+  --t-fast:.15s;--t-base:.22s;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{font-family:'Heebo',system-ui,sans-serif}
-.stage{min-height:100vh;background:radial-gradient(900px 500px at 50% -10%,rgba(138,107,255,.16),transparent 60%),radial-gradient(600px 400px at 90% 110%,rgba(255,77,109,.1),transparent 60%),#0C0A14;display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text)}
+body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-height:var(--lh-base);font-weight:var(--fw-med);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.stage{min-height:100vh;background:radial-gradient(900px 500px at 50% -10%,rgba(138,107,255,.16),transparent 60%),radial-gradient(600px 400px at 90% 110%,rgba(255,77,109,.1),transparent 60%),#0C0A14;display:flex;align-items:center;justify-content:center;padding:var(--s6);color:var(--text)}
 .device{position:relative;width:430px;max-width:100%;height:864px;max-height:calc(100vh - 48px);background:var(--ink);border:1px solid var(--line);border-radius:34px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.55);display:flex;flex-direction:column}
 .scroll{flex:1;overflow-y:auto;padding:4px 16px 16px;scrollbar-width:none;position:relative;z-index:1}
 .scroll::-webkit-scrollbar{display:none}
 .disp{font-weight:800;letter-spacing:-.02em}
 .tnum{font-variant-numeric:tabular-nums}
 .bidi{unicode-bidi:isolate}
+.toastwrap{position:absolute;inset-inline:0;top:0;z-index:50;display:flex;justify-content:center;pointer-events:none;padding:10px 14px}
+.toast{pointer-events:auto;max-width:360px;width:100%;display:flex;align-items:flex-start;gap:10px;background:linear-gradient(180deg,rgba(56,24,34,.97),rgba(40,18,26,.97));border:1px solid rgba(255,77,109,.45);box-shadow:0 16px 40px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);color:#FFD7DE;border-radius:14px;padding:11px 12px;font-size:13px;font-weight:600;line-height:1.45;animation:toastin .26s cubic-bezier(.22,1,.36,1)}
+.toast .tmsg{flex:1;min-width:0;overflow-wrap:anywhere}
+.toast .tx{flex-shrink:0;background:rgba(255,255,255,.1);border:none;color:#FFD7DE;width:24px;height:24px;border-radius:8px;font-size:15px;font-weight:800;line-height:1;cursor:pointer;font-family:inherit}
+.toast .tx:active{transform:scale(.9)}
+@keyframes toastin{from{transform:translateY(-14px);opacity:0}to{transform:translateY(0);opacity:1}}
+.clamp1{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;word-break:break-word}
+.clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;word-break:break-word}
+.clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;word-break:break-word}
+@media (prefers-reduced-motion:reduce){.toast{animation:none!important}}
 .bidi-ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
-.card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;cursor:pointer;border-radius:13px;padding:14px;font-family:inherit;font-weight:800;font-size:15px;color:#fff;transition:.15s}
+/* ===== thrill-micro layer ===== */
+.bar.is-locking{animation:lockpulse .65s cubic-bezier(.22,1,.36,1)}
+@keyframes lockpulse{0%{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03)}45%{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 2px rgba(255,194,60,.55),0 0 26px rgba(255,194,60,.4)}100%{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 1px rgba(255,194,60,.18)}}
+.lockspin{width:18px;height:18px;border:2px solid rgba(255,194,60,.25);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite}
+.bar .side.is-picked{animation:sideflash .6s cubic-bezier(.22,1,.36,1)}
+@keyframes sideflash{0%{filter:brightness(1.5)}100%{filter:brightness(1)}}
+.bar.is-reveal::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:13px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.16) 50%,transparent 100%);transform:translateX(-110%);animation:sweep .7s cubic-bezier(.22,1,.36,1) .05s 1}
+@keyframes sweep{to{transform:translateX(110%)}}
+[dir=rtl] .bar.is-reveal::after{animation-name:sweepR}
+@keyframes sweepR{from{transform:translateX(110%)}to{transform:translateX(-110%)}}
+.hotcard{position:relative}
+.hotcard::before{content:"";position:absolute;inset:-1px;border-radius:18px;pointer-events:none;box-shadow:0 0 0 0 rgba(255,77,109,.45);animation:hotpulse 2.4s ease-out infinite}
+@keyframes hotpulse{0%{box-shadow:0 0 0 0 rgba(255,77,109,.4)}70%{box-shadow:0 0 0 7px rgba(255,77,109,0)}100%{box-shadow:0 0 0 0 rgba(255,77,109,0)}}
+.tnum.bump{animation:bump .42s cubic-bezier(.34,1.56,.64,1)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.streakbadge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:900;border-radius:999px;padding:2px 8px;background:linear-gradient(90deg,rgba(255,138,77,.22),rgba(255,77,109,.22));color:#FFB07A;border:1px solid rgba(255,138,77,.4)}
+.streakbadge .fl{animation:flick 1.6s ease-in-out infinite;display:inline-block}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.18) rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.bar.is-locking,.bar .side.is-picked,.bar.is-reveal::after,.hotcard::before,.tnum.bump,.streakbadge .fl{animation:none!important}}
+.card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s4);margin-bottom:var(--s3)}
+.btn{display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;border:none;cursor:pointer;border-radius:var(--r-sm);padding:var(--s4);font-family:inherit;font-weight:var(--fw-x);font-size:var(--fs-md);color:#fff;transition:transform var(--t-fast),box-shadow var(--t-fast),opacity var(--t-fast)}
 .btn:active{transform:scale(.97)}
 .btn-pri{background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 10px 24px rgba(138,107,255,.45),0 0 18px rgba(167,139,255,.25)}
 .btn-pri:disabled{opacity:.45;cursor:not-allowed}
@@ -45,11 +84,11 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;border-radius:999px;padding:4px 9px}
 .spin{width:34px;height:34px;border:3px solid var(--line-2);border-top-color:var(--brand-2);border-radius:50%;animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.nav{display:flex;align-items:center;justify-content:space-around;padding:10px 8px 14px;background:rgba(21,18,30,.92);border-top:1px solid var(--line)}
-.navb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--faint);font-family:inherit;font-size:10.5px;font-weight:700;padding:4px 12px;min-height:44px;min-width:44px;border-radius:12px}
+.nav{display:flex;align-items:center;justify-content:space-around;padding:var(--s3) var(--s2) var(--s4);background:rgba(21,18,30,.92);border-top:1px solid var(--line)}
+.navb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s1);background:none;border:none;cursor:pointer;color:var(--faint);font-family:inherit;font-size:var(--fs-2xs);font-weight:var(--fw-bold);padding:var(--s1) var(--s3);min-height:44px;min-width:44px;border-radius:12px;transition:color var(--t-fast)}
 .navb.on{color:var(--brand-2)}
 .fab{margin-top:-26px;width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 10px 24px rgba(138,107,255,.5),0 0 22px rgba(255,77,109,.3);border:none;cursor:pointer;color:#fff;font-size:26px}
-.topbar{padding:15px 16px 8px;position:relative;z-index:2}
+.topbar{padding:var(--s4) var(--s4) var(--s2);position:relative;z-index:2}
 .err{background:rgba(255,77,109,.12);border:1px solid rgba(255,77,109,.3);color:#FFB3C0;border-radius:12px;padding:11px 13px;font-size:13px;font-weight:600;margin-bottom:12px}
 .pill{display:inline-flex;align-items:center;gap:6px;background:var(--gold-soft);padding:6px 11px;border-radius:999px;color:var(--gold);font-weight:800;font-size:14px;box-shadow:0 0 16px rgba(255,194,60,.25)}
 .goldglow{text-shadow:0 0 14px rgba(255,194,60,.6)}
@@ -84,7 +123,7 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .ticker .run{display:inline-flex;gap:10px;animation:tick 26s linear infinite}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .tk{display:inline-flex;align-items:center;gap:7px;background:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;color:var(--muted)}
-.stat{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:14px;padding:11px 8px;text-align:center}
+.stat{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s3) var(--s2);text-align:center}
 .why{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
 .whyi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
 .coins{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
@@ -120,6 +159,36 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .fab{box-shadow:0 14px 30px rgba(138,107,255,.55),0 0 26px rgba(255,77,109,.32),inset 0 1px 0 rgba(255,255,255,.3)}
 .fab:hover{filter:brightness(1.08)}
 @media(hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.05)}.btn:hover{filter:brightness(1.06)}.navb:hover{color:var(--muted)}}
+/* ----- nav active state + FAB lift ----- */
+.navb{position:relative;border-radius:13px;transition:color .18s ease,background .18s ease;padding-block:6px}
+.navb.on{color:var(--brand-2);background:var(--brand-soft)}
+.navb.on::before{content:"";position:absolute;inset-block-start:-10px;inset-inline-start:50%;transform:translateX(-50%);width:26px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,var(--brand-2),var(--brand));box-shadow:0 0 10px rgba(167,139,255,.7)}
+[dir="rtl"] .navb.on::before{transform:translateX(50%)}
+.fab{margin-top:-30px;border-radius:19px;background:linear-gradient(155deg,#c2acff,var(--brand) 62%,#7d5cff);transition:transform .16s ease,filter .16s ease,box-shadow .16s ease}
+.fab::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.32),transparent 55%);pointer-events:none}
+.fab:active{transform:scale(.93)}
+@media(hover:hover){.fab:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(138,107,255,.6),0 0 30px rgba(255,77,109,.36),inset 0 1px 0 rgba(255,255,255,.35)}}
+/* ----- sign-in auth card hero treatment ----- */
+.authcard{position:relative;border:1px solid transparent;background:linear-gradient(180deg,rgba(38,33,56,.92),rgba(24,20,36,.94)) padding-box,linear-gradient(150deg,rgba(167,139,255,.65),rgba(255,77,109,.4) 55%,rgba(255,194,60,.45)) border-box;box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 38px rgba(138,107,255,.22),inset 0 1px 0 rgba(255,255,255,.06)}
+.authcard::before{content:"";position:absolute;inset-block-start:0;inset-inline:0;height:42%;border-radius:18px 18px 0 0;background:radial-gradient(120% 100% at 50% 0,rgba(167,139,255,.16),transparent 70%);pointer-events:none}
+.authcard>*{position:relative}
+/* ----- topbar headline polish ----- */
+.topbar{border-bottom:1px solid var(--line);box-shadow:0 6px 18px rgba(8,6,14,.35)}
+.topbar .disp{letter-spacing:-.03em}
+.topbar>p.disp{background:linear-gradient(180deg,#FFFFFF,#CFC6E8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;line-height:1.12}
+.topbar>p.disp .jackpot{-webkit-text-fill-color:transparent}
+.topbar .pill{font-weight:900}
+/* ----- chip + selection polish ----- */
+.chip{transition:transform .12s ease,border-color .15s ease,background .15s ease,box-shadow .15s ease}
+.chip:active{transform:scale(.95)}
+.chip.on{background:linear-gradient(180deg,rgba(167,139,255,.26),rgba(138,107,255,.14));border-color:rgba(167,139,255,.6);color:#E4DBFF;box-shadow:0 0 0 1px rgba(167,139,255,.25),0 4px 14px rgba(138,107,255,.22)}
+button.card:active{transform:scale(.97)}
+@media(hover:hover){button.card:hover{border-color:var(--line-2);filter:brightness(1.05)}}
+/* ----- card surface depth ----- */
+.card{position:relative}
+.card::after{content:"";position:absolute;inset-block-start:0;inset-inline:14px;height:1px;border-radius:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);pointer-events:none}
+.lbpod{box-shadow:0 10px 30px rgba(0,0,0,.3),0 0 26px var(--lbglow),inset 0 1px 0 rgba(255,255,255,.06)!important}
+.lbmed{width:34px;height:34px;flex-shrink:0;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 12px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.5)}
 input:focus,textarea:focus{border-color:rgba(138,107,255,.6);box-shadow:0 0 0 3px rgba(138,107,255,.18)}
 button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px;border-radius:8px}
 .chip:focus-visible,.navb:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
@@ -283,6 +352,87 @@ const _GX11={
 he:{cueLegend:"✓ כן · ✗ לא"},en:{cueLegend:"✓ Yes · ✗ No"},es:{cueLegend:"✓ Sí · ✗ No"},fr:{cueLegend:"✓ Oui · ✗ Non"},pt:{cueLegend:"✓ Sim · ✗ Não"},ru:{cueLegend:"✓ Да · ✗ Нет"},de:{cueLegend:"✓ Ja · ✗ Nein"},hi:{cueLegend:"✓ हाँ · ✗ नहीं"},zh:{cueLegend:"✓ 是 · ✗ 否"},ar:{cueLegend:"✓ نعم · ✗ لا"}
 };
 for(const _c in _GX11){ if(STR[_c]) Object.assign(STR[_c],_GX11[_c]); }
+const _GX12={he:{you:"אתה"},en:{you:"You"},es:{you:"Tú"},fr:{you:"Toi"},pt:{you:"Você"},ru:{you:"Ты"},de:{you:"Du"},hi:{you:"आप"},zh:{you:"你"},ar:{you:"أنت"}};
+for(const _c in _GX12){ if(STR[_c]) Object.assign(STR[_c],_GX12[_c]); }
+const _GX13={
+he:{dismiss:"סגור",close:"סגור",netErr:"בעיית חיבור — נסה שוב",retry:"נסה שוב",noMembersHint:"הזמן עוד חברים לקבוצה — או שאל שאלה כללית",switchGeneral:"↩️ עבור לשאלה כללית",soloBoard:"אתה לבד בלוח כרגע",soloBoardHint:"הזמן חברים לקבוצה כדי להתחרות על הראש 👑",inviteToCompete:"📤 הזמן להתחרות"},
+en:{dismiss:"Dismiss",close:"Close",netErr:"Connection issue — try again",retry:"Try again",noMembersHint:"Invite more members to this group — or ask a general question",switchGeneral:"↩️ Switch to a general question",soloBoard:"You're the only one on the board",soloBoardHint:"Invite friends to the group to race for the top 👑",inviteToCompete:"📤 Invite to compete"},
+es:{dismiss:"Cerrar",close:"Cerrar",netErr:"Problema de conexión — inténtalo de nuevo",retry:"Reintentar",noMembersHint:"Invita a más miembros a este grupo — o haz una pregunta general",switchGeneral:"↩️ Cambiar a una pregunta general",soloBoard:"Eres el único en la tabla",soloBoardHint:"Invita a amigos al grupo para competir por la cima 👑",inviteToCompete:"📤 Invitar a competir"},
+fr:{dismiss:"Fermer",close:"Fermer",netErr:"Problème de connexion — réessaie",retry:"Réessayer",noMembersHint:"Invite plus de membres dans ce groupe — ou pose une question générale",switchGeneral:"↩️ Passer à une question générale",soloBoard:"Tu es seul au classement",soloBoardHint:"Invite des amis dans le groupe pour la course au sommet 👑",inviteToCompete:"📤 Inviter à concourir"},
+pt:{dismiss:"Fechar",close:"Fechar",netErr:"Problema de conexão — tente de novo",retry:"Tentar de novo",noMembersHint:"Convide mais membros para este grupo — ou faça uma pergunta geral",switchGeneral:"↩️ Mudar para uma pergunta geral",soloBoard:"Você é o único no ranking",soloBoardHint:"Convide amigos para o grupo para disputar o topo 👑",inviteToCompete:"📤 Convidar para competir"},
+ru:{dismiss:"Закрыть",close:"Закрыть",netErr:"Проблема соединения — попробуй снова",retry:"Повторить",noMembersHint:"Пригласи больше участников — или задай общий вопрос",switchGeneral:"↩️ Перейти к общему вопросу",soloBoard:"Ты пока один в рейтинге",soloBoardHint:"Пригласи друзей, чтобы бороться за вершину 👑",inviteToCompete:"📤 Пригласить"},
+de:{dismiss:"Schließen",close:"Schließen",netErr:"Verbindungsproblem — versuch es erneut",retry:"Erneut versuchen",noMembersHint:"Lade mehr Mitglieder ein — oder stell eine allgemeine Frage",switchGeneral:"↩️ Zu allgemeiner Frage wechseln",soloBoard:"Du bist allein in der Rangliste",soloBoardHint:"Lade Freunde ein, um um die Spitze zu kämpfen 👑",inviteToCompete:"📤 Zum Mitspielen einladen"},
+hi:{dismiss:"बंद करें",close:"बंद करें",netErr:"कनेक्शन समस्या — फिर कोशिश करें",retry:"फिर कोशिश करें",noMembersHint:"इस ग्रुप में और सदस्य बुलाएं — या सामान्य सवाल पूछें",switchGeneral:"↩️ सामान्य सवाल पर जाएं",soloBoard:"फ़िलहाल बोर्ड पर सिर्फ़ आप हैं",soloBoardHint:"टॉप के लिए दोस्तों को ग्रुप में बुलाएं 👑",inviteToCompete:"📤 मुकाबले के लिए बुलाएं"},
+zh:{dismiss:"关闭",close:"关闭",netErr:"连接出问题啦——再试一次",retry:"重试",noMembersHint:"邀请更多成员加入这个圈子——或提一个通用问题",switchGeneral:"↩️ 改为通用问题",soloBoard:"目前榜上只有你",soloBoardHint:"邀请好友加入圈子，一起冲榜 👑",inviteToCompete:"📤 邀请来比拼"},
+ar:{dismiss:"إغلاق",close:"إغلاق",netErr:"مشكلة اتصال — حاول مجدداً",retry:"إعادة المحاولة",noMembersHint:"ادعُ أعضاء أكثر إلى هذه المجموعة — أو اطرح سؤالاً عاماً",switchGeneral:"↩️ التحول إلى سؤال عام",soloBoard:"أنت الوحيد على الترتيب الآن",soloBoardHint:"ادعُ أصدقاءك للتنافس على القمة 👑",inviteToCompete:"📤 ادعُ للتنافس"}
+};
+for(const _c in _GX13){ if(STR[_c]) Object.assign(STR[_c],_GX13[_c]); }
+/* === COPY-POLISH merges === */
+const _GX14={
+he:{winT:"ניחשת נכון! 🏆",winPtsLbl:"נקודות לזכותך",winTotalLbl:"סך הנקודות שלך",winCont:"קדימה לבא בתור"},
+en:{winT:"You called it! 🏆",winPtsLbl:"points banked",winTotalLbl:"your total",winCont:"On to the next"},
+es:{winT:"¡Lo clavaste! 🏆",winPtsLbl:"puntos ganados",winTotalLbl:"tu total",winCont:"A por la siguiente"},
+fr:{winT:"Vu juste ! 🏆",winPtsLbl:"points gagnés",winTotalLbl:"ton total",winCont:"Au suivant"},
+pt:{winT:"Você cravou! 🏆",winPtsLbl:"pontos garantidos",winTotalLbl:"seu total",winCont:"Bora pro próximo"},
+ru:{winT:"В самую точку! 🏆",winPtsLbl:"очков в копилку",winTotalLbl:"твой счёт",winCont:"К следующему"},
+de:{winT:"Punktgenau! 🏆",winPtsLbl:"Punkte kassiert",winTotalLbl:"dein Gesamtstand",winCont:"Weiter zum nächsten"},
+hi:{winT:"बिल्कुल सही! 🏆",winPtsLbl:"पॉइंट्स मिले",winTotalLbl:"आपका कुल",winCont:"अगले की ओर"},
+zh:{winT:"被你说中了！🏆",winPtsLbl:"积分到手",winTotalLbl:"你的总分",winCont:"下一场"},
+ar:{winT:"أصبتَ تماماً! 🏆",winPtsLbl:"نقطة في رصيدك",winTotalLbl:"مجموعك",winCont:"إلى التالي"}
+};
+for(const _c in _GX14){ if(STR[_c]) Object.assign(STR[_c],_GX14[_c]); }
+const _GX15={
+he:{heroT1:"קרא את העתיד.",heroT2:"כבוש את הקבוצה.",heroSub:"נחש לפני כולם, תפוס את הצד הנכון וטפס לראש. ניחוש חדש כל יום — וכל ניצחון נחקק בלוח.",signinCard:"היכנס — והניחוש הראשון שלך מתחיל 🎯",staysLogged:"🔒 כניסה אחת. נשארים בפנים לתמיד.",footerNote:"נקודות בלבד · אף פעם לא כסף · בנוי לכל גיל 10–90"},
+en:{heroT1:"Call it first.",heroT2:"Own the group.",heroSub:"Predict before anyone else, back the right side, and climb to the top. A fresh call every day — and every win is carved into the board.",signinCard:"Sign in — your first call starts now 🎯",staysLogged:"🔒 One sign-in. You stay in for good.",footerNote:"Points only · never money · built for ages 10–90"},
+es:{heroT1:"Acierta primero.",heroT2:"Domina el grupo.",heroSub:"Predice antes que nadie, apuesta por el lado correcto y sube hasta la cima. Una predicción nueva cada día — y cada victoria queda grabada en el ranking.",signinCard:"Entra — tu primera predicción empieza ya 🎯",staysLogged:"🔒 Un solo acceso. Te quedas dentro para siempre.",footerNote:"Solo puntos · nunca dinero · para edades 10–90"},
+fr:{heroT1:"Vois juste, le premier.",heroT2:"Règne sur le groupe.",heroSub:"Pronostique avant tout le monde, mise sur le bon camp et grimpe au sommet. Un nouveau pronostic chaque jour — et chaque victoire est gravée au classement.",signinCard:"Connecte-toi — ton premier pronostic commence 🎯",staysLogged:"🔒 Une seule connexion. Tu restes dedans pour toujours.",footerNote:"Points uniquement · jamais d'argent · dès 10 et jusqu'à 90 ans"},
+pt:{heroT1:"Acerte primeiro.",heroT2:"Mande no grupo.",heroSub:"Dê o palpite antes de todos, fique do lado certo e suba até o topo. Um palpite novo todo dia — e cada vitória fica gravada no ranking.",signinCard:"Entre — seu primeiro palpite começa agora 🎯",staysLogged:"🔒 Um login só. Você fica dentro pra sempre.",footerNote:"Só pontos · nunca dinheiro · feito para idades 10–90"},
+ru:{heroT1:"Угадай первым.",heroT2:"Правь компанией.",heroSub:"Прогнозируй раньше всех, выбери верную сторону и заберись на вершину. Каждый день новый прогноз — и каждая победа высечена в рейтинге.",signinCard:"Войди — твой первый прогноз начинается 🎯",staysLogged:"🔒 Один вход. Ты в игре навсегда.",footerNote:"Только очки · никогда не деньги · для возрастов 10–90"},
+de:{heroT1:"Sag's als Erster voraus.",heroT2:"Beherrsche die Gruppe.",heroSub:"Tippe vor allen anderen, setz auf die richtige Seite und klettere ganz nach oben. Jeden Tag ein neuer Tipp — und jeder Sieg ist in der Rangliste verewigt.",signinCard:"Einloggen — dein erster Tipp beginnt jetzt 🎯",staysLogged:"🔒 Einmal einloggen. Du bleibst für immer drin.",footerNote:"Nur Punkte · niemals Geld · gebaut für 10–90 Jahre"},
+hi:{heroT1:"सबसे पहले भांप लो।",heroT2:"ग्रुप पर राज करो।",heroSub:"सबसे पहले अनुमान लगाओ, सही साइड चुनो और टॉप तक चढ़ो। हर दिन नया अनुमान — और हर जीत बोर्ड पर दर्ज हो जाती है।",signinCard:"साइन इन करो — आपका पहला अनुमान अभी शुरू 🎯",staysLogged:"🔒 एक बार साइन इन। हमेशा अंदर रहो।",footerNote:"सिर्फ़ पॉइंट्स · कभी पैसा नहीं · 10–90 हर उम्र के लिए"},
+zh:{heroT1:"抢先猜中。",heroT2:"称霸你的圈子。",heroSub:"抢在所有人之前预测，押对一方，一路爬到顶。每天一场新竞猜——每一次胜利都刻在榜上。",signinCard:"登录——你的第一次预测现在开始 🎯",staysLogged:"🔒 登录一次，永远留在场内。",footerNote:"只有积分 · 永不涉及金钱 · 为 10–90 全年龄打造"},
+ar:{heroT1:"توقّع قبل الجميع.",heroT2:"تسيّد المجموعة.",heroSub:"توقّع قبل أي شخص، اختر الجانب الصحيح، واصعد إلى القمة. توقّع جديد كل يوم — وكل فوز يُحفر في لوحة الصدارة.",signinCard:"سجّل الدخول — توقّعك الأول يبدأ الآن 🎯",staysLogged:"🔒 دخول واحد. تبقى في اللعبة للأبد.",footerNote:"نقاط فقط · لا مال أبداً · مصمَّم لكل الأعمار 10–90"}
+};
+for(const _c in _GX15){ if(STR[_c]) Object.assign(STR[_c],_GX15[_c]); }
+const _GX16={
+he:{whyTitle:"למה לא מפסיקים",why1t:"הרגע שבו הכל נעצר",why1b:"נועלים ניחוש — ועוצרים נשימה עד שהתוצאה נחשפת",why2t:"לצדוק כשכולם טעו",why2b:"ניחוש נכון מול הזרם שווה יותר נקודות",why3t:"לשבת בראש הלוח",why3b:"רצף ניצחונות הופך אותך לאגדה — וכולם זוכרים"},
+en:{whyTitle:"Why you'll keep coming back",why1t:"The moment everything stops",why1b:"Lock your call — then hold your breath until the result drops",why2t:"Be right when everyone's wrong",why2b:"Calling it against the crowd is worth more points",why3t:"Sit at the top of the board",why3b:"A winning streak makes you a legend — everyone remembers"},
+es:{whyTitle:"Por qué volverás",why1t:"El momento en que todo se detiene",why1b:"Bloquea tu predicción — y aguanta la respiración hasta el resultado",why2t:"Acertar cuando todos fallan",why2b:"Acertar contra la corriente vale más puntos",why3t:"Reina en la cima del ranking",why3b:"Una racha ganadora te hace leyenda — todos la recuerdan"},
+fr:{whyTitle:"Pourquoi tu reviendras",why1t:"L'instant où tout s'arrête",why1b:"Verrouille ton pronostic — et retiens ton souffle jusqu'au résultat",why2t:"Avoir raison quand tous ont tort",why2b:"Voir juste à contre-courant rapporte plus de points",why3t:"Trône en tête du classement",why3b:"Une série de victoires fait de toi une légende — tout le monde s'en souvient"},
+pt:{whyTitle:"Por que você vai voltar",why1t:"O instante em que tudo para",why1b:"Trave seu palpite — e prenda a respiração até o resultado",why2t:"Acertar quando todos erram",why2b:"Acertar contra a maré vale mais pontos",why3t:"Reine no topo do ranking",why3b:"Uma sequência de vitórias te torna lenda — todo mundo lembra"},
+ru:{whyTitle:"Почему тянет вернуться",why1t:"Миг, когда всё замирает",why1b:"Зафиксируй прогноз — и затаи дыхание до результата",why2t:"Быть правым, когда все ошиблись",why2b:"Угадать против толпы стоит больше очков",why3t:"Сиди на вершине рейтинга",why3b:"Серия побед делает тебя легендой — её все запомнят"},
+de:{whyTitle:"Warum du wiederkommst",why1t:"Der Moment, in dem alles stillsteht",why1b:"Leg deinen Tipp fest — und halt den Atem an, bis das Ergebnis fällt",why2t:"Recht haben, wenn alle danebenliegen",why2b:"Gegen den Strom richtig zu tippen bringt mehr Punkte",why3t:"Thron an der Spitze der Rangliste",why3b:"Eine Siegesserie macht dich zur Legende — alle erinnern sich"},
+hi:{whyTitle:"क्यों आप लौटकर आओगे",why1t:"वो पल जब सब रुक जाता है",why1b:"अपना अनुमान लॉक करो — और नतीजे तक सांस रोके रहो",why2t:"जब सब गलत हों तब सही होना",why2b:"भीड़ के खिलाफ सही होना ज़्यादा पॉइंट्स देता है",why3t:"बोर्ड के टॉप पर बैठो",why3b:"जीत की लड़ी आपको लीजेंड बनाती है — सबको याद रहता है"},
+zh:{whyTitle:"为什么你会一再回来",why1t:"一切静止的那一刻",why1b:"锁定你的预测——然后屏住呼吸，直到结果揭晓",why2t:"所有人都错时只有你对",why2b:"逆着大众猜对，能拿更多分",why3t:"稳坐榜首",why3b:"连胜让你成为传奇——人人都记得"},
+ar:{whyTitle:"لماذا ستعود دائماً",why1t:"اللحظة التي يتوقّف فيها كل شيء",why1b:"ثبّت توقّعك — واحبس أنفاسك حتى تظهر النتيجة",why2t:"أن تصيب حين يخطئ الجميع",why2b:"إصابتك عكس التيار تساوي نقاطاً أكثر",why3t:"اجلس على قمة اللوحة",why3b:"سلسلة انتصارات تجعلك أسطورة — والكل يتذكّر"}
+};
+for(const _c in _GX16){ if(STR[_c]) Object.assign(STR[_c],_GX16[_c]); }
+const _GX17={
+he:{emptyFeed:"🎯 כאן עוד שקט. שגר את הניחוש הראשון ותצית את הקבוצה.",emptyRanks:"🏆 הלוח ריק — לרגע. ניחוש אחד נכון ושמך עולה לראש 🚀",noGroupT:"עוד אין לך קבוצה",noGroupB:"פתח קבוצה או הצטרף עם קוד — וכבר היום מתחילים לנחש יחד."},
+en:{emptyFeed:"🎯 It's quiet in here. Drop the first call and light up the group.",emptyRanks:"🏆 The board's empty — for now. One right call and your name climbs to the top 🚀",noGroupT:"You don't have a group yet",noGroupB:"Start a group or join with a code — and you're predicting together today."},
+es:{emptyFeed:"🎯 Esto está en silencio. Lanza la primera predicción y enciende el grupo.",emptyRanks:"🏆 El ranking está vacío — por ahora. Un acierto y tu nombre sube a lo más alto 🚀",noGroupT:"Todavía no tienes un grupo",noGroupB:"Crea un grupo o únete con un código — y hoy mismo empiezan a predecir juntos."},
+fr:{emptyFeed:"🎯 C'est calme ici. Lance le premier pronostic et réveille le groupe.",emptyRanks:"🏆 Le classement est vide — pour l'instant. Un bon pronostic et ton nom grimpe au sommet 🚀",noGroupT:"Tu n'as pas encore de groupe",noGroupB:"Crée un groupe ou rejoins-en un avec un code — et vous pronostiquez ensemble dès aujourd'hui."},
+pt:{emptyFeed:"🎯 Tá quieto por aqui. Solta o primeiro palpite e acende o grupo.",emptyRanks:"🏆 O ranking está vazio — por enquanto. Um acerto e seu nome sobe pro topo 🚀",noGroupT:"Você ainda não tem um grupo",noGroupB:"Crie um grupo ou entre com um código — e hoje mesmo vocês começam a palpitar juntos."},
+ru:{emptyFeed:"🎯 Тут пока тихо. Сделай первый прогноз и зажги компанию.",emptyRanks:"🏆 Рейтинг пуст — пока что. Один точный прогноз — и твоё имя поднимается на вершину 🚀",noGroupT:"У тебя пока нет компании",noGroupB:"Создай компанию или войди по коду — и уже сегодня прогнозируете вместе."},
+de:{emptyFeed:"🎯 Hier ist es still. Gib den ersten Tipp ab und bring die Gruppe in Fahrt.",emptyRanks:"🏆 Die Rangliste ist leer — noch. Ein richtiger Tipp und dein Name klettert nach oben 🚀",noGroupT:"Du hast noch keine Gruppe",noGroupB:"Starte eine Gruppe oder tritt mit einem Code bei — und ihr tippt noch heute zusammen."},
+hi:{emptyFeed:"🎯 यहाँ अभी सन्नाटा है। पहला अनुमान लगाओ और ग्रुप में जान फूँक दो।",emptyRanks:"🏆 बोर्ड खाली है — अभी के लिए। एक सही अनुमान और आपका नाम टॉप तक चढ़ता है 🚀",noGroupT:"आपका अभी कोई ग्रुप नहीं है",noGroupB:"ग्रुप बनाओ या कोड से जॉइन करो — और आज ही साथ में अनुमान लगाना शुरू करो।"},
+zh:{emptyFeed:"🎯 这里还很安静。发出第一个预测，点燃整个圈子。",emptyRanks:"🏆 榜单还空着——暂时。一次猜对，你的名字就爬上榜首 🚀",noGroupT:"你还没有圈子",noGroupB:"创建一个圈子，或用邀请码加入——今天就和大家一起预测。"},
+ar:{emptyFeed:"🎯 المكان هادئ هنا. أطلق أول توقّع وأشعل المجموعة.",emptyRanks:"🏆 اللوحة فارغة — مؤقتاً. توقّع صحيح واحد ويصعد اسمك إلى القمة 🚀",noGroupT:"ليس لديك مجموعة بعد",noGroupB:"أنشئ مجموعة أو انضم برمز — ومن اليوم تتوقّعون معاً."}
+};
+for(const _c in _GX17){ if(STR[_c]) Object.assign(STR[_c],_GX17[_c]); }
+const _GX18={
+he:{pendInbox:"שאלה עליך — ההחלטה שלך",consentBlurb:"מישהו רוצה לפתוח ניחוש בקבוצה שקשור אליך. שום דבר לא יתפרסם בלי האישור שלך.",approveW:"מאשר ✓",declineW:"לא, תודה",waitApprove:"⏳ ממתינים שהמתויג יאשר"},
+en:{pendInbox:"A call about you — your decision",consentBlurb:"Someone wants to open a prediction in the group that involves you. Nothing goes live without your OK.",approveW:"Allow it ✓",declineW:"No thanks",waitApprove:"⏳ Waiting for them to say yes"},
+es:{pendInbox:"Una predicción sobre ti — tú decides",consentBlurb:"Alguien quiere abrir una predicción en el grupo que te involucra. Nada se publica sin tu OK.",approveW:"Permitir ✓",declineW:"No, gracias",waitApprove:"⏳ Esperando a que diga que sí"},
+fr:{pendInbox:"Un pronostic sur toi — c'est toi qui décides",consentBlurb:"Quelqu'un veut ouvrir un pronostic dans le groupe qui te concerne. Rien n'est publié sans ton accord.",approveW:"Autoriser ✓",declineW:"Non merci",waitApprove:"⏳ En attente de son accord"},
+pt:{pendInbox:"Um palpite sobre você — você decide",consentBlurb:"Alguém quer abrir um palpite no grupo que envolve você. Nada vai ao ar sem o seu OK.",approveW:"Permitir ✓",declineW:"Não, obrigado",waitApprove:"⏳ Esperando ele(a) dizer sim"},
+ru:{pendInbox:"Прогноз о тебе — решать тебе",consentBlurb:"Кто-то хочет открыть в компании прогноз, который касается тебя. Ничего не появится без твоего согласия.",approveW:"Разрешить ✓",declineW:"Нет, спасибо",waitApprove:"⏳ Ждём его согласия"},
+de:{pendInbox:"Ein Tipp über dich — deine Entscheidung",consentBlurb:"Jemand möchte in der Gruppe einen Tipp eröffnen, bei dem es um dich geht. Nichts wird ohne dein OK veröffentlicht.",approveW:"Erlauben ✓",declineW:"Nein danke",waitApprove:"⏳ Warten auf sein/ihr Ja"},
+hi:{pendInbox:"आप पर एक अनुमान — फैसला आपका",consentBlurb:"कोई ग्रुप में आपसे जुड़ा एक अनुमान खोलना चाहता है। आपकी मंज़ूरी के बिना कुछ भी पब्लिश नहीं होगा।",approveW:"मंज़ूरी दो ✓",declineW:"नहीं, धन्यवाद",waitApprove:"⏳ उनके हाँ कहने का इंतज़ार"},
+zh:{pendInbox:"一个关于你的竞猜——由你决定",consentBlurb:"有人想在圈子里发起一个和你有关的竞猜。未经你同意，不会公开。",approveW:"同意 ✓",declineW:"不用了",waitApprove:"⏳ 等对方点头"},
+ar:{pendInbox:"توقّع عنك — القرار قرارك",consentBlurb:"يريد أحدهم فتح توقّع في المجموعة يخصّك. لن يُنشر شيء دون موافقتك.",approveW:"أوافق ✓",declineW:"لا، شكراً",waitApprove:"⏳ بانتظار موافقته"}
+};
+for(const _c in _GX18){ if(STR[_c]) Object.assign(STR[_c],_GX18[_c]); }
 const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
 const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
@@ -324,17 +474,23 @@ const SND={
   on: localStorage.getItem("eyevos_sound")!=="off", ctx:null,
   ac(){ if(!this.ctx){ try{ this.ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return this.ctx; },
   beep(f,d,t,v){ if(!this.on)return; const c=this.ac(); if(!c)return; const o=c.createOscillator(),g=c.createGain(); o.type=t||"sine"; o.frequency.value=f; g.gain.value=v||.07; o.connect(g); g.connect(c.destination); const n=c.currentTime; o.start(n); g.gain.exponentialRampToValueAtTime(.0001,n+d); o.stop(n+d); },
-  tap(){ this.beep(440,.07,"triangle",.05); },
-  lock(){ this.beep(300,.1,"sawtooth",.05); setTimeout(()=>this.beep(520,.12,"sawtooth",.05),80); },
-  win(){ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>this.beep(f,.18,"triangle",.08),i*85)); },
+  tap(){ this.beep(523,.05,"triangle",.045); },
+  lock(){ this.beep(330,.09,"sine",.06); setTimeout(()=>this.beep(494,.1,"sine",.06),70); setTimeout(()=>this.beep(659,.16,"triangle",.06),150); },
+  reveal(){ this.beep(784,.09,"sine",.04); setTimeout(()=>this.beep(988,.12,"sine",.035),60); },
+  win(){ [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>this.beep(f,.2,"triangle",.08),i*80)); },
   toggle(){ this.on=!this.on; localStorage.setItem("eyevos_sound",this.on?"on":"off"); if(this.on)this.tap(); return this.on; }
 };
 function CountUp({value,dur=650}){
   const [n,setN]=useState(value); const prev=useRef(value);
-  useEffect(()=>{ const from=prev.current,to=value; prev.current=value; if(from===to){setN(to);return;} const start=performance.now(); let raf;
+  const [bump,setBump]=useState(false);
+  useEffect(()=>{ const from=prev.current,to=value; prev.current=value; if(from===to){setN(to);return;}
+    const reduce=typeof matchMedia!=="undefined"&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+    if(to>from){ setBump(true); const b=setTimeout(()=>setBump(false),440); if(reduce){setN(to);return ()=>clearTimeout(b);} }
+    if(reduce){ setN(to); return; }
+    const start=performance.now(); let raf;
     const tick=(x)=>{ const p=Math.min(1,(x-start)/dur); setN(Math.round(from+(to-from)*(1-Math.pow(1-p,3)))); if(p<1)raf=requestAnimationFrame(tick); };
     raf=requestAnimationFrame(tick); return ()=>cancelAnimationFrame(raf); },[value,dur]);
-  return <span className="tnum">{n}</span>;
+  return <span className={"tnum"+(bump?" bump":"")}>{n}</span>;
 }
 function Countdown({to}){
   const [now,setNow]=useState(Date.now());
@@ -388,6 +544,7 @@ function LangSheet({cur,onPick,onClose}){
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
       {LANGS.map(l=><button key={l.c} onClick={()=>onPick(l.c)} className={"chip"+(cur===l.c?" on":"")} style={{justifyContent:"center",padding:"13px",fontSize:14.5}}>{l.n}</button>)}
     </div>
+    <button className="btn btn-ghost" style={{marginTop:16}} onClick={onClose}>{t("close")}</button>
   </div></div>;
 }
 
@@ -430,7 +587,7 @@ function SignIn({onOpenLang}){
         <div className="stat"><div className="disp" style={{fontSize:18,fontWeight:900,color:"var(--no)"}}>{t("stBets")}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{t("stBetsL")}</div></div>
       </div>
       {msg&&<div className="err" style={{maxWidth:330,margin:"0 auto 12px",textAlign:"start"}}>{msg}</div>}
-      <div className="card" style={{maxWidth:330,margin:"0 auto",textAlign:"start"}}>
+      <div className="card authcard" style={{maxWidth:330,margin:"0 auto",textAlign:"start"}}>
         <div style={{fontWeight:800,fontSize:15,marginBottom:12,textAlign:"center"}}>{t("signinCard")}</div>
         <button onClick={google} className="gbtn">
           <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5c-2 1.5-4.7 2.5-7.6 2.5-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C41.4 36.3 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>{t("continueGoogle")}</button>
@@ -453,11 +610,15 @@ function SignIn({onOpenLang}){
 /* ---------- feed ---------- */
 function Bar({poll,tl,onVote,locking,disabled}){
   const total=tl.yes+tl.no,y=pct(tl.yes,tl.no),voted=tl.mine,reveal=(disabled||!!voted||poll.status!=="open")&&!locking;
+  const justRevealed=useRef(false);
+  const prevReveal=useRef(reveal);
+  if(reveal&&!prevReveal.current)justRevealed.current=true; prevReveal.current=reveal;
+  useEffect(()=>{ if(justRevealed.current){ const id=setTimeout(()=>{justRevealed.current=false;},760); return ()=>clearTimeout(id); } });
   return <div>
-    <div className="bar">
-      {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="spin" style={{width:18,height:18,borderWidth:2}}/>{t("locking")}</div>
-      :<><div className="side" style={{width:(reveal?y:50)+"%",background:voted==="yes"?"var(--yes)":"var(--yes-soft)"}}/>
-      <div className="side" style={{width:(reveal?100-y:50)+"%",background:voted==="no"?"var(--no)":"var(--no-soft)"}}/>
+    <div className={"bar"+(locking?" is-locking":"")+(justRevealed.current?" is-reveal":"")}>
+      {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="lockspin"/>{t("locking")}</div>
+      :<><div className={"side"+(reveal&&voted==="yes"?" is-picked":"")} style={{width:(reveal?y:50)+"%",background:voted==="yes"?"var(--yes)":"var(--yes-soft)"}}/>
+      <div className={"side"+(reveal&&voted==="no"?" is-picked":"")} style={{width:(reveal?100-y:50)+"%",background:voted==="no"?"var(--no)":"var(--no-soft)"}}/>
       <button className="lab" style={{insetInlineStart:0,color:voted==="yes"?"#2A0410":"var(--yes)",textShadow:voted==="yes"?"0 1px 1px rgba(255,255,255,.35)":"none"}} disabled={reveal} onClick={()=>onVote("yes")}><span aria-hidden="true" style={{fontWeight:900}}>✓</span> {t("yes")} {reveal?<span className="tnum" dir="ltr"><CountUp value={y} dur={420}/>%</span>:""}</button>
       <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={reveal} onClick={()=>onVote("no")}>{reveal?<span className="tnum" dir="ltr"><CountUp value={100-y} dur={420}/>%</span>:""} {t("no")} <span aria-hidden="true" style={{fontWeight:900}}>✗</span></button></>}
     </div>
@@ -476,12 +637,12 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onRepo
   const shareBet=()=>shareWa(t("shareBet",{q:poll.question,url:REDIRECT}));
   const shareWin=()=>shareWa(t("shareWin",{q:poll.question,url:REDIRECT}));
   return <div className={"card"+(hot?" hotcard":"")} style={featured?{boxShadow:"0 0 0 1px rgba(255,194,60,.45),0 10px 34px rgba(255,194,60,.18)"}:null}>
-    {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}>{t("hotNow")}</div>}
+    {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}><span className="livedot" style={{background:"#2a1800",boxShadow:"0 0 8px rgba(42,24,0,.6)"}}/>{t("hotNow")}</div>}
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
       <div style={{display:"flex",alignItems:"center",gap:7,minWidth:0,flex:1}}><span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>{groupName&&<span style={{fontSize:11,color:"var(--muted)",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>👥 {groupName}</span>}</div>
       <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag" dir="auto" style={{background:"var(--gold-soft)",color:"var(--gold)",border:"1px solid rgba(255,194,60,.4)"}}>🏆 <span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&poll.status!=="resolved"&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
     </div>
-    <p className="disp" style={{fontSize:18,fontWeight:700,margin:"0 0 12px",lineHeight:1.25}}>{poll.question}</p>
+    <p className="disp clamp3" title={poll.question} style={{fontSize:"var(--fs-lg)",fontWeight:"var(--fw-bold)",margin:"0 0 var(--s3)",lineHeight:"var(--lh-snug)"}}>{poll.question}</p>
     <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe}/>
     {poll.status==="open"&&!aboutMe&&<>
       <div style={{display:"flex",alignItems:"center",gap:10,marginTop:10,background:"var(--ink-3)",border:"1px solid var(--line)",borderRadius:11,padding:"8px 12px",fontSize:12.5,fontWeight:700}}>
@@ -575,6 +736,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     setLocking(null);
     if(error)return onErr(error.message);
     setTally(prev=>{ const cur=prev[poll.id]||{yes:0,no:0,mine:null}; return {...prev,[poll.id]:{...cur,mine:choice}}; }); // keep my choice across a racing reload
+    SND.reveal();   // results uncover for this card — soft confirmation tone
     await load();
   };
   const doResolve=async(o,proof)=>{
@@ -604,7 +766,8 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     </div>
     <button className="btn btn-pri" onClick={()=>{SND.tap();setCreating(true);}} style={{marginBottom:13}}>{t("newBet")}</button>
     {inbox.length>0&&<div className="card" style={{border:"1px solid var(--brand)",background:"var(--brand-soft)",marginBottom:13,padding:13}}>
-      <div style={{fontWeight:800,fontSize:14,marginBottom:8}}>🙋 {t("pendInbox")}</div>
+      <div style={{fontWeight:800,fontSize:14,marginBottom:4}}>🙋 {t("pendInbox")}</div>
+      <div style={{fontSize:12,color:"var(--muted)",lineHeight:1.5,marginBottom:10}}>{t("consentBlurb")}</div>
       {inbox.map(p=><div key={p.id} style={{marginBottom:8}}>
         <div style={{fontSize:14,fontWeight:600,marginBottom:8}}>{p.question}</div>
         <div style={{display:"flex",gap:8}}>
@@ -666,7 +829,7 @@ function CreatePoll({groups,me,onDone,onCancel,onErr}){
     </div>
     {kind==="person"&&<div style={{marginBottom:14}}>
       <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("tagWho")}</div>
-      {members.length===0?<div className="card" style={{color:"var(--muted)",fontSize:12.5,textAlign:"center",margin:0}}>{t("noMembers")}</div>
+      {members.length===0?<div className="card" style={{margin:0,padding:14,textAlign:"center"}}><div style={{fontSize:28,marginBottom:6}}>🙋</div><div style={{color:"var(--muted)",fontSize:12.5,marginBottom:4}}>{t("noMembers")}</div><div style={{color:"var(--faint)",fontSize:11.5,lineHeight:1.5,marginBottom:12}}>{t("noMembersHint")}</div><button className="btn btn-pri" style={{padding:11,fontSize:14,marginBottom:8}} onClick={()=>{SND.tap();setKind("general");setTarget(null);}}>{t("switchGeneral")}</button>{grp&&<button className="btn btn-ghost" style={{padding:11,fontSize:13}} onClick={()=>shareWa(t("inviteText",{name:grp.name,code:grp.invite_code,url:REDIRECT}))}>{t("inviteWa")}</button>}</div>
       :<div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,scrollbarWidth:"none"}}>
         {members.map(m=><button key={m.profile_id} className={"chip"+(target===m.profile_id?" on":"")} onClick={()=>setTarget(m.profile_id)} style={{whiteSpace:"nowrap"}}>{m.profiles?m.profiles.display_name:"—"}</button>)}
       </div>}
@@ -718,11 +881,13 @@ function Ranks({group,me,onErr,onChange}){
     </div>
     {onChange&&<button onClick={onChange} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",margin:"0 0 12px",fontFamily:"inherit",fontSize:13}}>↺ {t("changeGroup")}</button>}
     {ranked.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyRanks")}</div>}
-    {ranked.map((r,i)=><div key={r.id} className="card" style={{display:"flex",alignItems:"center",gap:11,padding:11,borderColor:r.id===me.id?"var(--brand)":(i===0?"rgba(255,194,60,.4)":"var(--line)"),background:r.id===me.id?"var(--brand-soft)":"var(--ink-2)"}}>
-      <span style={{width:22,fontWeight:800,fontSize:i<3?18:14,color:i<3?"var(--gold)":"var(--faint)",textAlign:"center"}}>{i<3?medal[i]:i+1}</span>
-      <Avatar p={{display_name:r.name,photo_url:r.photo}} size={34}/>
-      <div style={{flex:1,fontWeight:700,fontSize:14.5}}>{r.name}</div>
-      <span className="tnum disp" style={{fontWeight:800,fontSize:17,color:"var(--gold)"}}>{r.total}</span></div>)}
+    {ranked.map((r,i)=>{const isMe=r.id===me.id;const pod=i<3;const ring=["rgba(255,194,60,.55)","rgba(208,214,232,.5)","rgba(214,150,92,.5)"][i];const medalBg=["linear-gradient(150deg,#FFE08A,#F5A623)","linear-gradient(150deg,#E8EDF7,#AEB6CC)","linear-gradient(150deg,#E5B07E,#B97A43)"][i];const medalFg=["#5a3b00","#2a2f3d","#3a2208"][i];return <div key={r.id} className={"card lbrow"+(pod?" lbpod":"")} style={{display:"flex",alignItems:"center",gap:11,padding:pod?"13px 12px":11,marginBottom:pod?10:8,borderColor:isMe?"var(--brand)":(pod?ring:"var(--line)"),background:isMe?"var(--brand-soft)":undefined,"--lbglow":pod?ring:"transparent"}}>
+      {pod?<span className="lbmed" dir="ltr" style={{background:medalBg,color:medalFg}}>{medal[i]}</span>
+        :<span dir="ltr" style={{width:26,fontWeight:800,fontSize:14,color:"var(--faint)",textAlign:"center",fontVariantNumeric:"tabular-nums"}}>{i+1}</span>}
+      <Avatar p={{display_name:r.name,photo_url:r.photo}} size={pod?40:34}/>
+      <div style={{flex:1,minWidth:0}}><div style={{fontWeight:pod?800:700,fontSize:pod?15.5:14.5,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}{isMe&&<span style={{marginInlineStart:6,fontSize:11,fontWeight:800,color:"var(--brand-2)"}}>{t("you")}</span>}</div></div>
+      <span className="tnum disp" dir="ltr" style={{fontWeight:900,fontSize:pod?19:16,color:pod?"var(--gold)":"var(--text)"}}>{r.total}</span></div>;})}
+    {ranked.length===1&&ranked[0].id===me.id&&<div className="card" style={{textAlign:"center",padding:16,borderStyle:"dashed"}}><div style={{fontSize:26,marginBottom:6}}>👑</div><div style={{fontWeight:800,fontSize:14.5,marginBottom:4}}>{t("soloBoard")}</div><div style={{color:"var(--muted)",fontSize:12.5,lineHeight:1.5,marginBottom:12}}>{t("soloBoardHint")}</div><button className="btn btn-pri" style={{padding:11,fontSize:14}} onClick={()=>shareWa(t("inviteText",{name:group.name,code:group.invite_code,url:REDIRECT}))}>{t("inviteToCompete")}</button></div>}
   </div>;
 }
 
@@ -790,6 +955,7 @@ function EditProfile({me,onClose,onUpdated}){
     {url.trim()&&!validUrl&&<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:14}}>{t("urlHint")}</div>}
     {lerr&&<div className="err">{lerr}</div>}
     <button className="btn btn-pri" disabled={busy} onClick={save}>{busy?t("savingW"):t("saveBtn")}</button>
+    <button className="btn btn-ghost" style={{marginTop:10}} onClick={onClose}>{t("back")}</button>
   </div></div>;
 }
 
@@ -885,7 +1051,9 @@ function App(){
   if(!session)return <div className="stage"><div className="device"><Coins/><SignIn onOpenLang={()=>setLangOpen(true)}/>{langSheet}</div></div>;
   if(!me||groups===null)return <div className="stage"><div className="device"><Spinner/></div></div>;
 
+  const errMsg = err==null ? null : (/fetch|network|failed to fetch|load failed|timeout|offline/i.test(String(err)) ? t("netErr") : String(err));
   return <div className="stage"><div className="device">
+    {errMsg&&<div className="toastwrap" dir={dirOf(lang)}><div className="toast" role="alert" aria-live="assertive"><span style={{flexShrink:0}}>⚠️</span><span className="tmsg">{errMsg}</span><button className="tx" aria-label={t("dismiss")} title={t("dismiss")} onClick={()=>setErr(null)}>×</button></div></div>}
     {celebrate&&<Confetti/>}
     {winPts!=null&&<WinModal won={winPts} total={total} onClose={()=>setWinPts(null)}/>}
     <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -902,7 +1070,6 @@ function App(){
       {tab==="groups"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}>👥 {t("groupsT")}</p>}
     </div>
     <div className="scroll">
-      {err&&<div className="err">{err}</div>}
       {tab==="groups"?
         <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{setGroup(g);setTab("board");}}/>
       :groups.length===0?

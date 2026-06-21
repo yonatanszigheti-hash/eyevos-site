@@ -178,6 +178,32 @@ zh:{allTopics:"全部",postIn:"发布到哪个圈子？"},
 ar:{allTopics:"الكل",postIn:"في أي مجموعة تنشر؟"}
 };
 for(const _c in _GX4){ if(STR[_c]) Object.assign(STR[_c],_GX4[_c]); }
+const _GX5={
+he:{pickTopicT:"באיזה נושא?",pickTopicSub:"קודם נושא, אחר כך קבוצה",changeGroup:"החלף קבוצה"},
+en:{pickTopicT:"Which topic?",pickTopicSub:"First a topic, then a group",changeGroup:"Change group"},
+es:{pickTopicT:"¿Qué tema?",pickTopicSub:"Primero un tema, luego un grupo",changeGroup:"Cambiar grupo"},
+fr:{pickTopicT:"Quel sujet ?",pickTopicSub:"D'abord un sujet, puis un groupe",changeGroup:"Changer de groupe"},
+pt:{pickTopicT:"Qual assunto?",pickTopicSub:"Primeiro um assunto, depois um grupo",changeGroup:"Trocar grupo"},
+ru:{pickTopicT:"Какая тема?",pickTopicSub:"Сначала тема, потом группа",changeGroup:"Сменить группу"},
+de:{pickTopicT:"Welches Thema?",pickTopicSub:"Erst ein Thema, dann eine Gruppe",changeGroup:"Gruppe wechseln"},
+hi:{pickTopicT:"कौन सा विषय?",pickTopicSub:"पहले विषय, फिर ग्रुप",changeGroup:"ग्रुप बदलें"},
+zh:{pickTopicT:"哪个主题？",pickTopicSub:"先选主题，再选圈子",changeGroup:"切换圈子"},
+ar:{pickTopicT:"أي موضوع؟",pickTopicSub:"أولاً موضوع، ثم مجموعة",changeGroup:"تغيير المجموعة"}
+};
+for(const _c in _GX5){ if(STR[_c]) Object.assign(STR[_c],_GX5[_c]); }
+const _GX6={
+he:{kindAbout:"על מי השאלה?",kGen:"כללי",kPers:"על מישהו 🙋",tagWho:"את מי לתייג?",mustTag:"חובה לתייג אדם לשאלה אישית",noMembers:"אין חברים אחרים בקבוצה לתייג",pendInbox:"ממתינים לאישורך",approveW:"אשר",declineW:"דחה",aboutYou:"🙋 השאלה עליך — אינך מצביע",waitApprove:"⏳ ממתין לאישור המתויג",resYes:"כן ✅",resNo:"לא ❌",wonB:"צדקת! 🎉",lostB:"טעית 😬",winT:"צדקת! 🏆",winCont:"המשך",winPts:"+{n} נקודות",winTotal:"סך הכל {n}"},
+en:{kindAbout:"Who is it about?",kGen:"General",kPers:"About someone 🙋",tagWho:"Tag who?",mustTag:"You must tag a person for a personal question",noMembers:"No other members to tag in this group",pendInbox:"Awaiting your OK",approveW:"Approve",declineW:"Decline",aboutYou:"🙋 This is about you — you can't vote",waitApprove:"⏳ Waiting for the tagged person",resYes:"Yes ✅",resNo:"No ❌",wonB:"You nailed it! 🎉",lostB:"Missed it 😬",winT:"You nailed it! 🏆",winCont:"Continue",winPts:"+{n} points",winTotal:"Total {n}"},
+es:{kindAbout:"¿Sobre quién?",kGen:"General",kPers:"Sobre alguien 🙋",tagWho:"¿A quién etiquetar?",mustTag:"Debes etiquetar a una persona",noMembers:"No hay otros miembros para etiquetar",pendInbox:"Esperan tu OK",approveW:"Aprobar",declineW:"Rechazar",aboutYou:"🙋 Es sobre ti — no puedes votar",waitApprove:"⏳ Esperando a la persona etiquetada",resYes:"Sí ✅",resNo:"No ❌",wonB:"¡Acertaste! 🎉",lostB:"Fallaste 😬",winT:"¡Acertaste! 🏆",winCont:"Continuar",winPts:"+{n} puntos",winTotal:"Total {n}"},
+fr:{kindAbout:"À propos de qui ?",kGen:"Général",kPers:"Sur quelqu'un 🙋",tagWho:"Taguer qui ?",mustTag:"Tu dois taguer une personne",noMembers:"Aucun autre membre à taguer",pendInbox:"En attente de ton accord",approveW:"Approuver",declineW:"Refuser",aboutYou:"🙋 C'est sur toi — tu ne votes pas",waitApprove:"⏳ En attente de la personne taguée",resYes:"Oui ✅",resNo:"Non ❌",wonB:"Bien vu ! 🎉",lostB:"Raté 😬",winT:"Bien vu ! 🏆",winCont:"Continuer",winPts:"+{n} points",winTotal:"Total {n}"},
+pt:{kindAbout:"Sobre quem?",kGen:"Geral",kPers:"Sobre alguém 🙋",tagWho:"Marcar quem?",mustTag:"Você deve marcar uma pessoa",noMembers:"Sem outros membros para marcar",pendInbox:"Aguardando seu OK",approveW:"Aprovar",declineW:"Recusar",aboutYou:"🙋 É sobre você — não pode votar",waitApprove:"⏳ Aguardando a pessoa marcada",resYes:"Sim ✅",resNo:"Não ❌",wonB:"Acertou! 🎉",lostB:"Errou 😬",winT:"Acertou! 🏆",winCont:"Continuar",winPts:"+{n} pontos",winTotal:"Total {n}"},
+ru:{kindAbout:"О ком?",kGen:"Общий",kPers:"О ком-то 🙋",tagWho:"Кого отметить?",mustTag:"Нужно отметить человека",noMembers:"Нет других участников для отметки",pendInbox:"Ждут твоего согласия",approveW:"Принять",declineW:"Отклонить",aboutYou:"🙋 Это о тебе — ты не голосуешь",waitApprove:"⏳ Ждём отмеченного",resYes:"Да ✅",resNo:"Нет ❌",wonB:"В точку! 🎉",lostB:"Мимо 😬",winT:"В точку! 🏆",winCont:"Дальше",winPts:"+{n} очков",winTotal:"Всего {n}"},
+de:{kindAbout:"Über wen?",kGen:"Allgemein",kPers:"Über jemanden 🙋",tagWho:"Wen markieren?",mustTag:"Du musst eine Person markieren",noMembers:"Keine anderen Mitglieder zum Markieren",pendInbox:"Warten auf dein OK",approveW:"Zustimmen",declineW:"Ablehnen",aboutYou:"🙋 Es geht um dich — du stimmst nicht ab",waitApprove:"⏳ Warten auf die markierte Person",resYes:"Ja ✅",resNo:"Nein ❌",wonB:"Getroffen! 🎉",lostB:"Daneben 😬",winT:"Getroffen! 🏆",winCont:"Weiter",winPts:"+{n} Punkte",winTotal:"Gesamt {n}"},
+hi:{kindAbout:"किसके बारे में?",kGen:"सामान्य",kPers:"किसी के बारे में 🙋",tagWho:"किसे टैग करें?",mustTag:"आपको एक व्यक्ति टैग करना होगा",noMembers:"टैग करने के लिए कोई और सदस्य नहीं",pendInbox:"आपकी मंज़ूरी का इंतज़ार",approveW:"मंज़ूर",declineW:"अस्वीकार",aboutYou:"🙋 यह आपके बारे में है — आप वोट नहीं कर सकते",waitApprove:"⏳ टैग किए व्यक्ति का इंतज़ार",resYes:"हाँ ✅",resNo:"नहीं ❌",wonB:"सही पकड़ा! 🎉",lostB:"चूक गए 😬",winT:"सही पकड़ा! 🏆",winCont:"आगे",winPts:"+{n} अंक",winTotal:"कुल {n}"},
+zh:{kindAbout:"关于谁？",kGen:"通用",kPers:"关于某人 🙋",tagWho:"标记谁？",mustTag:"必须标记一个人",noMembers:"没有其他成员可标记",pendInbox:"等待你同意",approveW:"同意",declineW:"拒绝",aboutYou:"🙋 这是关于你的——你不能投票",waitApprove:"⏳ 等待被标记的人",resYes:"是 ✅",resNo:"否 ❌",wonB:"猜对了！🎉",lostB:"猜错了 😬",winT:"猜对了！🏆",winCont:"继续",winPts:"+{n} 分",winTotal:"共 {n}"},
+ar:{kindAbout:"عن من؟",kGen:"عام",kPers:"عن شخص 🙋",tagWho:"من تُشير إليه؟",mustTag:"يجب الإشارة إلى شخص",noMembers:"لا يوجد أعضاء آخرون للإشارة",pendInbox:"بانتظار موافقتك",approveW:"موافقة",declineW:"رفض",aboutYou:"🙋 السؤال عنك — لا تصوّت",waitApprove:"⏳ بانتظار الشخص المُشار إليه",resYes:"نعم ✅",resNo:"لا ❌",wonB:"أصبت! 🎉",lostB:"أخطأت 😬",winT:"أصبت! 🏆",winCont:"متابعة",winPts:"+{n} نقطة",winTotal:"المجموع {n}"}
+};
+for(const _c in _GX6){ if(STR[_c]) Object.assign(STR[_c],_GX6[_c]); }
 const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
 const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
@@ -317,8 +343,8 @@ function SignIn({onOpenLang}){
 }
 
 /* ---------- feed ---------- */
-function Bar({poll,tl,onVote,locking}){
-  const total=tl.yes+tl.no,y=pct(tl.yes,tl.no),voted=tl.mine,reveal=(!!voted||poll.status!=="open")&&!locking;
+function Bar({poll,tl,onVote,locking,disabled}){
+  const total=tl.yes+tl.no,y=pct(tl.yes,tl.no),voted=tl.mine,reveal=(disabled||!!voted||poll.status!=="open")&&!locking;
   return <div>
     <div className="bar">
       {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="spin" style={{width:18,height:18,borderWidth:2}}/>{t("locking")}</div>
@@ -338,6 +364,7 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
   const canResolve=(poll.status==="open"&&closed)||poll.status==="locked";
   const mayResolve=canResolve&&poll.author_id===me.id;
   const pay=payouts(tl);
+  const aboutMe=!!poll.target_id&&poll.target_id===me.id;
   const myResult=poll.status==="resolved"&&tl.mine?(tl.mine===poll.resolved_outcome?"win":"lose"):null;
   const shareBet=()=>shareWa(t("shareBet",{q:poll.question,url:REDIRECT}));
   const shareWin=()=>shareWa(t("shareWin",{q:poll.question,url:REDIRECT}));
@@ -348,8 +375,8 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
       <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag" style={{background:"var(--gold-soft)",color:"var(--gold)"}}>🏆 {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")}>📤</button></div>
     </div>
     <p className="disp" style={{fontSize:18,fontWeight:700,margin:"0 0 12px",lineHeight:1.25}}>{poll.question}</p>
-    <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking}/>
-    {poll.status==="open"&&<>
+    <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe}/>
+    {poll.status==="open"&&!aboutMe&&<>
       <div style={{display:"flex",gap:8,marginTop:10}}>
         <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="yes"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="yes"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--yes)"}}>{t("yes")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="yes"?"var(--gold)":"var(--text)"}}>+{pay.yes}{pay.min==="yes"?" 🔥":""}</span></div>
         <div style={{flex:1,display:"flex",justifyContent:"space-between",alignItems:"center",background:pay.min==="no"?"var(--gold-soft)":"var(--ink-3)",border:"1px solid "+(pay.min==="no"?"rgba(255,194,60,.4)":"var(--line)"),borderRadius:11,padding:"7px 11px"}}><span style={{fontSize:12,fontWeight:700,color:"var(--no)"}}>{t("no")}</span><span className="tnum disp" style={{fontWeight:900,fontSize:15,color:pay.min==="no"?"var(--gold)":"var(--text)"}}>+{pay.no}{pay.min==="no"?" 🔥":""}</span></div>
@@ -359,6 +386,7 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
         <span style={{whiteSpace:"nowrap"}}>{pay.gate?t("minPays"):t("minOpens")}</span>
       </div>
     </>}
+    {poll.status==="open"&&aboutMe&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,background:"var(--brand-soft)",color:"var(--brand-2)",fontWeight:700,fontSize:13,textAlign:"center"}}>{t("aboutYou")}</div>}
     {myResult&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,fontWeight:800,fontSize:13.5,textAlign:"center",background:myResult==="win"?"rgba(255,194,60,.14)":"var(--ink-3)",color:myResult==="win"?"var(--gold)":"var(--muted)"}}>
       {myResult==="win"?t("wonB"):t("lostB")}
       {myResult==="win"&&<button onClick={shareWin} className="chip" style={{marginInlineStart:8,padding:"3px 9px",fontSize:12}}>{t("shareBtn")}</button>}
@@ -375,6 +403,7 @@ function ResolveSheet({poll,onPick,onClose}){
     <button className="btn" style={{background:"var(--no)",color:"#06302b",marginBottom:12}} onClick={()=>onPick("no",proof.trim()||null)}>{t("resNo")}</button>
     <input className="in" placeholder={t("proofUrl")} value={proof} onChange={e=>setProof(e.target.value)} style={{marginBottom:12,fontSize:13}}/>
     <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5}}>{t("resHint")}</p>
+    <button className="btn btn-ghost" onClick={onClose} style={{marginTop:10}}>{t("back")}</button>
   </div></div>;
 }
 function Feed({groups,me,onErr,onResolved,startCreate}){
@@ -385,7 +414,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   const lastCreate=useRef(startCreate);
   useEffect(()=>{ if(startCreate!==lastCreate.current){ lastCreate.current=startCreate; SND.tap(); setCreating(true); } },[startCreate]);
   const load=async()=>{                  // cross-group: RLS already scopes polls to groups I'm a member of
-    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,force_proof,group_id").order("created_at",{ascending:false});
+    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,force_proof,group_id,target_id,personal").order("created_at",{ascending:false});
     if(!mounted.current)return;
     if(error)return onErr(error.message);
     setPolls(data||[]);
@@ -423,10 +452,13 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(won){ SND.win(); onResolved(true); } else { SND.tap(); onResolved(false); }
     await load();
   };
-  if(creating)return <CreatePoll groups={groups} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
+  const respond=async(poll,approve)=>{ const{error}=await SB.rpc("respond_consent",{p_poll:poll.id,p_approve:approve}); if(error)return onErr(error.message); SND.tap(); await load(); };
+  if(creating)return <CreatePoll groups={groups} me={me} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
   if(polls===null)return <Spinner label={t("loadingBets")}/>;
-  const all=polls.filter(p=>p.status!=="void");
+  const all=polls.filter(p=>p.status!=="void"&&p.status!=="pending_consent");
   const list=topic==="all"?all:all.filter(p=>p.subject===topic);
+  const inbox=polls.filter(p=>p.status==="pending_consent"&&p.target_id===me.id);
+  const waiting=polls.filter(p=>p.status==="pending_consent"&&p.author_id===me.id&&p.target_id!==me.id);
   let hottestId=null,hn=2;
   list.forEach(p=>{if(p.status==="open"){const n=(tally[p.id]||{yes:0,no:0}).yes+(tally[p.id]||{yes:0,no:0}).no;if(n>hn){hn=n;hottestId=p.id;}}});
   return <div>
@@ -435,43 +467,103 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
       {SK.map(k=><button key={k} className={"chip"+(topic===k?" on":"")} onClick={()=>{SND.tap();setTopic(k);}} style={{whiteSpace:"nowrap"}}>{SEMO[k]} {subName(k)}</button>)}
     </div>
     <button className="btn btn-pri" onClick={()=>{SND.tap();setCreating(true);}} style={{marginBottom:13}}>{t("newBet")}</button>
+    {inbox.length>0&&<div className="card" style={{border:"1px solid var(--brand)",background:"var(--brand-soft)",marginBottom:13,padding:13}}>
+      <div style={{fontWeight:800,fontSize:14,marginBottom:8}}>🙋 {t("pendInbox")}</div>
+      {inbox.map(p=><div key={p.id} style={{marginBottom:8}}>
+        <div style={{fontSize:14,fontWeight:600,marginBottom:8}}>{p.question}</div>
+        <div style={{display:"flex",gap:8}}>
+          <button className="btn" style={{background:"var(--yes)",padding:8}} onClick={()=>respond(p,true)}>{t("approveW")}</button>
+          <button className="btn btn-ghost" style={{padding:8}} onClick={()=>respond(p,false)}>{t("declineW")}</button>
+        </div></div>)}
+    </div>}
+    {waiting.length>0&&<div className="card" style={{marginBottom:13,padding:11,fontSize:12.5,color:"var(--muted)"}}>{t("waitApprove")} · {waiting.length}</div>}
     {list.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyFeed")}</div>}
     {list.map(p=><PollCard key={p.id} poll={p} tl={tally[p.id]||{yes:0,no:0,mine:null}} me={me} onVote={vote} onResolve={(pl)=>setResolving(pl)} locking={locking===p.id} featured={p.id===hottestId} groupName={gname[p.group_id]}/>)}
     {resolving&&<ResolveSheet poll={resolving} onPick={doResolve} onClose={()=>setResolving(null)}/>}
   </div>;
 }
-function CreatePoll({groups,onDone,onCancel,onErr}){
-  const [gid,setGid]=useState((groups[0]||{}).id);
-  const grp=groups.find(g=>g.id===gid)||groups[0];
-  const subject=grpSub(grp);
+function CreatePoll({groups,me,onDone,onCancel,onErr}){
+  const have=SK.filter(k=>groups.some(g=>grpSub(g)===k));
   const pad=n=>String(n).padStart(2,"0");
   const fmt=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes());
   const nowStr=fmt(new Date());
+  const [ctopic,setCtopic]=useState(null);
+  const [gid,setGid]=useState(null);
+  const [kind,setKind]=useState("general");
+  const [target,setTarget]=useState(null);
+  const [members,setMembers]=useState([]);
   const [q,setQ]=useState(""),[when,setWhen]=useState(fmt(new Date(Date.now()+24*3600000))),[busy,setBusy]=useState(false);
+  const inTopic=ctopic?groups.filter(g=>grpSub(g)===ctopic):[];
+  const grp=inTopic.find(g=>g.id===gid)||inTopic[0]||null;
+  useEffect(()=>{ if(ctopic){ const f=groups.filter(g=>grpSub(g)===ctopic); setGid(f[0]?f[0].id:null);} },[ctopic]);
+  useEffect(()=>{ setKind("general"); setTarget(null); },[gid,ctopic]);
+  useEffect(()=>{ if(!grp){setMembers([]);return;} let alive=true; (async()=>{ const{data}=await SB.from("group_members").select("profile_id,profiles(display_name,photo_url)").eq("group_id",grp.id); if(alive)setMembers((data||[]).filter(m=>m.profile_id!==me.id)); })(); return ()=>{alive=false;}; },[grp&&grp.id]);
   const ts=when?new Date(when).getTime():0;
   const validWhen=!!ts&&ts>Date.now();
-  const submit=async()=>{if(q.trim().length<5||!validWhen||!grp)return;setBusy(true);
-    const{error}=await SB.rpc("create_poll",{p_group:grp.id,p_subject:subject,p_type:"event",p_personal:false,p_question:q.trim(),p_target:null,p_force_proof:false,p_closes_at:new Date(when).toISOString()});
+  const okPerson=kind!=="person"||!!target;
+  const submit=async()=>{if(q.trim().length<5||!validWhen||!grp)return;
+    if(kind==="person"&&!target){onErr(t("mustTag"));return;}
+    setBusy(true);
+    const{error}=await SB.rpc("create_poll",{p_group:grp.id,p_subject:ctopic,p_type:kind==="person"?"person":"event",p_personal:kind==="person",p_question:q.trim(),p_target:kind==="person"?target:null,p_force_proof:false,p_closes_at:new Date(when).toISOString()});
     setBusy(false);if(error)return onErr(error.message);SND.tap();onDone();};
-  return <div>
+  if(!ctopic)return <div>
     <button onClick={onCancel} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
-    <h2 className="disp" style={{fontSize:22,margin:"0 0 14px"}}>{t("newBetT")}</h2>
-    <textarea className="in" rows="3" placeholder={t("qPh")} value={q} onChange={e=>setQ(e.target.value)} style={{resize:"none",marginBottom:14}}/>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("postIn")}</div>
-    <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,marginBottom:14,scrollbarWidth:"none"}}>
-      {groups.map(g=><button key={g.id} className={"chip"+(g.id===gid?" on":"")} onClick={()=>setGid(g.id)} style={{whiteSpace:"nowrap"}}>{SEMO[grpSub(g)]} {g.name}</button>)}
+    <h2 className="disp" style={{fontSize:22,margin:"0 0 6px"}}>{t("newBetT")}</h2>
+    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("pickTopicSub")}</p>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {have.map(k=><button key={k} onClick={()=>{SND.tap();setCtopic(k);}} className="card" style={{margin:0,padding:"18px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",border:"1px solid "+SC[k]+"55",background:SC[k]+"14"}}>
+        <span style={{fontSize:30}}>{SEMO[k]}</span><span style={{fontWeight:800,fontSize:14.5,color:SC[k]}}>{subName(k)}</span></button>)}
     </div>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("subjectLocked")}</div>
-    <div className="chip on" style={{marginBottom:18,padding:"9px 13px",fontSize:13.5}}>{SEMO[subject]} {subName(subject)}</div>
+  </div>;
+  return <div>
+    <button onClick={()=>setCtopic(null)} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
+    <h2 className="disp" style={{fontSize:22,margin:"0 0 14px"}}>{SEMO[ctopic]} {subName(ctopic)}</h2>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("postIn")}</div>
+    <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,marginBottom:16,scrollbarWidth:"none"}}>
+      {inTopic.map(g=><button key={g.id} className={"chip"+((grp&&g.id===grp.id)?" on":"")} onClick={()=>setGid(g.id)} style={{whiteSpace:"nowrap"}}>👥 {g.name}</button>)}
+    </div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("kindAbout")}</div>
+    <div style={{display:"flex",gap:8,marginBottom:14}}>
+      <button className={"chip"+(kind==="general"?" on":"")} style={{flex:1,justifyContent:"center"}} onClick={()=>{setKind("general");setTarget(null);}}>{t("kGen")}</button>
+      <button className={"chip"+(kind==="person"?" on":"")} style={{flex:1,justifyContent:"center"}} onClick={()=>setKind("person")}>{t("kPers")}</button>
+    </div>
+    {kind==="person"&&<div style={{marginBottom:14}}>
+      <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("tagWho")}</div>
+      {members.length===0?<div className="card" style={{color:"var(--muted)",fontSize:12.5,textAlign:"center",margin:0}}>{t("noMembers")}</div>
+      :<div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,scrollbarWidth:"none"}}>
+        {members.map(m=><button key={m.profile_id} className={"chip"+(target===m.profile_id?" on":"")} onClick={()=>setTarget(m.profile_id)} style={{whiteSpace:"nowrap"}}>{m.profiles?m.profiles.display_name:"—"}</button>)}
+      </div>}
+    </div>}
+    <textarea className="in" rows="3" placeholder={t("qPh")} value={q} onChange={e=>setQ(e.target.value)} style={{resize:"none",marginBottom:14}}/>
     <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("whenClose")}</div>
     <input className="in" type="datetime-local" min={nowStr} value={when} onChange={e=>setWhen(e.target.value)} style={{marginBottom:8,colorScheme:"dark"}}/>
     {validWhen?<div style={{height:10}}/>:<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:14}}>{t("futureTime")}</div>}
-    <button className="btn btn-pri" disabled={busy||q.trim().length<5||!validWhen} onClick={submit}>{t("placeBet")}</button>
+    <button className="btn btn-pri" disabled={busy||q.trim().length<5||!validWhen||!grp||!okPerson} onClick={submit}>{t("placeBet")}</button>
   </div>;
 }
 
 /* ---------- ranks ---------- */
-function Ranks({group,me,onErr}){
+function PickGroup({groups,onPick}){
+  const [sub,setSub]=useState(null);
+  const have=SK.filter(k=>groups.some(g=>grpSub(g)===k));
+  if(!sub)return <div>
+    <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:4}}>{t("pickTopicT")}</div>
+    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("pickTopicSub")}</p>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {have.map(k=><button key={k} onClick={()=>{SND.tap();setSub(k);}} className="card" style={{margin:0,padding:"18px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",border:"1px solid "+SC[k]+"55",background:SC[k]+"14"}}>
+        <span style={{fontSize:30}}>{SEMO[k]}</span><span style={{fontWeight:800,fontSize:14.5,color:SC[k]}}>{subName(k)}</span></button>)}
+    </div>
+  </div>;
+  const inSub=groups.filter(g=>grpSub(g)===sub);
+  return <div>
+    <button onClick={()=>setSub(null)} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
+    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><span style={{fontSize:24}}>{SEMO[sub]}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:SC[sub]}}>{subName(sub)}</span></div>
+    {inSub.map(g=><button key={g.id} onClick={()=>{SND.tap();onPick(g);}} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,width:"100%",textAlign:"start",cursor:"pointer",border:"1px solid var(--line)",background:"var(--ink-2)",color:"var(--text)"}}>
+      <div style={{width:38,height:38,borderRadius:11,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
+      <div style={{flex:1}}><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div><span style={{color:"var(--muted)"}}>›</span></button>)}
+  </div>;
+}
+function Ranks({group,me,onErr,onChange}){
   const [rows,setRows]=useState(null);
   const gsub=grpSub(group);
   useEffect(()=>{(async()=>{const{data,error}=await SB.from("member_scores").select("profile_id,points,profiles(display_name,photo_url)").eq("group_id",group.id);
@@ -487,6 +579,7 @@ function Ranks({group,me,onErr}){
       <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:14.5}}>{group.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{subName(gsub)} · {t("codeLabel")}: <b className="tnum" style={{color:"var(--text)",letterSpacing:"1px"}}>{group.invite_code}</b></div></div>
       <button onClick={()=>shareWa(t("inviteText",{name:group.name,code:group.invite_code,url:REDIRECT}))} className="chip" style={{padding:8}} title="WhatsApp">📤</button>
     </div>
+    {onChange&&<button onClick={onChange} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",margin:"0 0 12px",fontFamily:"inherit",fontSize:13}}>↺ {t("changeGroup")}</button>}
     {ranked.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyRanks")}</div>}
     {ranked.map((r,i)=><div key={r.id} className="card" style={{display:"flex",alignItems:"center",gap:11,padding:11,borderColor:r.id===me.id?"var(--brand)":(i===0?"rgba(255,194,60,.4)":"var(--line)"),background:r.id===me.id?"var(--brand-soft)":"var(--ink-2)"}}>
       <span style={{width:22,fontWeight:800,fontSize:i<3?18:14,color:i<3?"var(--gold)":"var(--faint)",textAlign:"center"}}>{i<3?medal[i]:i+1}</span>
@@ -623,18 +716,18 @@ function Groups({groups,me,active,onErr,reload,onEnter}){
 function App(){
   const [session,setSession]=useState(undefined),[me,setMe]=useState(null),[groups,setGroups]=useState(null),[group,setGroup]=useState(null);
   const [tab,setTab]=useState("feed"),[err,setErr]=useState(null),[startCreate,setStartCreate]=useState(0),[celebrate,setCelebrate]=useState(false);
-  const [scores,setScores]=useState({}),[total,setTotal]=useState(0),[snd,setSnd]=useState(SND.on),[lang,setLang]=useState(CUR.lang),[langOpen,setLangOpen]=useState(false);
+  const [scores,setScores]=useState({}),[total,setTotal]=useState(0),[snd,setSnd]=useState(SND.on),[lang,setLang]=useState(CUR.lang),[langOpen,setLangOpen]=useState(false),[winPts,setWinPts]=useState(null);
   useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=dirOf(lang);},[lang]);
   const pickLang=(c)=>{CUR.lang=c;localStorage.setItem("eyevos_lang",c);setLang(c);setLangOpen(false);SND.tap();};
   useEffect(()=>{SB.auth.getSession().then(({data})=>setSession(data.session||null));const{data:s}=SB.auth.onAuthStateChange((_e,ss)=>setSession(ss||null));return()=>s.subscription.unsubscribe();},[]);
   useEffect(()=>{if(!session){setMe(null);return;}SB.from("profiles").select("id,display_name,photo_url").eq("id",session.user.id).single().then(({data})=>setMe(data||{id:session.user.id,display_name:(session.user.email||"Player").split("@")[0]}));},[session]);
-  const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("*").order("created_at");if(error){setErr(error.message);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:(list[0]||null));};
+  const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("*").order("created_at");if(error){setErr(error.message);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:null);};
   useEffect(()=>{if(me)loadGroups();},[me]);
-  const loadScores=async()=>{if(!me)return;const{data}=await SB.from("member_scores").select("subject,points").eq("profile_id",me.id);const s={};let x=0;(data||[]).forEach(r=>{s[r.subject]=(s[r.subject]||0)+r.points;x+=r.points;});setScores(s);setTotal(x);};
+  const loadScores=async()=>{if(!me)return;const{data}=await SB.from("member_scores").select("subject,points").eq("profile_id",me.id);const s={};let x=0;(data||[]).forEach(r=>{s[r.subject]=(s[r.subject]||0)+r.points;x+=r.points;});setScores(s);setTotal(x);return x;};
   useEffect(()=>{loadScores();},[me]);
   const onErr=(m)=>{setErr(m);setTimeout(()=>setErr(null),5000);};
   const signOut=async()=>{await SB.auth.signOut();setGroup(null);setGroups(null);};
-  const onResolved=(won)=>{loadScores();if(won){setCelebrate(true);setTimeout(()=>setCelebrate(false),1500);}};
+  const onResolved=async(won)=>{const before=total;const after=await loadScores();if(won){const d=Math.max(0,(after||0)-before);setWinPts(d);setCelebrate(true);setTimeout(()=>setCelebrate(false),1500);}};
   const langSheet = langOpen?<LangSheet cur={lang} onPick={pickLang} onClose={()=>setLangOpen(false)}/>:null;
   const langBtn = <button onClick={()=>setLangOpen(true)} className="chip" style={{padding:"6px 9px",fontSize:14}} title="Language">🌐</button>;
 
@@ -644,6 +737,13 @@ function App(){
 
   return <div className="stage"><div className="device">
     {celebrate&&<Confetti/>}
+    {winPts!=null&&<div className="sheet" onClick={()=>setWinPts(null)}><div className="sheetcard" onClick={e=>e.stopPropagation()} style={{textAlign:"center"}}><div className="grab"/>
+      <div style={{fontSize:46,margin:"4px 0"}}>🏆</div>
+      <h3 className="disp" style={{fontSize:23,fontWeight:900,color:"var(--gold)",margin:"0 0 4px"}}>{t("winT")}</h3>
+      <div className="disp goldglow" style={{fontSize:30,fontWeight:900,color:"var(--gold)",margin:"4px 0"}}>{t("winPts",{n:winPts})}</div>
+      <div style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("winTotal",{n:total})}</div>
+      <button className="btn btn-pri" onClick={()=>setWinPts(null)}>{t("winCont")}</button>
+    </div></div>}
     <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
@@ -661,10 +761,10 @@ function App(){
       {err&&<div className="err">{err}</div>}
       {tab==="groups"?
         <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{setGroup(g);setTab("board");}}/>
-      :!group?
+      :groups.length===0?
         <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎲</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:16}}>{t("noGroupB")}</p><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
         :tab==="feed"?<Feed groups={groups} me={me} onErr={onErr} onResolved={onResolved} startCreate={startCreate}/>
-        :tab==="board"?<Ranks group={group} me={me} onErr={onErr}/>
+        :tab==="board"?(group?<Ranks group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)}/>:<PickGroup groups={groups} onPick={(g)=>setGroup(g)}/>)
         :tab==="rules"?<Rules/>
         :<Profile group={group} groups={groups} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>}
     </div>

@@ -27,6 +27,8 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .scroll::-webkit-scrollbar{display:none}
 .disp{font-weight:800;letter-spacing:-.02em}
 .tnum{font-variant-numeric:tabular-nums}
+.bidi{unicode-bidi:isolate}
+.bidi-ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
 .card{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;cursor:pointer;border-radius:13px;padding:14px;font-family:inherit;font-weight:800;font-size:15px;color:#fff;transition:.15s}
 .btn:active{transform:scale(.97)}
@@ -35,7 +37,7 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .btn-ghost{background:var(--ink-3);border:1px solid var(--line-2);color:var(--text)}
 .btn-gold{background:linear-gradient(180deg,#FFD466,#F5A623);color:#3a2400;box-shadow:0 10px 24px rgba(255,194,60,.4)}
 .in{width:100%;background:var(--ink-3);border:1px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--text);font-family:inherit;font-size:16px;outline:none}
-.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--ink-3);color:var(--muted);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--ink-3);color:var(--muted);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;min-height:44px}
 .chip.on{background:var(--brand-soft);border-color:rgba(138,107,255,.5);color:#D9CDFF}
 .bar{position:relative;height:46px;border-radius:13px;overflow:hidden;display:flex;background:var(--ink-3);border:1px solid var(--line)}
 .bar .side{height:100%;transition:width .55s cubic-bezier(.22,1,.36,1)}
@@ -44,7 +46,7 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .spin{width:34px;height:34px;border:3px solid var(--line-2);border-top-color:var(--brand-2);border-radius:50%;animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .nav{display:flex;align-items:center;justify-content:space-around;padding:10px 8px 14px;background:rgba(21,18,30,.92);border-top:1px solid var(--line)}
-.navb{display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--faint);font-family:inherit;font-size:10.5px;font-weight:700;padding:4px 12px}
+.navb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;cursor:pointer;color:var(--faint);font-family:inherit;font-size:10.5px;font-weight:700;padding:4px 12px;min-height:44px;min-width:44px;border-radius:12px}
 .navb.on{color:var(--brand-2)}
 .fab{margin-top:-26px;width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--brand-2),var(--brand));box-shadow:0 10px 24px rgba(138,107,255,.5),0 0 22px rgba(255,77,109,.3);border:none;cursor:pointer;color:#fff;font-size:26px}
 .topbar{padding:15px 16px 8px;position:relative;z-index:2}
@@ -64,6 +66,16 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40;border-radius:34px}
 .confetti i{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;animation:cf 1.3s cubic-bezier(.4,.6,.6,1) forwards}
 @keyframes cf{0%{transform:translateY(-14px) rotate(0);opacity:1}100%{transform:translateY(720px) rotate(620deg);opacity:0}}
+@keyframes trophyPop{0%{transform:scale(.2) rotate(-18deg);opacity:0}55%{transform:scale(1.28) rotate(6deg);opacity:1}72%{transform:scale(.92) rotate(-3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.trophyPop{display:inline-block;animation:trophyPop .72s cubic-bezier(.22,1.3,.4,1) both;filter:drop-shadow(0 6px 22px rgba(255,194,60,.55))}
+@keyframes ringPulse{0%{transform:scale(.4);opacity:.55}100%{transform:scale(2.2);opacity:0}}
+.winRing{position:absolute;inset-block-start:18px;inset-inline-start:50%;inline-size:78px;block-size:78px;margin-inline-start:-39px;border-radius:999px;border:3px solid var(--gold);pointer-events:none;animation:ringPulse 1s ease-out .12s both}
+@keyframes ptsFlash{0%{transform:scale(.7);opacity:0}40%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+.ptsFlash{animation:ptsFlash .5s cubic-bezier(.22,1.3,.4,1) both}
+@keyframes streakIn{from{transform:translateY(8px);opacity:0}to{transform:translateY(0);opacity:1}}
+.streakRow{display:inline-flex;align-items:center;gap:8px;justify-content:center;background:linear-gradient(90deg,rgba(255,77,109,.18),rgba(255,194,60,.18));border:1px solid rgba(255,194,60,.34);border-radius:999px;padding:7px 15px;font-weight:900;font-size:14px;color:var(--gold);box-shadow:0 0 22px rgba(255,77,109,.28);animation:streakIn .4s ease-out .55s both}
+@keyframes cf2{0%{transform:translate3d(0,-16px,0) rotate(0);opacity:1}100%{transform:translate3d(var(--cfx,0),760px,0) rotate(var(--cfr,640deg));opacity:0}}
+@media (prefers-reduced-motion:reduce){.trophyPop,.winRing,.ptsFlash,.streakRow{animation:none!important}.winRing{display:none}}
 .neon{text-shadow:0 0 18px rgba(167,139,255,.65),0 0 40px rgba(138,107,255,.4);animation:neonpulse 2.8s ease-in-out infinite}
 @keyframes neonpulse{0%,100%{text-shadow:0 0 16px rgba(167,139,255,.55),0 0 38px rgba(138,107,255,.32)}50%{text-shadow:0 0 28px rgba(167,139,255,.95),0 0 64px rgba(138,107,255,.55)}}
 .logob{width:78px;height:78px;border-radius:22px;background:linear-gradient(150deg,var(--brand-2),var(--brand) 55%,var(--yes));display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 18px 46px rgba(138,107,255,.5),0 0 30px rgba(255,77,109,.25);animation:float 4s ease-in-out infinite}
@@ -81,7 +93,14 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;background:#fff;color:#1f1f1f;border:none;border-radius:13px;padding:14px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.35)}
 .gbtn:active{transform:scale(.97)}
 @media (max-width:480px){.stage{padding:0}.device{width:100%;height:100vh;height:100dvh;max-height:100dvh;border-radius:0;border:none}.confetti{border-radius:0}}
-@media (prefers-reduced-motion:reduce){.spin,.jackpot,.confetti,.neon,.logob,.ticker .run,.livedot,.coin{animation:none!important}.coin{opacity:.12}}
+@media (prefers-reduced-motion:reduce){
+  .spin,.jackpot,.confetti,.confetti i,.neon,.logob,.ticker .run,.livedot,.coin,.coins{animation:none!important;transition:none!important}
+  .coin,.coins{opacity:.12}
+  .confetti,.confetti i{display:none!important}
+  .bar .side{transition:none!important}
+  .sheetcard{animation:none!important}
+  .btn:active,.card:hover,.gbtn:active,.fab:active{transform:none!important}
+}
 /* ===== premium polish layer (real-betting-site feel; visual only) ===== */
 .device{box-shadow:0 50px 130px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.04),inset 0 1px 0 rgba(255,255,255,.05)}
 .device::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;background:
@@ -102,7 +121,11 @@ body{font-family:'Heebo',system-ui,sans-serif}
 .fab:hover{filter:brightness(1.08)}
 @media(hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.05)}.btn:hover{filter:brightness(1.06)}.navb:hover{color:var(--muted)}}
 input:focus,textarea:focus{border-color:rgba(138,107,255,.6);box-shadow:0 0 0 3px rgba(138,107,255,.18)}
-button:focus-visible,a:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px;border-radius:8px}
+.chip:focus-visible,.navb:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+.fab:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.bar .lab:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--brand-2),inset 0 0 0 4px rgba(12,10,20,.85);border-radius:11px}
+.btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 </style>
 </head>
 <body>
@@ -230,9 +253,40 @@ zh:{viewProof:"查看证据",awaitResolve:"⏳ 等待作者裁定"},
 ar:{viewProof:"عرض الإثبات",awaitResolve:"⏳ بانتظار حسم صاحب السؤال"}
 };
 for(const _c in _GX8){ if(STR[_c]) Object.assign(STR[_c],_GX8[_c]); }
+const _GX9={
+he:{ptsUnit:"נקודות",streakRow:"{n} ברצף! 🔥"},
+en:{ptsUnit:"points",streakRow:"{n} in a row! 🔥"},
+es:{ptsUnit:"puntos",streakRow:"¡{n} seguidas! 🔥"},
+fr:{ptsUnit:"points",streakRow:"{n} d'affilée ! 🔥"},
+pt:{ptsUnit:"pontos",streakRow:"{n} seguidas! 🔥"},
+ru:{ptsUnit:"очков",streakRow:"{n} подряд! 🔥"},
+de:{ptsUnit:"Punkte",streakRow:"{n} in Folge! 🔥"},
+hi:{ptsUnit:"अंक",streakRow:"लगातार {n}! 🔥"},
+zh:{ptsUnit:"分",streakRow:"连续 {n} 次！🔥"},
+ar:{ptsUnit:"نقطة",streakRow:"{n} متتالية! 🔥"}
+};
+for(const _c in _GX9){ if(STR[_c]) Object.assign(STR[_c],_GX9[_c]); }
+const _GX10={
+he:{reportBtn:"דווח",reportTitle:"דיווח על שאלה",reportHint:"הצוות יבדוק. דיווחי שווא עלולים להגביל את החשבון.",reportSent:"✅ הדיווח נשלח. תודה ששמרת על הקהילה",reason_spam:"ספאם או הטעיה",reason_harassment:"הטרדה או בריונות",reason_inappropriate:"תוכן לא ראוי",reason_other:"אחר"},
+en:{reportBtn:"Report",reportTitle:"Report this poll",reportHint:"Our team will review. False reports may limit your account.",reportSent:"✅ Report sent. Thanks for keeping the community safe",reason_spam:"Spam or misleading",reason_harassment:"Harassment or bullying",reason_inappropriate:"Inappropriate content",reason_other:"Something else"},
+es:{reportBtn:"Reportar",reportTitle:"Reportar esta pregunta",reportHint:"Nuestro equipo lo revisará. Los reportes falsos pueden limitar tu cuenta.",reportSent:"✅ Reporte enviado. Gracias por cuidar la comunidad",reason_spam:"Spam o engañoso",reason_harassment:"Acoso o intimidación",reason_inappropriate:"Contenido inapropiado",reason_other:"Otro motivo"},
+fr:{reportBtn:"Signaler",reportTitle:"Signaler cette question",reportHint:"Notre équipe vérifiera. Les faux signalements peuvent limiter votre compte.",reportSent:"✅ Signalement envoyé. Merci de protéger la communauté",reason_spam:"Spam ou trompeur",reason_harassment:"Harcèlement ou intimidation",reason_inappropriate:"Contenu inapproprié",reason_other:"Autre raison"},
+pt:{reportBtn:"Denunciar",reportTitle:"Denunciar esta pergunta",reportHint:"Nossa equipe vai analisar. Denúncias falsas podem limitar sua conta.",reportSent:"✅ Denúncia enviada. Obrigado por cuidar da comunidade",reason_spam:"Spam ou enganoso",reason_harassment:"Assédio ou bullying",reason_inappropriate:"Conteúdo impróprio",reason_other:"Outro motivo"},
+ru:{reportBtn:"Пожаловаться",reportTitle:"Пожаловаться на вопрос",reportHint:"Команда проверит. Ложные жалобы могут ограничить ваш аккаунт.",reportSent:"✅ Жалоба отправлена. Спасибо, что бережёте сообщество",reason_spam:"Спам или обман",reason_harassment:"Травля или оскорбления",reason_inappropriate:"Неприемлемый контент",reason_other:"Другое"},
+de:{reportBtn:"Melden",reportTitle:"Diese Frage melden",reportHint:"Unser Team prüft das. Falsche Meldungen können dein Konto einschränken.",reportSent:"✅ Meldung gesendet. Danke, dass du die Community schützt",reason_spam:"Spam oder irreführend",reason_harassment:"Belästigung oder Mobbing",reason_inappropriate:"Unangemessener Inhalt",reason_other:"Anderer Grund"},
+hi:{reportBtn:"रिपोर्ट करें",reportTitle:"इस सवाल की रिपोर्ट करें",reportHint:"हमारी टीम समीक्षा करेगी। झूठी रिपोर्ट से आपका खाता सीमित हो सकता है।",reportSent:"✅ रिपोर्ट भेजी गई। समुदाय को सुरक्षित रखने के लिए धन्यवाद",reason_spam:"स्पैम या भ्रामक",reason_harassment:"उत्पीड़न या बदमाशी",reason_inappropriate:"अनुचित सामग्री",reason_other:"कुछ और"},
+zh:{reportBtn:"举报",reportTitle:"举报此问题",reportHint:"我们的团队会审核。虚假举报可能限制你的账户。",reportSent:"✅ 举报已发送，感谢你守护社区",reason_spam:"垃圾或误导",reason_harassment:"骚扰或欺凌",reason_inappropriate:"不当内容",reason_other:"其他原因"},
+ar:{reportBtn:"إبلاغ",reportTitle:"الإبلاغ عن هذا السؤال",reportHint:"سيراجع فريقنا البلاغ. البلاغات الكاذبة قد تقيّد حسابك.",reportSent:"✅ تم إرسال البلاغ. شكراً لحفاظك على المجتمع",reason_spam:"سبام أو مضلل",reason_harassment:"تحرّش أو تنمّر",reason_inappropriate:"محتوى غير لائق",reason_other:"سبب آخر"}
+};
+for(const _c in _GX10){ if(STR[_c]) Object.assign(STR[_c],_GX10[_c]); }
+const _GX11={
+he:{cueLegend:"✓ כן · ✗ לא"},en:{cueLegend:"✓ Yes · ✗ No"},es:{cueLegend:"✓ Sí · ✗ No"},fr:{cueLegend:"✓ Oui · ✗ Non"},pt:{cueLegend:"✓ Sim · ✗ Não"},ru:{cueLegend:"✓ Да · ✗ Нет"},de:{cueLegend:"✓ Ja · ✗ Nein"},hi:{cueLegend:"✓ हाँ · ✗ नहीं"},zh:{cueLegend:"✓ 是 · ✗ 否"},ar:{cueLegend:"✓ نعم · ✗ لا"}
+};
+for(const _c in _GX11){ if(STR[_c]) Object.assign(STR[_c],_GX11[_c]); }
 const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
 const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
+function Chev({color}){ const rtl=dirOf(CUR.lang)==="rtl"; return <span aria-hidden="true" style={{color:color||"var(--muted)",unicodeBidi:"isolate",fontWeight:700}}>{rtl?"‹":"›"}</span>; }
 function t(k,vars){ let s=(STR[CUR.lang]&&STR[CUR.lang][k]); if(s===undefined) s=STR.en[k]; if(s===undefined) s=k; if(vars){ for(const p in vars) s=s.split("{"+p+"}").join(vars[p]); } return s; }
 
 /* ===================== subjects ===================== */
@@ -299,7 +353,35 @@ function payouts(t2){
 function fmtClose(iso){ try{ return new Date(iso).toLocaleString(CUR.lang,{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; } }
 function shareWa(text){ window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank"); }
 function Spinner({label}){return <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,padding:"60px 0",color:"var(--muted)"}}><div className="spin"/><div style={{fontSize:13,fontWeight:700}}>{label||t("connecting")}</div></div>;}
-function Confetti(){const c=["#FF4D6D","#2DD4BF","#FFC23C","#8A6BFF","#5BC8FF"];return <div className="confetti">{Array.from({length:22},(_,i)=><i key={i} style={{left:Math.round(Math.random()*100)+"%",background:c[i%c.length],animationDelay:(Math.random()*.4).toFixed(2)+"s"}}/>)}</div>;}
+function WinModal({won,total,onClose}){
+  const pts=(won&&won.pts)||0, streak=(won&&won.streak)||0;
+  const [show,setShow]=useState(0);
+  const reduce=(typeof matchMedia!=="undefined")&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+  useEffect(()=>{ if(reduce){setShow(pts);return;} const id=setTimeout(()=>setShow(pts),560); return()=>clearTimeout(id); },[pts,reduce]);
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()} style={{textAlign:"center",position:"relative"}}><div className="grab"/>
+    {!reduce&&<span className="winRing" aria-hidden="true"/>}
+    <div style={{fontSize:50,margin:"4px 0",lineHeight:1}}><span className={reduce?"":"trophyPop"} role="img" aria-label="trophy">🏆</span></div>
+    <h3 className="disp" style={{fontSize:23,fontWeight:900,color:"var(--gold)",margin:"0 0 4px"}}>{t("winT")}</h3>
+    <div className={"disp goldglow"+(show?" ptsFlash":"")} dir="ltr" style={{fontSize:38,fontWeight:900,color:"var(--gold)",margin:"6px 0",minHeight:46}}>+<CountUp value={show} dur={760}/> <span style={{fontSize:18,fontWeight:800,opacity:.85}}>{t("ptsUnit")}</span></div>
+    {streak>0&&<div className="streakRow" dir="auto">🔥 {t("streakRow",{n:streak})}</div>}
+    <div style={{color:"var(--muted)",fontSize:13,margin:"14px 0 16px"}} dir="auto">{t("winTotal",{n:total})}</div>
+    <button className="btn btn-pri" onClick={onClose}>{t("winCont")}</button>
+  </div></div>;
+}
+function Confetti(){
+  const c=["#FF4D6D","#2DD4BF","#FFC23C","#8A6BFF","#5BC8FF","#FF9F45"];
+  const reduce=(typeof matchMedia!=="undefined")&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+  if(reduce)return null;
+  const N=70;
+  return <div className="confetti" aria-hidden="true">{Array.from({length:N},(_,i)=>{
+    const start=Math.round(Math.random()*100);
+    const fan=(start-50)*1.9+(Math.random()*120-60);
+    const sz=6+Math.round(Math.random()*8);
+    const rot=(Math.random()*900-200).toFixed(0)+"deg";
+    const dur=(1.5+Math.random()*1.1).toFixed(2)+"s";
+    return <i key={i} style={{left:start+"%",background:c[i%c.length],inlineSize:sz+"px",blockSize:(sz+Math.round(Math.random()*6))+"px",borderRadius:(Math.random()<.3?"50%":"2px"),animation:"cf2 "+dur+" cubic-bezier(.2,.6,.5,1) "+(Math.random()*.35).toFixed(2)+"s forwards","--cfx":fan.toFixed(0)+"px","--cfr":rot}}/>;
+  })}</div>;
+}
 function LangSheet({cur,onPick,onClose}){
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
     <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 16px"}}>🌐 Language · שפה · اللغة</h3>
@@ -376,14 +458,14 @@ function Bar({poll,tl,onVote,locking,disabled}){
       {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="spin" style={{width:18,height:18,borderWidth:2}}/>{t("locking")}</div>
       :<><div className="side" style={{width:(reveal?y:50)+"%",background:voted==="yes"?"var(--yes)":"var(--yes-soft)"}}/>
       <div className="side" style={{width:(reveal?100-y:50)+"%",background:voted==="no"?"var(--no)":"var(--no-soft)"}}/>
-      <button className="lab" style={{insetInlineStart:0,color:voted==="yes"?"#fff":"var(--yes)"}} disabled={reveal} onClick={()=>onVote("yes")}>{t("yes")} {reveal?<span className="tnum"><CountUp value={y} dur={420}/>%</span>:""}</button>
-      <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={reveal} onClick={()=>onVote("no")}>{reveal?<span className="tnum"><CountUp value={100-y} dur={420}/>%</span>:""} {t("no")}</button></>}
+      <button className="lab" style={{insetInlineStart:0,color:voted==="yes"?"#2A0410":"var(--yes)",textShadow:voted==="yes"?"0 1px 1px rgba(255,255,255,.35)":"none"}} disabled={reveal} onClick={()=>onVote("yes")}><span aria-hidden="true" style={{fontWeight:900}}>✓</span> {t("yes")} {reveal?<span className="tnum" dir="ltr"><CountUp value={y} dur={420}/>%</span>:""}</button>
+      <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={reveal} onClick={()=>onVote("no")}>{reveal?<span className="tnum" dir="ltr"><CountUp value={100-y} dur={420}/>%</span>:""} {t("no")} <span aria-hidden="true" style={{fontWeight:900}}>✗</span></button></>}
     </div>
     <div style={{display:"flex",justifyContent:"space-between",marginTop:8,fontSize:12,color:"var(--muted)",fontWeight:600}}>
-      <span className="tnum">{t("betsN",{n:total})}</span><span style={{color:reveal?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{reveal?t("locked"):t("pickSide")}</span></div>
+      <span className="tnum bidi">{t("betsN",{n:total})}</span><span style={{color:reveal?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{reveal?t("locked"):t("pickSide")}</span></div>
   </div>;
 }
-function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
+function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onReport}){
   const total=tl.yes+tl.no;
   const hot=poll.status==="open"&&total>=8;
   const closed=poll.status==="open"&&new Date(poll.closes_at)<new Date();
@@ -397,7 +479,7 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
     {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}>{t("hotNow")}</div>}
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
       <div style={{display:"flex",alignItems:"center",gap:7,minWidth:0,flex:1}}><span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>{groupName&&<span style={{fontSize:11,color:"var(--muted)",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>👥 {groupName}</span>}</div>
-      <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag" style={{background:"var(--gold-soft)",color:"var(--gold)"}}>🏆 {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")}>📤</button></div>
+      <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag" dir="auto" style={{background:"var(--gold-soft)",color:"var(--gold)",border:"1px solid rgba(255,194,60,.4)"}}>🏆 <span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&poll.status!=="resolved"&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
     </div>
     <p className="disp" style={{fontSize:18,fontWeight:700,margin:"0 0 12px",lineHeight:1.25}}>{poll.question}</p>
     <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe}/>
@@ -406,6 +488,7 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName}){
         <span dir="ltr" style={{color:"var(--gold)",fontWeight:900}}>🎯 +5</span>
         <span style={{color:"var(--faint)"}}>·</span>
         <span style={{color:"var(--gold)"}}>🔥 {t("bonusHint")}</span>
+        <span style={{marginInlineStart:"auto",color:"var(--muted)",fontWeight:800,fontSize:11.5}} dir="auto" title={t("cueLegend")}>{t("cueLegend")}</span>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600,gap:8}}>
         <span dir="ltr">⏱ {closed?t("closedW"):<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
@@ -433,6 +516,16 @@ function ResolveSheet({poll,onPick,onClose}){
     <button className="btn btn-ghost" onClick={onClose} style={{marginTop:10}}>{t("back")}</button>
   </div></div>;
 }
+function ReportSheet({poll,onPick,onClose}){
+  const reasons=[["spam","🔁"],["harassment","🙅"],["inappropriate","⚠️"],["other","💬"]];
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
+    <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 6px"}}>{t("reportTitle")}</h3>
+    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{poll.question}</p>
+    {reasons.map(([k,emo])=><button key={k} className="chip" onClick={()=>onPick(k)} style={{display:"flex",width:"100%",justifyContent:"flex-start",gap:10,padding:"13px 14px",marginBottom:10,fontSize:14.5,borderRadius:13}}><span aria-hidden="true">{emo}</span>{t("reason_"+k)}</button>)}
+    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,marginTop:2}}>{t("reportHint")}</p>
+    <button className="btn btn-ghost" onClick={onClose} style={{marginTop:10}}>{t("back")}</button>
+  </div></div>;
+}
 function Feed({groups,me,onErr,onResolved,startCreate}){
   const [polls,setPolls]=useState(null),[tally,setTally]=useState({}),[creating,setCreating]=useState(false),[locking,setLocking]=useState(null),[resolving,setResolving]=useState(null),[topic,setTopic]=useState("all");
   const mounted=useRef(true);
@@ -440,18 +533,27 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
   const lastCreate=useRef(startCreate);
   useEffect(()=>{ if(startCreate!==lastCreate.current){ lastCreate.current=startCreate; SND.tap(); setCreating(true); } },[startCreate]);
+  const reqId=useRef(0);
   const load=async()=>{                  // cross-group: RLS already scopes polls to groups I'm a member of
+    const my=++reqId.current;            // request-id: only the newest load() may commit state
+    const stale=()=>!mounted.current||my!==reqId.current;
     const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,force_proof,group_id,target_id,personal,proof_url").order("created_at",{ascending:false});
-    if(!mounted.current)return;
+    if(stale())return;
     if(error)return onErr(error.message);
     setPolls(data||[]);
     if(data&&data.length){const ids=data.map(p=>p.id);
       const tt={};
       const rpc=await SB.rpc("poll_tally",{p_polls:ids});           // counts only (private); falls back if RPC not created yet
-      if(!mounted.current)return;
-      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={yes:r.yes||0,no:r.no||0,mine:r.mine||null};}); }
-      else { const{data:v}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids); if(!mounted.current)return; (v||[]).forEach(r=>{tt[r.poll_id]=tt[r.poll_id]||{yes:0,no:0,mine:null};tt[r.poll_id][r.choice]++;if(r.voter_id===me.id)tt[r.poll_id].mine=r.choice;}); }
-      setTally(tt);}
+      if(stale())return;
+      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={yes:r.yes||0,no:r.no||0,mine:r.mine||null};}); setTally(tt); }
+      else { const{data:v,error:ve}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids); if(stale())return;
+        // p_votes RLS restricts raw votes to MY rows -> fallback only sees my own vote. Never render an all-zero tally over
+        // real counts: keep prior counts, refresh only `mine`. No prior tally -> leave empty (unknown != zero).
+        setTally(prev=>{ const out={}; ids.forEach(id=>{ const p=prev[id]; if(p)out[id]={yes:p.yes,no:p.no,mine:p.mine}; });
+          if(!ve){ (v||[]).forEach(r=>{ out[r.poll_id]=out[r.poll_id]||{yes:0,no:0,mine:null}; if(r.voter_id===me.id)out[r.poll_id].mine=r.choice; }); }
+          return out; });
+      }
+    }
     else setTally({});
   };
   useEffect(()=>{load();},[]);
@@ -472,6 +574,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(!mounted.current)return;
     setLocking(null);
     if(error)return onErr(error.message);
+    setTally(prev=>{ const cur=prev[poll.id]||{yes:0,no:0,mine:null}; return {...prev,[poll.id]:{...cur,mine:choice}}; }); // keep my choice across a racing reload
     await load();
   };
   const doResolve=async(o,proof)=>{
@@ -480,10 +583,12 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(!mounted.current)return;
     if(error)return onErr(error.message);
     const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win
-    if(won){ SND.win(); onResolved(true); } else { SND.tap(); onResolved(false); }
+    if(won){ SND.win(); onResolved(true,poll); } else { SND.tap(); onResolved(false,poll); }
     await load();
   };
   const respond=async(poll,approve)=>{ const{error}=await SB.rpc("respond_consent",{p_poll:poll.id,p_approve:approve}); if(error)return onErr(error.message); SND.tap(); await load(); };
+  const [reporting,setReporting]=useState(null);
+  const doReport=async(reason)=>{ const poll=reporting; setReporting(null); if(!poll)return; SND.tap(); const{error}=await SB.rpc("report_poll",{p_poll:poll.id,p_reason:reason}); if(!mounted.current)return; if(error)return onErr(error.message); onErr(t("reportSent")); };
   if(creating)return <CreatePoll groups={groups} me={me} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
   if(polls===null)return <Spinner label={t("loadingBets")}/>;
   const all=polls.filter(p=>p.status!=="void"&&p.status!=="pending_consent");
@@ -491,7 +596,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   const inbox=polls.filter(p=>p.status==="pending_consent"&&p.target_id===me.id);
   const waiting=polls.filter(p=>p.status==="pending_consent"&&p.author_id===me.id&&p.target_id!==me.id);
   let hottestId=null,hn=2;
-  list.forEach(p=>{if(p.status==="open"){const n=(tally[p.id]||{yes:0,no:0}).yes+(tally[p.id]||{yes:0,no:0}).no;if(n>hn){hn=n;hottestId=p.id;}}});
+  list.forEach(p=>{if(p.status==="open"){const tp=tally[p.id]; if(!tp)return; const n=(tp.yes||0)+(tp.no||0); if(n>hn){hn=n;hottestId=p.id;}}});
   return <div>
     <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:12,scrollbarWidth:"none"}}>
       <button className={"chip"+(topic==="all"?" on":"")} onClick={()=>{SND.tap();setTopic("all");}} style={{whiteSpace:"nowrap"}}>🔥 {t("allTopics")}</button>
@@ -509,8 +614,9 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     </div>}
     {waiting.length>0&&<div className="card" style={{marginBottom:13,padding:11,fontSize:12.5,color:"var(--muted)"}}>{t("waitApprove")} · {waiting.length}</div>}
     {list.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyFeed")}</div>}
-    {list.map(p=><PollCard key={p.id} poll={p} tl={tally[p.id]||{yes:0,no:0,mine:null}} me={me} onVote={vote} onResolve={(pl)=>setResolving(pl)} locking={locking===p.id} featured={p.id===hottestId} groupName={gname[p.group_id]}/>)}
+    {list.map(p=><PollCard key={p.id} poll={p} tl={tally[p.id]||{yes:0,no:0,mine:null}} me={me} onVote={vote} onResolve={(pl)=>setResolving(pl)} locking={locking===p.id} featured={p.id===hottestId} groupName={gname[p.group_id]} onReport={()=>setReporting(p)}/>)}
     {resolving&&<ResolveSheet poll={resolving} onPick={doResolve} onClose={()=>setResolving(null)}/>}
+    {reporting&&<ReportSheet poll={reporting} onPick={doReport} onClose={()=>setReporting(null)}/>}
   </div>;
 }
 function CreatePoll({groups,me,onDone,onCancel,onErr}){
@@ -591,7 +697,7 @@ function PickGroup({groups,onPick}){
     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><span style={{fontSize:24}}>{SEMO[sub]}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:SC[sub]}}>{subName(sub)}</span></div>
     {inSub.map(g=><button key={g.id} onClick={()=>{SND.tap();onPick(g);}} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,width:"100%",textAlign:"start",cursor:"pointer",border:"1px solid var(--line)",background:"var(--ink-2)",color:"var(--text)"}}>
       <div style={{width:38,height:38,borderRadius:11,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
-      <div style={{flex:1}}><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div><span style={{color:"var(--muted)"}}>›</span></button>)}
+      <div style={{flex:1}}><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum bidi-ltr" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div><Chev/></button>)}
   </div>;
 }
 function Ranks({group,me,onErr,onChange}){
@@ -641,9 +747,9 @@ function Profile({group,groups,me,total,scores,onSignOut,onUpdated,onLang,snd,on
     </div>
     <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("settings")}</div>
     <div className="card" style={{padding:4,marginBottom:14}}>
-      <button onClick={onLang} style={srow}><span>🌐 {t("langRow")}</span><span style={{color:"var(--muted)"}}>{langName} ›</span></button>
+      <button onClick={onLang} style={srow}><span>🌐 {t("langRow")}</span><span style={{color:"var(--muted)",display:"inline-flex",alignItems:"center",gap:5}}><span className="bidi">{langName}</span><Chev/></span></button>
       <button onClick={onSound} style={{...srow,borderTop:"1px solid var(--line)"}}><span>{snd?"🔊":"🔇"} {t("soundRow")}</span><span style={{color:"var(--muted)"}}>{snd?t("onW"):t("offW")}</span></button>
-      <button onClick={onRules} style={{...srow,borderTop:"1px solid var(--line)"}}><span>📖 {t("rulesH")}</span><span style={{color:"var(--muted)"}}>›</span></button>
+      <button onClick={onRules} style={{...srow,borderTop:"1px solid var(--line)"}}><span>📖 {t("rulesH")}</span><Chev/></button>
     </div>
     <button className="btn btn-ghost" onClick={onSignOut}>{t("signOut")}</button>
     {editing&&<EditProfile me={me} onClose={()=>setEditing(false)} onUpdated={onUpdated}/>}
@@ -761,7 +867,17 @@ function App(){
   useEffect(()=>{loadScores();},[me]);
   const onErr=(m)=>{setErr(m);setTimeout(()=>setErr(null),5000);};
   const signOut=async()=>{await SB.auth.signOut();setGroup(null);setGroups(null);};
-  const onResolved=async(won)=>{const before=total;const after=await loadScores();if(won){const d=Math.max(0,(after||0)-before);setWinPts(d);setCelebrate(true);setTimeout(()=>setCelebrate(false),1500);}};
+  const onResolved=async(won,poll)=>{
+    const before=total; const after=await loadScores();
+    if(!won)return;
+    let pts=Math.max(0,(after||0)-before), streak=0;
+    if(poll&&me){ // exact per-win figures from the append-only ledger (RLS: own rows readable); never trust the diff alone
+      try{ const{data:ev}=await SB.from("score_events").select("total,streak_bonus").eq("poll_id",poll.id).eq("profile_id",me.id).maybeSingle();
+        if(ev){ if(ev.total>0)pts=ev.total; if(ev.streak_bonus>0){ const{data:ms}=await SB.from("member_scores").select("streak").eq("profile_id",me.id).eq("group_id",poll.group_id).eq("subject",poll.subject).maybeSingle(); streak=(ms&&ms.streak)||(ev.streak_bonus===5?5:3); } }
+      }catch(e){}
+    }
+    setWinPts({pts,streak}); setCelebrate(true); setTimeout(()=>setCelebrate(false),2600);
+  };
   const langSheet = langOpen?<LangSheet cur={lang} onPick={pickLang} onClose={()=>setLangOpen(false)}/>:null;
   const langBtn = <button onClick={()=>setLangOpen(true)} className="chip" style={{padding:"6px 9px",fontSize:14}} title="Language">🌐</button>;
 
@@ -771,17 +887,11 @@ function App(){
 
   return <div className="stage"><div className="device">
     {celebrate&&<Confetti/>}
-    {winPts!=null&&<div className="sheet" onClick={()=>setWinPts(null)}><div className="sheetcard" onClick={e=>e.stopPropagation()} style={{textAlign:"center"}}><div className="grab"/>
-      <div style={{fontSize:46,margin:"4px 0"}}>🏆</div>
-      <h3 className="disp" style={{fontSize:23,fontWeight:900,color:"var(--gold)",margin:"0 0 4px"}}>{t("winT")}</h3>
-      <div className="disp goldglow" style={{fontSize:30,fontWeight:900,color:"var(--gold)",margin:"4px 0"}}>{t("winPts",{n:winPts})}</div>
-      <div style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("winTotal",{n:total})}</div>
-      <button className="btn btn-pri" onClick={()=>setWinPts(null)}>{t("winCont")}</button>
-    </div></div>}
+    {winPts!=null&&<WinModal won={winPts} total={total} onClose={()=>setWinPts(null)}/>}
     <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
-        {group&&tab!=="groups"&&tab!=="feed"&&<button className="chip" onClick={()=>setTab("groups")} style={{padding:"5px 10px",fontSize:12}}>👥 {group.name} ›</button>}
+        {group&&tab!=="groups"&&tab!=="feed"&&<button className="chip" onClick={()=>setTab("groups")} style={{padding:"5px 10px",fontSize:12}}>👥 <span className="bidi">{group.name}</span> <Chev/></button>}
         <button onClick={()=>{SND.tap();setTab("rules");}} className={"chip"+(tab==="rules"?" on":"")} style={{padding:"5px 9px",fontSize:12}}>📖 {t("navRules")}</button>
         <span className="pill" style={{fontSize:13}}>🏆 <CountUp value={total}/></span>
       </div></div>

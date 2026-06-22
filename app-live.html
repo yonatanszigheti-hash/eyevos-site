@@ -715,7 +715,7 @@ function SignIn({onOpenLang}){
 
 /* ---------- feed ---------- */
 function Bar({poll,tl,onVote,locking,disabled}){
-  const total=tl.yes+tl.no,y=pct(tl.yes,tl.no),voted=tl.mine,reveal=(disabled||!!voted||poll.status!=="open")&&!locking;
+  const total=(tl.total!=null?tl.total:(tl.yes+tl.no)),y=pct(tl.yes,tl.no),voted=tl.mine,reveal=(disabled||!!voted||poll.status!=="open")&&!locking;   // total is always real; yes/no come back 0 until I'm entitled (anti-bias) — bar only shows post-vote so y is real then
   const [revealed,setRevealed]=useState(false);
   const prevReveal=useRef(reveal);
   useEffect(()=>{
@@ -735,7 +735,7 @@ function Bar({poll,tl,onVote,locking,disabled}){
   </div>;
 }
 function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onReport}){
-  const total=tl.yes+tl.no;
+  const total=(tl.total!=null?tl.total:(tl.yes+tl.no));
   const hot=poll.status==="open"&&total>=8;
   const closed=poll.status==="open"&&new Date(poll.closes_at)<new Date();
   const canResolve=(poll.status==="open"&&closed)||poll.status==="locked";
@@ -822,21 +822,21 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
       const tt={};
       const rpc=await SB.rpc("poll_tally",{p_polls:ids});           // counts only (private); falls back if RPC not created yet
       if(stale())return;
-      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={yes:r.yes||0,no:r.no||0,mine:r.mine||null};});
+      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={total:r.total||0,yes:r.yes||0,no:r.no||0,mine:r.mine||null};});
         // monotonic merge: tallies only grow and my own pick never vanishes — a read on a lagging replica
         // (missing my just-cast vote) must not reset mine->null (bar re-hides) or shrink counts to 0.
         setTally(prev=>{ const out={}; ids.forEach(id=>{ const n=tt[id], p=prev[id];
-          if(n&&p) out[id]={yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
-          else if(n) out[id]=n; else if(p) out[id]={yes:p.yes,no:p.no,mine:p.mine}; });
+          if(n&&p) out[id]={total:Math.max(n.total,p.total||0),yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
+          else if(n) out[id]=n; else if(p) out[id]=p; });
           return out; }); }
       else { const{data:v,error:ve}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids); if(stale())return;
         // COUNT the votes we can read. Before HARDENING, votes RLS returns ALL rows -> correct yes/no counts.
         // After HARDENING (own-rows only) poll_tally exists and we never reach here; if we ever do, keep the
         // higher of (counted, prior) so a momentary own-only read can never shrink a real tally back to 0.
-        const tt2={}; if(!ve){ (v||[]).forEach(r=>{ tt2[r.poll_id]=tt2[r.poll_id]||{yes:0,no:0,mine:null}; if(r.choice==="yes"||r.choice==="no")tt2[r.poll_id][r.choice]++; if(r.voter_id===me.id)tt2[r.poll_id].mine=r.choice; }); }
+        const tt2={}; if(!ve){ (v||[]).forEach(r=>{ tt2[r.poll_id]=tt2[r.poll_id]||{total:0,yes:0,no:0,mine:null}; if(r.choice==="yes"||r.choice==="no"){tt2[r.poll_id][r.choice]++;tt2[r.poll_id].total++;} if(r.voter_id===me.id)tt2[r.poll_id].mine=r.choice; }); }
         setTally(prev=>{ const out={}; ids.forEach(id=>{ const n=tt2[id], p=prev[id];
-          if(n&&p) out[id]={yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
-          else if(n) out[id]=n; else if(p) out[id]={yes:p.yes,no:p.no,mine:p.mine}; });
+          if(n&&p) out[id]={total:Math.max(n.total,p.total||0),yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
+          else if(n) out[id]=n; else if(p) out[id]=p; });
           return out; });
       }
     }
@@ -886,7 +886,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(!mounted.current)return;
     setLocking(null);
     if(error)return onErr(error.message);
-    setTally(prev=>{ const cur=prev[poll.id]||{yes:0,no:0,mine:null}; const c2={...cur,mine:choice}; if(!cur.mine){ c2[choice]=(cur[choice]||0)+1; } return {...prev,[poll.id]:c2}; }); // optimistically count MY vote: set mine + bump my side so the bar/picks-count include me instantly (before load() returns)
+    setTally(prev=>{ const cur=prev[poll.id]||{total:0,yes:0,no:0,mine:null}; const c2={...cur,mine:choice}; if(!cur.mine){ c2[choice]=(cur[choice]||0)+1; c2.total=(cur.total||0)+1; } return {...prev,[poll.id]:c2}; }); // optimistically count MY vote: set mine + bump my side AND total so the bar/picks-count include me instantly (before load() returns)
     try{ localStorage.setItem("eyevos_voted_once","1"); }catch(e){}   // retire the first-vote coachmark
     SND.reveal();   // results uncover for this card — soft confirmation tone
     await load();
@@ -917,7 +917,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   const inbox=polls.filter(p=>p.status==="pending_consent"&&p.target_id===me.id);
   const waiting=polls.filter(p=>p.status==="pending_consent"&&p.author_id===me.id&&p.target_id!==me.id);
   let hottestId=null,hn=2;
-  list.forEach(p=>{if(p.status==="open"){const tp=tally[p.id]; if(!tp)return; const n=(tp.yes||0)+(tp.no||0); if(n>hn){hn=n;hottestId=p.id;}}});
+  list.forEach(p=>{if(p.status==="open"){const tp=tally[p.id]; if(!tp)return; const n=(tp.total!=null?tp.total:((tp.yes||0)+(tp.no||0))); if(n>hn){hn=n;hottestId=p.id;}}});   // use total: yes/no are hidden pre-vote, only total is real for everyone
   return <div>
     <div style={{display:"flex",flexWrap:"wrap",gap:8,paddingBottom:12}}>
       <button className={"chip"+(topic==="all"?" on":"")} onClick={()=>{SND.tap();setTopic("all");}} style={{whiteSpace:"nowrap"}}>🔥 {t("allTopics")}</button>

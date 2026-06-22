@@ -67,7 +67,7 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 [dir=rtl] .bar.is-reveal::after{animation-name:sweepR}
 @keyframes sweepR{from{transform:translateX(110%)}to{transform:translateX(-110%)}}
 .hotcard{position:relative}
-.hotcard::before{content:"";position:absolute;inset:-1px;border-radius:18px;pointer-events:none;border:1.5px solid rgba(255,77,109,.45);opacity:0;will-change:transform,opacity;transform:scale(1);animation:hotpulse 2.4s ease-out infinite}
+.hotcard::before{content:"";position:absolute;inset:-1px;border-radius:18px;pointer-events:none;border:1.5px solid rgba(255,77,109,.45);opacity:0;transform:translateZ(0) scale(1);animation:hotpulse 2.4s ease-out infinite}
 @keyframes hotpulse{0%{transform:scale(1);opacity:.55}70%{transform:scale(1.06);opacity:0}100%{transform:scale(1.06);opacity:0}}
 .tnum.bump{animation:bump .42s cubic-bezier(.34,1.56,.64,1)}
 @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
@@ -484,6 +484,18 @@ hi:{dUnit:"दि",underdogWin:"अल्पमत में जीत! 🎯",lo
 zh:{dUnit:"天",underdogWin:"少数派获胜！🎯",lostNudge:"差一点！下一个预测在等你",qTooShort:"至少 5 个字符",charsLeft:"剩余",otpWait:"稍等——几秒后再试"},
 ar:{dUnit:"ي",underdogWin:"فوز الأقلية! 🎯",lostNudge:"اقتربت! توقّعك التالي بانتظارك",qTooShort:"5 أحرف على الأقل",charsLeft:"متبقٍ",otpWait:"لحظة — حاول مرة أخرى بعد ثوانٍ"}};
 for(const _c in _GX23){ if(STR[_c]) Object.assign(STR[_c],_GX23[_c]); }
+const _GX24={
+he:{beFirst:"היה הראשון לנחש 👀",offline:"אין חיבור — נתחבר אוטומטית כשהאינטרנט יחזור",changeEmail:"שנה כתובת",signOutConfirm:"להתנתק? תצטרך להתחבר מחדש.",nameBlocked:"השם הזה שמור — בחר אחר",shareWinBtn:"שתף את הניצחון 🏆",shareWinModal:"ניחשתי נכון וצברתי {pts} נקודות ב‑Eyevos 🎯 בוא תנחש גם: {url}"},
+en:{beFirst:"Be the first to call it 👀",offline:"You're offline — we'll reconnect automatically",changeEmail:"Change email",signOutConfirm:"Disconnect? You'll need to sign in again.",nameBlocked:"That name is reserved — pick another",shareWinBtn:"Share your win 🏆",shareWinModal:"I called it right and won {pts} points on Eyevos 🎯 Come predict too: {url}"},
+es:{beFirst:"Sé el primero en predecir 👀",offline:"Sin conexión — nos reconectaremos solos",changeEmail:"Cambiar correo",signOutConfirm:"¿Desconectar? Tendrás que iniciar sesión de nuevo.",nameBlocked:"Ese nombre está reservado — elige otro",shareWinBtn:"Comparte tu victoria 🏆",shareWinModal:"Acerté y gané {pts} puntos en Eyevos 🎯 Ven a predecir: {url}"},
+fr:{beFirst:"Sois le premier à prédire 👀",offline:"Hors ligne — reconnexion automatique",changeEmail:"Changer d'e-mail",signOutConfirm:"Se déconnecter ? Tu devras te reconnecter.",nameBlocked:"Ce nom est réservé — choisis-en un autre",shareWinBtn:"Partage ta victoire 🏆",shareWinModal:"J'ai vu juste et gagné {pts} points sur Eyevos 🎯 Viens prédire : {url}"},
+pt:{beFirst:"Seja o primeiro a palpitar 👀",offline:"Sem conexão — vamos reconectar sozinhos",changeEmail:"Mudar e-mail",signOutConfirm:"Desconectar? Você precisará entrar de novo.",nameBlocked:"Esse nome é reservado — escolha outro",shareWinBtn:"Compartilhe sua vitória 🏆",shareWinModal:"Acertei e ganhei {pts} pontos no Eyevos 🎯 Vem palpitar: {url}"},
+ru:{beFirst:"Будь первым 👀",offline:"Нет связи — переподключимся автоматически",changeEmail:"Изменить почту",signOutConfirm:"Выйти? Нужно будет войти заново.",nameBlocked:"Это имя зарезервировано — выберите другое",shareWinBtn:"Поделиться победой 🏆",shareWinModal:"Я угадал и набрал {pts} очков в Eyevos 🎯 Заходи прогнозировать: {url}"},
+de:{beFirst:"Sei der Erste 👀",offline:"Offline — wir verbinden automatisch neu",changeEmail:"E-Mail ändern",signOutConfirm:"Abmelden? Du musst dich neu anmelden.",nameBlocked:"Dieser Name ist reserviert — wähle einen anderen",shareWinBtn:"Sieg teilen 🏆",shareWinModal:"Ich lag richtig und holte {pts} Punkte bei Eyevos 🎯 Komm mittippen: {url}"},
+hi:{beFirst:"सबसे पहले अनुमान लगाओ 👀",offline:"ऑफ़लाइन — कनेक्शन वापस आते ही जुड़ जाएंगे",changeEmail:"ईमेल बदलें",signOutConfirm:"डिस्कनेक्ट करें? फिर से साइन इन करना होगा।",nameBlocked:"यह नाम सुरक्षित है — दूसरा चुनें",shareWinBtn:"अपनी जीत साझा करें 🏆",shareWinModal:"मैंने सही अनुमान लगाया और Eyevos पर {pts} अंक जीते 🎯 तुम भी अनुमान लगाओ: {url}"},
+zh:{beFirst:"抢先预测 👀",offline:"已离线——网络恢复后会自动重连",changeEmail:"更换邮箱",signOutConfirm:"断开连接？需要重新登录。",nameBlocked:"该名称已保留——请换一个",shareWinBtn:"分享你的胜利 🏆",shareWinModal:"我猜对了，在 Eyevos 赢得 {pts} 分 🎯 来一起预测：{url}"},
+ar:{beFirst:"كن أول من يتوقّع 👀",offline:"غير متصل — سنعيد الاتصال تلقائياً",changeEmail:"تغيير البريد",signOutConfirm:"تسجيل الخروج؟ ستحتاج لتسجيل الدخول مجدداً.",nameBlocked:"هذا الاسم محجوز — اختر غيره",shareWinBtn:"شارك فوزك 🏆",shareWinModal:"توقّعت بشكل صحيح وربحت {pts} نقطة في Eyevos 🎯 تعال توقّع أيضاً: {url}"}};
+for(const _c in _GX24){ if(STR[_c]) Object.assign(STR[_c],_GX24[_c]); }
 const _GX21={
 he:{emptyFeedSub:"שאלה אחת של כן/לא — והקבוצה כבר משחקת.",emptyFeedCta:"🎯 פתח את הניחוש הראשון",firstVoteTip:"בחר צד כדי לראות מה כולם ניחשו — האחוזים מוסתרים עד שאתה נועל.",groupCreatedSub:"עכשיו פתח ניחוש ראשון — או שתף את הקוד וחכה שיצטרפו.",enterGroupGo:"כניסה — ולפתוח ניחוש ראשון",sixtySec:"לוקח פחות מדקה"},
 en:{emptyFeedSub:"One yes/no question — and the group's in the game.",emptyFeedCta:"🎯 Open the first prediction",firstVoteTip:"Pick a side to see what everyone guessed — the percentages stay hidden until you lock in.",groupCreatedSub:"Now open your first prediction — or share the code and wait for people to join.",enterGroupGo:"Enter & make your first call",sixtySec:"Takes under a minute"},
@@ -502,6 +514,9 @@ const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyev
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
 function Chev({color}){ const rtl=dirOf(CUR.lang)==="rtl"; return <span aria-hidden="true" style={{color:color||"var(--muted)",unicodeBidi:"isolate",fontWeight:700}}>{rtl?"‹":"›"}</span>; }
 function t(k,vars){ let s=(STR[CUR.lang]&&STR[CUR.lang][k]); if(s===undefined) s=STR.en[k]; if(s===undefined) s=k; if(vars){ for(const p in vars) s=s.split("{"+p+"}").join(vars[p]); } return s; }
+// strip zero-width + bidi-control chars from user content so a question/name cannot reorder the UI
+// around it or hide slurs between glyphs (RLO/LRO spoofing). React already escapes HTML.
+function safeText(x){ return (x==null?"":String(x)).replace(/[​-‏‪-‮⁦-⁩﻿]/g,""); }
 const _RMQ=(typeof matchMedia!=="undefined")?matchMedia("(prefers-reduced-motion:reduce)"):null;   // cached once, O(1) read
 const prefersReduce=()=>!!(_RMQ&&_RMQ.matches);
 
@@ -548,15 +563,16 @@ const SND={
   lock(){ this.beep(330,.09,"sine",.06); setTimeout(()=>this.beep(494,.1,"sine",.06),70); setTimeout(()=>this.beep(659,.16,"triangle",.06),150); },
   reveal(){ this.beep(784,.09,"sine",.04); setTimeout(()=>this.beep(988,.12,"sine",.035),60); },
   win(){ [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>this.beep(f,.2,"triangle",.08),i*80)); },
-  toggle(){ this.on=!this.on; localStorage.setItem("eyevos_sound",this.on?"on":"off"); if(this.on)this.tap(); return this.on; }
+  toggle(){ this.on=!this.on; localStorage.setItem("eyevos_sound",this.on?"on":"off"); if(this.on)this.tap(); return this.on; },
+  buzz(p){ try{ if(navigator&&navigator.vibrate&&!prefersReduce()) navigator.vibrate(p); }catch(e){} }
 };
-function CountUp({value,dur=650}){
+function CountUp({value,dur=650,nobump=false}){
   const [n,setN]=useState(value); const prev=useRef(value);
   const [bump,setBump]=useState(false);
   useEffect(()=>{ const from=prev.current,to=value; prev.current=value; if(from===to){setN(to);return;}
     const reduce=prefersReduce();
     let b=null;
-    if(to>from){ setBump(true); b=setTimeout(()=>setBump(false),440); }
+    if(to>from&&!nobump){ setBump(true); b=setTimeout(()=>setBump(false),440); }
     if(reduce){ setN(to); return ()=>{ if(b)clearTimeout(b); }; }
     const start=performance.now(); let raf;
     const tick=(x)=>{ const p=Math.min(1,(x-start)/dur); setN(Math.round(from+(to-from)*(1-Math.pow(1-p,3)))); if(p<1)raf=requestAnimationFrame(tick); };
@@ -564,13 +580,14 @@ function CountUp({value,dur=650}){
   },[value,dur]);
   return <span className={"tnum"+(bump?" bump":"")}>{n}</span>;
 }
+// one shared 1Hz clock for every Countdown — N cards => 1 timer, not N
+const _CLK={t:Date.now(),subs:new Set(),id:null,tick(){this.t=Date.now();this.subs.forEach(fn=>fn(this.t));},on(fn){this.subs.add(fn);if(!this.id)this.id=setInterval(()=>this.tick(),1000);return()=>{this.subs.delete(fn);if(!this.subs.size&&this.id){clearInterval(this.id);this.id=null;}};}};
 function Countdown({to}){
   const target=new Date(to).getTime();
   const [now,setNow]=useState(Date.now());
   useEffect(()=>{
     if(isNaN(target)||target-Date.now()<=0)return;
-    const id=setInterval(()=>setNow(Date.now()),1000);
-    return()=>clearInterval(id);
+    return _CLK.on(setNow);
   },[target]);
   const ms=target-now;
   if(isNaN(ms))return null;
@@ -595,11 +612,12 @@ function WinModal({won,total,onClose}){
     {!reduce&&<span className="winRing" aria-hidden="true"/>}
     <div style={{fontSize:50,margin:"4px 0",lineHeight:1}}><span className={reduce?"":"trophyPop"} role="img" aria-label="trophy">🏆</span></div>
     <h3 className="disp" style={{fontSize:23,fontWeight:900,color:"var(--gold)",margin:"0 0 4px"}}>{t("winT")}</h3>
-    <div className={"disp goldglow"+(show?" ptsFlash":"")} dir="ltr" style={{fontSize:38,fontWeight:900,color:"var(--gold)",margin:"6px 0",minHeight:46}}>+<CountUp value={show} dur={760}/> <span style={{fontSize:18,fontWeight:800,opacity:.85}}>{t("ptsUnit")}</span></div>
+    <div className={"disp goldglow"+(show?" ptsFlash":"")} dir="ltr" style={{fontSize:38,fontWeight:900,color:"var(--gold)",margin:"6px 0",minHeight:46}}>+<CountUp value={show} dur={760} nobump={true}/> <span style={{fontSize:18,fontWeight:800,opacity:.85}}>{t("ptsUnit")}</span></div>
     <div style={{color:"var(--faint)",fontSize:11.5,fontWeight:700,marginTop:-2}} dir="auto">{t("winPtsLbl")}</div>
     {underdog&&<div className="streakRow" dir="auto" style={{marginTop:10,color:"var(--yes)",borderColor:"rgba(255,77,109,.4)",boxShadow:"0 0 22px rgba(255,77,109,.32)"}}>{t("underdogWin")}</div>}
     {streak>=3&&<div className="streakRow" dir="auto" style={{marginTop:10}}>{t("streakRow",{n:streak})}</div>}
     <div style={{color:"var(--muted)",fontSize:13,margin:"14px 0 16px"}} dir="auto">{t("winTotalLbl")}: <span className="tnum" style={{fontWeight:900,color:"var(--text)"}}>{total}</span></div>
+    <button className="btn" style={{marginBottom:10,background:"var(--gold)",color:"#3a2208",fontWeight:800}} onClick={()=>{ SND.tap(); shareWa(t("shareWinModal",{pts:pts,url:REDIRECT})); }}>{t("shareWinBtn")}</button>
     <button className="btn btn-pri" onClick={onClose}>{t("winCont")}</button>
   </div></div>;
 }
@@ -664,7 +682,8 @@ function SignIn({onOpenLang}){
     <div className="livebadge" style={{marginBottom:16}}><span className="livedot"/> {t("liveBadge")}</div>
     {sent?
       <div className="card" style={{maxWidth:330,margin:"10px auto"}}><div style={{fontSize:44,marginBottom:8}}>📧</div><div style={{fontWeight:800,fontSize:17,marginBottom:6}}>{t("linkSentT")}</div><div style={{color:"var(--muted)",fontSize:13.5,lineHeight:1.6}}>{t("linkSentB",{email:email})}</div>
-        <button className="btn btn-ghost" style={{marginTop:14}} onClick={()=>setSent(false)}>{t("resend")}</button></div>
+        <button className="btn btn-ghost" style={{marginTop:14}} disabled={busy} onClick={()=>{ SND.tap(); magic(); }}>{busy?t("sending"):t("resend")}</button>
+        <button className="btn" style={{marginTop:10,background:"none",color:"var(--faint)",fontSize:13,fontWeight:700}} onClick={()=>setSent(false)}>{t("changeEmail")}</button></div>
       :<>
       <h1 className="disp" style={{fontSize:30,fontWeight:900,lineHeight:1.15,margin:"4px 0 8px"}}>{t("heroT1")}<br/><span className="jackpot">{t("heroT2")}</span></h1>
       <p style={{color:"var(--muted)",fontSize:14.5,maxWidth:300,margin:"0 auto 18px",lineHeight:1.55}}>{t("heroSub")}</p>
@@ -679,8 +698,8 @@ function SignIn({onOpenLang}){
         <button onClick={google} className="gbtn" disabled={gbusy} style={gbusy?{opacity:.6,cursor:"not-allowed"}:null}>
           <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5c-2 1.5-4.7 2.5-7.6 2.5-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C41.4 36.3 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>{t("continueGoogle")}</button>
         <div style={{display:"flex",alignItems:"center",gap:10,margin:"14px 0",color:"var(--faint)",fontSize:12}}><div style={{flex:1,height:1,background:"var(--line)"}}/>{t("orEmail")}<div style={{flex:1,height:1,background:"var(--line)"}}/></div>
-        <input ref={emRef} className="in" type="email" placeholder={t("emailPh")} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&magic()} style={{marginBottom:10,textAlign:"center"}}/>
-        <button className="btn btn-pri" disabled={busy||!email.includes("@")} onClick={magic}>{busy?t("sending"):t("sendLink")}</button>
+        <input ref={emRef} className="in" type="email" inputMode="email" autoComplete="email" placeholder={t("emailPh")} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&magic()} style={{marginBottom:10,textAlign:"center"}}/>
+        <button className="btn btn-pri" disabled={busy||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())} onClick={magic}>{busy?t("sending"):t("sendLink")}</button>
         <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginTop:13,color:"var(--no)",fontSize:12,fontWeight:700}}>{t("staysLogged")}</div>
       </div>
       <div style={{maxWidth:330,margin:"22px auto 0",textAlign:"start"}}>
@@ -712,7 +731,7 @@ function Bar({poll,tl,onVote,locking,disabled}){
       <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={reveal} onClick={()=>onVote("no")}>{reveal?<span className="tnum" dir="ltr"><CountUp value={100-y} dur={420}/>%</span>:""} {t("no")} <span aria-hidden="true" style={{fontWeight:900}}>✗</span></button></>}
     </div>
     <div style={{display:"flex",justifyContent:"space-between",marginTop:8,fontSize:12,color:"var(--muted)",fontWeight:600}}>
-      <span className="tnum bidi">{t("betsN",{n:total})}</span><span style={{color:reveal?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{reveal?t("locked"):t("pickSide")}</span></div>
+      <span className="tnum bidi">{total>0?t("betsN",{n:total}):t("beFirst")}</span><span style={{color:reveal?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{reveal?t("locked"):t("pickSide")}</span></div>
   </div>;
 }
 function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onReport}){
@@ -731,7 +750,7 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onRepo
       <div style={{display:"flex",alignItems:"center",gap:7,minWidth:0,flex:1}}><span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>{groupName&&<span style={{fontSize:11,color:"var(--muted)",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>👥 {groupName}</span>}</div>
       <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag tag-line" dir="auto" style={{background:poll.resolved_outcome==="yes"?"var(--yes-soft)":"var(--no-soft)",color:poll.resolved_outcome==="yes"?"var(--yes)":"var(--no)"}}>🏆 <span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
     </div>
-    <p className="disp clamp3" title={poll.question} style={{fontSize:"var(--fs-lg)",fontWeight:"var(--fw-bold)",margin:"0 0 var(--s3)",lineHeight:"var(--lh-snug)"}}>{poll.question}</p>
+    <p className="disp clamp3" title={safeText(poll.question)}style={{fontSize:"var(--fs-lg)",fontWeight:"var(--fw-bold)",margin:"0 0 var(--s3)",lineHeight:"var(--lh-snug)"}}>{safeText(poll.question)}</p>
     <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe||closed}/>
     {poll.status==="open"&&!aboutMe&&<>
       <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",columnGap:8,rowGap:6,marginTop:10,background:"var(--ink-3)",border:"1px solid var(--line)",borderRadius:11,padding:"8px 12px",fontSize:12.5,fontWeight:700}}>
@@ -741,7 +760,7 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onRepo
         <span style={{marginInlineStart:"auto",color:"var(--muted)",fontWeight:800,fontSize:11.5,flexShrink:0,whiteSpace:"nowrap"}} dir="auto" title={t("cueLegend")}>{t("cueLegend")}</span>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600,gap:8}}>
-        <span dir="ltr">⏱ {closed?t("closedW"):<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
+        <span style={{display:"inline-flex",alignItems:"center",gap:5}}><span aria-hidden="true">⏱</span>{closed?<span>{t("closedW")}</span>:<span dir="ltr" style={{unicodeBidi:"isolate"}}><Countdown to={poll.closes_at}/></span>}<span style={{opacity:.65}} dir="ltr"> · {fmtClose(poll.closes_at)}</span></span>
       </div>
     </>}
     {poll.status==="open"&&aboutMe&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,background:"var(--brand-soft)",color:"var(--brand-2)",fontWeight:700,fontSize:13,textAlign:"center"}}>{t("aboutYou")}</div>}
@@ -759,7 +778,7 @@ function ResolveSheet({poll,onPick,onClose}){
   const [proof,setProof]=useState("");   // manual resolution + optional proof-image link (free path; no external API)
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
     <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 6px"}}>{t("resolveT")}</h3>
-    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{poll.question}</p>
+    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{safeText(poll.question)}</p>
     <button className="btn" style={{background:"var(--yes)",color:"var(--on-yes)",marginBottom:10}} onClick={()=>onPick("yes",proof.trim()||null)}>{t("resYes")}</button>
     <button className="btn" style={{background:"var(--no)",color:"var(--on-no)",marginBottom:12}} onClick={()=>onPick("no",proof.trim()||null)}>{t("resNo")}</button>
     <input className="in" placeholder={t("proofUrl")} value={proof} onChange={e=>setProof(e.target.value)} style={{marginBottom:12,fontSize:13}}/>
@@ -771,7 +790,7 @@ function ReportSheet({poll,onPick,onClose}){
   const reasons=[["spam","🔁"],["harassment","🙅"],["inappropriate","⚠️"],["other","💬"]];
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
     <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 6px"}}>{t("reportTitle")}</h3>
-    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{poll.question}</p>
+    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{safeText(poll.question)}</p>
     {reasons.map(([k,emo])=><button key={k} className="chip" onClick={()=>onPick(k)} style={{display:"flex",width:"100%",justifyContent:"flex-start",gap:10,padding:"13px 14px",marginBottom:10,fontSize:14.5,borderRadius:13}}><span aria-hidden="true">{emo}</span>{t("reason_"+k)}</button>)}
     <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,marginTop:2}}>{t("reportHint")}</p>
     <button className="btn btn-ghost" onClick={onClose} style={{marginTop:10}}>{t("back")}</button>
@@ -879,9 +898,9 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     busyRef.current=false;
     if(!mounted.current)return;
     if(error)return onErr(error.message);
+    seenStatus.current[poll.id]="resolved";   // mark BEFORE the await/celebration so the polls-effect can never double-fire for the resolver
     const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win
-    seenStatus.current[poll.id]="resolved";   // mark so the auto-celebrate effect doesn't fire a 2nd time for the resolver
-    if(won){ SND.win(); await onResolved(true,poll); } else { SND.tap(); onResolved(false,poll); }
+    if(won){ SND.win(); SND.buzz([0,45,35,110]); await onResolved(true,poll); } else { SND.tap(); onResolved(false,poll); }
     await load();
   };
   const [responding,setResponding]=useState(false);
@@ -936,7 +955,7 @@ function CreatePoll({groups,me,onDone,onCancel,onErr}){
   const have=SK.filter(k=>groups.some(g=>grpSub(g)===k));
   const pad=n=>String(n).padStart(2,"0");
   const fmt=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes());
-  const nowStr=fmt(new Date());
+  const nowStr=fmt(new Date(Date.now()+60000));   // floor the picker 1 min ahead so 'now' is never selectable
   const [ctopic,setCtopic]=useState(null);
   const [gid,setGid]=useState(null);
   const [kind,setKind]=useState("general");
@@ -1074,7 +1093,7 @@ function Profile({group,groups,me,total,scores,onSignOut,onUpdated,onLang,snd,on
       <button onClick={onRules} style={{...srow,borderTop:"1px solid var(--line)"}}><span>📖 {t("rulesH")}</span><Chev/></button>
       <a href="privacy.html" target="_blank" rel="noopener" style={{...srow,borderTop:"1px solid var(--line)",textDecoration:"none",color:"inherit"}}><span>🛡️ {t("privacyRow")}</span><Chev/></a>
     </div>
-    <button className="btn btn-ghost" onClick={onSignOut}>{t("signOut")}</button>
+    <button className="btn btn-ghost" onClick={()=>{ if(window.confirm(t("signOutConfirm"))){ SND.tap(); onSignOut(); } }}>{t("signOut")}</button>
     {editing&&<EditProfile me={me} onClose={()=>setEditing(false)} onUpdated={onUpdated}/>}
   </div>;
 }
@@ -1087,7 +1106,9 @@ function EditProfile({me,onClose,onUpdated}){
   const validUrl=/^https?:\/\//.test(url.trim())?url.trim():"";
   const preview={display_name:name,photo_url:validUrl||avatar};
   const save=async()=>{
-    if(name.trim().length<2){setLerr(t("nameMin"));return;}
+    const nm=name.trim();
+    if(nm.length<2){setLerr(t("nameMin"));return;}
+    if(/\b(admin|eyevos|moderator|support|official|staff|system)\b/i.test(nm)){ setLerr(t("nameBlocked")); return; }
     setBusy(true); setLerr(null);
     const photo=validUrl||(avatar||null);
     const res=await SB.rpc("update_profile",{p_name:name.trim(),p_photo:photo});   // always via the validated RPC (no unguarded direct-write fallback)
@@ -1105,7 +1126,7 @@ function EditProfile({me,onClose,onUpdated}){
       {AVATARS.map(a=><button key={a} onClick={()=>{setAvatar(a);setUrl("");}} style={{fontSize:21,padding:"5px 0",borderRadius:11,cursor:"pointer",border:"1px solid "+((avatar===a&&!url.trim())?"var(--brand)":"var(--line)"),background:(avatar===a&&!url.trim())?"var(--brand-soft)":"var(--ink-3)"}}>{a}</button>)}
     </div>
     <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>{t("orUrl")}</div>
-    <input className="in" placeholder="https://…" value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:url.trim()&&!validUrl?6:16}}/>
+    <input className="in" dir="ltr" placeholder="https://…" value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:url.trim()&&!validUrl?6:16,textAlign:dirOf(CUR.lang)==="rtl"?"right":"left"}}/>
     {url.trim()&&!validUrl&&<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:14}}>{t("urlHint")}</div>}
     {lerr&&<div className="err">{lerr}</div>}
     <button className="btn btn-pri" disabled={busy} onClick={save}>{busy?t("savingW"):t("saveBtn")}</button>
@@ -1129,8 +1150,8 @@ function Rules(){
 /* ---------- groups (subject -> groups) ---------- */
 function Groups({groups,me,active,onErr,reload,onEnter}){
   const [sub,setSub]=useState(null),[mode,setMode]=useState("list"),[name,setName]=useState(""),[code,setCode]=useState(""),[busy,setBusy]=useState(false),[made,setMade]=useState(null);
-  const create=async()=>{if(busy||!name.trim())return;setBusy(true);
-    let res=await SB.rpc("create_group",{p_name:name.trim(),p_subject:sub});
+  const create=async()=>{const nm=name.trim();if(busy||nm.length<2)return;setBusy(true);
+    let res=await SB.rpc("create_group",{p_name:nm,p_subject:sub});
     if(res.error&&/function|does not exist|p_subject|schema cache/i.test(res.error.message)) res=await SB.rpc("create_group",{p_name:name.trim()}); // works before the per-subject SQL is run
     setBusy(false);if(res.error)return onErr(res.error.message);
     const made=Array.isArray(res.data)?res.data[0]:res.data;   // RPC may return a row or a single-row array; never assume non-null
@@ -1157,7 +1178,7 @@ function Groups({groups,me,active,onErr,reload,onEnter}){
       <button className="btn btn-pri" onClick={()=>onEnter(made,sub)}>{t("enterGroupGo")}</button></div>
     :mode==="create"?<>
       <input className="in" placeholder={t("groupNamePh")} value={name} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
-      <button className="btn btn-pri" disabled={busy||!name.trim()} onClick={create} style={{marginBottom:10}}>{t("createBtn")}</button>
+      <button className="btn btn-pri" disabled={busy||name.trim().length<2} onClick={create} style={{marginBottom:10}}>{t("createBtn")}</button>
       <button className="btn btn-ghost" onClick={()=>setMode("list")}>{t("back")}</button></>
     :mode==="join"?<>
       <input className="in" placeholder="K7M2QX" value={code} maxLength={6} inputMode="latin" autoCapitalize="characters" onChange={e=>setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6))} style={{marginBottom:14,textAlign:"center",letterSpacing:"2px",fontSize:18}}/>
@@ -1168,7 +1189,7 @@ function Groups({groups,me,active,onErr,reload,onEnter}){
       {inSub.map(g=><div key={g.id} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,borderColor:active&&active.id===g.id?"var(--brand)":"var(--line)"}}>
         <button onClick={()=>onEnter(g,sub)} style={{flex:1,display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer",textAlign:"start",color:"var(--text)",padding:0}}>
           <div style={{width:38,height:38,borderRadius:11,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
-          <div><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div></button>
+          <div><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum bidi-ltr" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div></button>
         <button onClick={()=>wa(g)} className="chip" style={{padding:8}} title="WhatsApp">📤</button></div>)}
       <button className="btn btn-pri" style={{marginTop:8,marginBottom:10}} onClick={()=>setMode("create")}>{t("createGroup")}</button>
       <button className="btn btn-ghost" onClick={()=>setMode("join")}>{t("joinWithCode")}</button></>}
@@ -1191,7 +1212,7 @@ function App(){
     });
     pull(); return ()=>{live=false;};
   },[session]);
-  const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("*").order("created_at");if(error){setErr(error.message);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:null);};
+  const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("*").order("created_at");if(error){onErr(error.message);if(groups===null)setGroups([]);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:null);};
   useEffect(()=>{if(me)loadGroups();},[me]);
   useEffect(()=>{ const back=()=>{ if(me){ loadGroups(); loadScores(); } }; window.addEventListener("online",back); return ()=>window.removeEventListener("online",back); },[me]);
   const loadScores=async()=>{if(!me)return;const{data}=await SB.from("member_scores").select("subject,points").eq("profile_id",me.id);const s={};let x=0;(data||[]).forEach(r=>{s[r.subject]=(s[r.subject]||0)+r.points;x+=r.points;});setScores(s);setTotal(x);return x;};
@@ -1214,6 +1235,10 @@ function App(){
   const langSheet = langOpen?<LangSheet cur={lang} onPick={pickLang} onClose={()=>setLangOpen(false)}/>:null;
   const langBtn = <button onClick={()=>setLangOpen(true)} className="chip" style={{padding:"6px 9px",fontSize:14}} title="Language">🌐</button>;
 
+  const [offline,setOffline]=useState(typeof navigator!=="undefined"&&navigator.onLine===false);
+  useEffect(()=>{ const up=()=>setOffline(false), down=()=>setOffline(true);
+    window.addEventListener("online",up); window.addEventListener("offline",down);
+    return ()=>{ window.removeEventListener("online",up); window.removeEventListener("offline",down); }; },[]);
   if(session===undefined)return <div className="stage"><div className="device"><Spinner label={t("connecting")}/></div></div>;
   if(!session)return <div className="stage"><div className="device"><Coins/><SignIn onOpenLang={()=>setLangOpen(true)}/>{langSheet}</div></div>;
   if(!me||groups===null)return <div className="stage"><div className="device"><Spinner/></div></div>;
@@ -1223,6 +1248,7 @@ function App(){
   const errMsg = errRaw==null ? null : ((!isOk && /fetch|network|failed to fetch|load failed|timeout|offline/i.test(errRaw)) ? t("netErr") : errRaw);
   return <div className="stage"><div className="device">
     {errMsg&&<div className="toastwrap" dir={dirOf(lang)}><div className={"toast"+(isOk?" toast-ok":"")} role="status" aria-live="polite"><span style={{flexShrink:0}}>{isOk?"✅":"⚠️"}</span><span className="tmsg">{errMsg}</span>{!isOk&&errMsg===t("netErr")&&<button className="chip" style={{flexShrink:0,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>{setErr(null);location.reload();}}>{t("retry")}</button>}<button className="tx" aria-label={t("dismiss")} title={t("dismiss")} onClick={()=>setErr(null)}>×</button></div></div>}
+    {offline&&<div dir={dirOf(lang)} style={{position:"absolute",top:0,left:0,right:0,zIndex:60,background:"var(--no)",color:"#fff",textAlign:"center",fontSize:12,fontWeight:700,padding:"5px 8px"}}>{t("offline")}</div>}
     {celebrate&&<Confetti/>}
     {winPts!=null&&<WinModal won={winPts} total={(winPts&&winPts.total!=null)?winPts.total:total} onClose={()=>setWinPts(null)}/>}
     <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
@@ -1232,7 +1258,7 @@ function App(){
         <button onClick={()=>{SND.tap();setTab("rules");}} className={"chip"+(tab==="rules"?" on":"")} style={{padding:"5px 9px",fontSize:12}}>📖 {t("navRules")}</button>
         <span className="pill" style={{fontSize:13}}>🏆 <CountUp value={total}/></span>
       </div></div>
-      {tab==="feed"&&<p className="disp" style={{fontSize:24,fontWeight:900,margin:"12px 0 0"}}>{t("tbBet")}<br/><span className="jackpot">{t("heroWin")}</span></p>}
+      {tab==="feed"&&<p className="disp" style={{fontSize:24,fontWeight:900,margin:"12px 0 0",lineHeight:1.12}}>{t("tbBet")} <span className="jackpot">{t("heroWin")}</span></p>}
       {tab==="board"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span className="hl">{t("boardH")}</span></p>}
       {tab==="rules"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span className="hl">{t("rulesH")}</span></p>}
       {tab==="profile"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span className="hl">{t("profileH")}</span></p>}

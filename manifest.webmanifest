@@ -1,6 +1,7 @@
 {
   "name": "Eyevos — Social Prediction Game",
   "short_name": "Eyevos",
+  "id": "/app-live.html",
   "description": "Predict before everyone, win points, rule your group. Points only — never real money. Ages 10+.",
   "start_url": "/app-live.html",
   "scope": "/",

@@ -2,8 +2,8 @@
    IMPORTANT: only same-origin GETs are touched. Supabase (auth/data) and CDN
    scripts are cross-origin and pass straight through to the network — never cached,
    so login and live data are always fresh. */
-const CACHE = "eyevos-v2";   // bump on every shell-changing deploy so activate() purges the stale cache
-const SHELL = ["/", "/index.html", "/app-live.html", "/manifest.webmanifest", "/icon.svg"];
+const CACHE = "eyevos-v3";   // bump on every shell-changing deploy so activate() purges the stale cache
+const SHELL = ["/", "/index.html", "/app-live.html", "/privacy.html", "/manifest.webmanifest", "/icon.svg"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -27,7 +27,7 @@ self.addEventListener("fetch", (e) => {
   if (req.mode === "navigate" || req.destination === "document") {
     e.respondWith(
       fetch(req)
-        .then((r) => { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); return r; })
+        .then((r) => { if (r && r.ok && r.type === "basic") { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); } return r; })  // never cache a 404/500/redirect as the offline shell
         .catch(() => caches.match(req).then((m) => m || caches.match("/app-live.html")))
     );
     return;

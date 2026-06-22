@@ -108,8 +108,9 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 @keyframes rise{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
 .grab{width:40px;height:4px;border-radius:9px;background:var(--line-2);margin:0 auto 18px}
 .jackpot{background:linear-gradient(90deg,#FFC23C,#FF4D6D,#FFC23C);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.2s linear infinite}
+@media(hover:none){.jackpot{animation-duration:4.4s}}
 @keyframes shine{to{background-position:200% 0}}
-.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40;border-radius:34px;contain:strict;will-change:contents}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40;border-radius:34px;contain:layout paint style}
 .confetti i{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;will-change:transform,opacity;animation:cf2 1.3s cubic-bezier(.4,.6,.6,1) forwards}
 @keyframes cf{0%{transform:translate3d(0,-14px,0) rotate(0);opacity:1}100%{transform:translate3d(0,720px,0) rotate(620deg);opacity:0}}
 @keyframes trophyPop{0%{transform:scale(.2) rotate(-18deg);opacity:0}55%{transform:scale(1.28) rotate(6deg);opacity:1}72%{transform:scale(.92) rotate(-3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
@@ -394,8 +395,8 @@ for(const _c in _GX14){ if(STR[_c]) Object.assign(STR[_c],_GX14[_c]); }
 const _GX15={
 he:{heroT1:"קרא את העתיד.",heroT2:"כבוש את הקבוצה.",heroSub:"נחש לפני כולם, תפוס את הצד הנכון וטפס לראש. ניחוש חדש כל יום — וכל ניצחון נחקק בלוח.",signinCard:"היכנס — והניחוש הראשון שלך מתחיל 🎯",staysLogged:"🔒 כניסה אחת. נשארים בפנים לתמיד.",footerNote:"נקודות בלבד · אף פעם לא כסף · בנוי לכל גיל 10–90"},
 en:{heroT1:"Call it first.",heroT2:"Own the group.",heroSub:"Predict before anyone else, back the right side, and climb to the top. A fresh call every day — and every win is carved into the board.",signinCard:"Sign in — your first call starts now 🎯",staysLogged:"🔒 One sign-in. You stay in for good.",footerNote:"Points only · never money · built for ages 10–90"},
-es:{heroT1:"Acierta primero.",heroT2:"Domina el grupo.",heroSub:"Predice antes que nadie, apuesta por el lado correcto y sube hasta la cima. Una predicción nueva cada día — y cada victoria queda grabada en el ranking.",signinCard:"Entra — tu primera predicción empieza ya 🎯",staysLogged:"🔒 Un solo acceso. Te quedas dentro para siempre.",footerNote:"Solo puntos · nunca dinero · para edades 10–90"},
-fr:{heroT1:"Vois juste, le premier.",heroT2:"Règne sur le groupe.",heroSub:"Pronostique avant tout le monde, mise sur le bon camp et grimpe au sommet. Un nouveau pronostic chaque jour — et chaque victoire est gravée au classement.",signinCard:"Connecte-toi — ton premier pronostic commence 🎯",staysLogged:"🔒 Une seule connexion. Tu restes dedans pour toujours.",footerNote:"Points uniquement · jamais d'argent · dès 10 et jusqu'à 90 ans"},
+es:{heroT1:"Acierta primero.",heroT2:"Domina el grupo.",heroSub:"Predice antes que nadie, ponte del lado correcto y sube hasta la cima. Una predicción nueva cada día — y cada victoria queda grabada en el ranking.",signinCard:"Entra — tu primera predicción empieza ya 🎯",staysLogged:"🔒 Un solo acceso. Te quedas dentro para siempre.",footerNote:"Solo puntos · nunca dinero · para edades 10–90"},
+fr:{heroT1:"Vois juste, le premier.",heroT2:"Règne sur le groupe.",heroSub:"Pronostique avant tout le monde, choisis le bon camp et grimpe au sommet. Un nouveau pronostic chaque jour — et chaque victoire est gravée au classement.",signinCard:"Connecte-toi — ton premier pronostic commence 🎯",staysLogged:"🔒 Une seule connexion. Tu restes dedans pour toujours.",footerNote:"Points uniquement · jamais d'argent · dès 10 et jusqu'à 90 ans"},
 pt:{heroT1:"Acerte primeiro.",heroT2:"Mande no grupo.",heroSub:"Dê o palpite antes de todos, fique do lado certo e suba até o topo. Um palpite novo todo dia — e cada vitória fica gravada no ranking.",signinCard:"Entre — seu primeiro palpite começa agora 🎯",staysLogged:"🔒 Um login só. Você fica dentro pra sempre.",footerNote:"Só pontos · nunca dinheiro · feito para idades 10–90"},
 ru:{heroT1:"Угадай первым.",heroT2:"Правь компанией.",heroSub:"Прогнозируй раньше всех, выбери верную сторону и заберись на вершину. Каждый день новый прогноз — и каждая победа высечена в рейтинге.",signinCard:"Войди — твой первый прогноз начинается 🎯",staysLogged:"🔒 Один вход. Ты в игре навсегда.",footerNote:"Только очки · никогда не деньги · для возрастов 10–90"},
 de:{heroT1:"Sag's als Erster voraus.",heroT2:"Beherrsche die Gruppe.",heroSub:"Tippe vor allen anderen, setz auf die richtige Seite und klettere ganz nach oben. Jeden Tag ein neuer Tipp — und jeder Sieg ist in der Rangliste verewigt.",signinCard:"Einloggen — dein erster Tipp beginnt jetzt 🎯",staysLogged:"🔒 Einmal einloggen. Du bleibst für immer drin.",footerNote:"Nur Punkte · niemals Geld · gebaut für 10–90 Jahre"},
@@ -582,7 +583,7 @@ function WinModal({won,total,onClose}){
     <h3 className="disp" style={{fontSize:23,fontWeight:900,color:"var(--gold)",margin:"0 0 4px"}}>{t("winT")}</h3>
     <div className={"disp goldglow"+(show?" ptsFlash":"")} dir="ltr" style={{fontSize:38,fontWeight:900,color:"var(--gold)",margin:"6px 0",minHeight:46}}>+<CountUp value={show} dur={760}/> <span style={{fontSize:18,fontWeight:800,opacity:.85}}>{t("ptsUnit")}</span></div>
     <div style={{color:"var(--faint)",fontSize:11.5,fontWeight:700,marginTop:-2}} dir="auto">{t("winPtsLbl")}</div>
-    {streak>0&&<div className="streakRow" dir="auto" style={{marginTop:10}}>🔥 {t("streakRow",{n:streak})}</div>}
+    {streak>=2&&<div className="streakRow" dir="auto" style={{marginTop:10}}>{t("streakRow",{n:streak})}</div>}
     <div style={{color:"var(--muted)",fontSize:13,margin:"14px 0 16px"}} dir="auto">{t("winTotalLbl")}: <span className="tnum" style={{fontWeight:900,color:"var(--text)"}}>{total}</span></div>
     <button className="btn btn-pri" onClick={onClose}>{t("winCont")}</button>
   </div></div>;
@@ -709,16 +710,16 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onRepo
     {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}><span className="livedot" style={{background:"#2a1800",boxShadow:"0 0 8px rgba(42,24,0,.6)"}}/>{t("hotNow")}</div>}
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
       <div style={{display:"flex",alignItems:"center",gap:7,minWidth:0,flex:1}}><span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>{groupName&&<span style={{fontSize:11,color:"var(--muted)",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>👥 {groupName}</span>}</div>
-      <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag tag-line" dir="auto" style={{background:"var(--gold-soft)",color:"var(--gold)"}}>🏆 <span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&poll.status!=="resolved"&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
+      <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag tag-line" dir="auto" style={{background:poll.resolved_outcome==="yes"?"var(--yes-soft)":"var(--no-soft)",color:poll.resolved_outcome==="yes"?"var(--yes)":"var(--no)"}}>🏆 <span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&poll.status!=="resolved"&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
     </div>
     <p className="disp clamp3" title={poll.question} style={{fontSize:"var(--fs-lg)",fontWeight:"var(--fw-bold)",margin:"0 0 var(--s3)",lineHeight:"var(--lh-snug)"}}>{poll.question}</p>
     <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe}/>
     {poll.status==="open"&&!aboutMe&&<>
-      <div style={{display:"flex",alignItems:"center",gap:10,marginTop:10,background:"var(--ink-3)",border:"1px solid var(--line)",borderRadius:11,padding:"8px 12px",fontSize:12.5,fontWeight:700}}>
-        <span dir="ltr" style={{color:"var(--gold)",fontWeight:900}}>🎯 +5</span>
-        <span style={{color:"var(--faint)"}}>·</span>
-        <span style={{color:"var(--gold)"}}>🔥 {t("bonusHint")}</span>
-        <span style={{marginInlineStart:"auto",color:"var(--muted)",fontWeight:800,fontSize:11.5}} dir="auto" title={t("cueLegend")}>{t("cueLegend")}</span>
+      <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",columnGap:8,rowGap:6,marginTop:10,background:"var(--ink-3)",border:"1px solid var(--line)",borderRadius:11,padding:"8px 12px",fontSize:12.5,fontWeight:700}}>
+        <span dir="ltr" style={{color:"var(--gold)",fontWeight:900,flexShrink:0}}>🎯 +5</span>
+        <span style={{color:"var(--faint)",flexShrink:0}}>·</span>
+        <span style={{color:"var(--gold)",minWidth:0,overflowWrap:"anywhere"}}>🔥 {t("bonusHint")}</span>
+        <span style={{marginInlineStart:"auto",color:"var(--muted)",fontWeight:800,fontSize:11.5,flexShrink:0,whiteSpace:"nowrap"}} dir="auto" title={t("cueLegend")}>{t("cueLegend")}</span>
       </div>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600,gap:8}}>
         <span dir="ltr">⏱ {closed?t("closedW"):<Countdown to={poll.closes_at}/>} <span style={{opacity:.65}}>· {fmtClose(poll.closes_at)}</span></span>
@@ -766,6 +767,9 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   const lastCreate=useRef(startCreate);
   useEffect(()=>{ if(startCreate!==lastCreate.current){ lastCreate.current=startCreate; SND.tap(); setCreating(true); } },[startCreate]);
   const reqId=useRef(0);
+  const busyRef=useRef(false);                 // single in-flight guard shared across resolve / report
+  const seenStatus=useRef({});                 // poll.id -> last status, to detect a fresh resolve and celebrate every winner
+  const winChecked=useRef(false);              // skip celebration on the first paint (don't celebrate old history)
   const load=async()=>{                  // cross-group: RLS already scopes polls to groups I'm a member of
     const my=++reqId.current;            // request-id: only the newest load() may commit state
     const stale=()=>!mounted.current||my!==reqId.current;
@@ -777,7 +781,13 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
       const tt={};
       const rpc=await SB.rpc("poll_tally",{p_polls:ids});           // counts only (private); falls back if RPC not created yet
       if(stale())return;
-      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={yes:r.yes||0,no:r.no||0,mine:r.mine||null};}); setTally(tt); }
+      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={yes:r.yes||0,no:r.no||0,mine:r.mine||null};});
+        // monotonic merge: tallies only grow and my own pick never vanishes — a read on a lagging replica
+        // (missing my just-cast vote) must not reset mine->null (bar re-hides) or shrink counts to 0.
+        setTally(prev=>{ const out={}; ids.forEach(id=>{ const n=tt[id], p=prev[id];
+          if(n&&p) out[id]={yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
+          else if(n) out[id]=n; else if(p) out[id]={yes:p.yes,no:p.no,mine:p.mine}; });
+          return out; }); }
       else { const{data:v,error:ve}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids); if(stale())return;
         // COUNT the votes we can read. Before HARDENING, votes RLS returns ALL rows -> correct yes/no counts.
         // After HARDENING (own-rows only) poll_tally exists and we never reach here; if we ever do, keep the
@@ -791,11 +801,19 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     }
     else setTally({});
   };
+  useEffect(()=>{   // celebrate EVERY winner: detect a poll that just flipped to resolved where I voted the winning side
+    const ps=polls||[];
+    ps.forEach(p=>{ const prev=seenStatus.current[p.id]; seenStatus.current[p.id]=p.status;
+      if(!winChecked.current)return;
+      if(p.status==="resolved" && prev && prev!=="resolved"){ const mine=(tally[p.id]||{}).mine;
+        if(mine && mine===p.resolved_outcome && p.target_id!==me.id){ SND.win(); onResolved(true,p); } } });
+    if(ps.length) winChecked.current=true;
+  },[polls,tally]);
   useEffect(()=>{load();},[]);
-  useEffect(()=>{                       // realtime: refresh when anyone votes / a poll changes, with reconnect + polling fallback
+  useEffect(()=>{                       // realtime + a light always-on visible poll (others' votes don't stream once votes-RLS is own-rows)
     let tmr=null, poll=null, ch=null, dead=false;
     const schedule=()=>{ if(tmr)clearTimeout(tmr); tmr=setTimeout(()=>{if(mounted.current)load();},400); };
-    const startPolling=()=>{ if(poll||dead)return; poll=setInterval(()=>{ if(mounted.current&&!document.hidden)load(); },15000); };
+    const startPolling=()=>{ if(poll||dead)return; poll=setInterval(()=>{ if(mounted.current&&!document.hidden)load(); },12000); };
     const stopPolling=()=>{ if(poll){clearInterval(poll);poll=null;} };
     const sub=()=>{
       ch=SB.channel("rt-feed")
@@ -803,16 +821,18 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
         .on("postgres_changes",{event:"*",schema:"public",table:"polls"},schedule)
         .subscribe((status)=>{
           if(dead)return;
-          if(status==="SUBSCRIBED"){ stopPolling(); if(mounted.current)load(); }
+          if(status==="SUBSCRIBED"){ if(mounted.current)load(); }   // keep polling on too (covers other members' votes)
           else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"||status==="CLOSED"){
-            startPolling();
             if(ch){ SB.removeChannel(ch); ch=null; }
             setTimeout(()=>{ if(!dead&&mounted.current)sub(); },4000);
           }
         });
     };
-    sub();
-    return ()=>{ dead=true; if(tmr)clearTimeout(tmr); stopPolling(); if(ch)SB.removeChannel(ch); };
+    sub(); startPolling();
+    const onVis=()=>{ if(document.hidden||dead||!mounted.current)return; load();   // self-heal a socket the OS killed while backgrounded
+      const st=ch&&ch.state; if(st!=="joined"&&st!=="joining"){ if(ch){SB.removeChannel(ch);ch=null;} sub(); } };
+    document.addEventListener("visibilitychange",onVis);
+    return ()=>{ dead=true; document.removeEventListener("visibilitychange",onVis); if(tmr)clearTimeout(tmr); stopPolling(); if(ch)SB.removeChannel(ch); };
   },[]);
   const vote=async(poll,choice)=>{
     if(locking)return;
@@ -830,10 +850,13 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   };
   const doResolve=async(o,proof)=>{
     const poll=resolving; setResolving(null); if(!poll)return;
+    if(busyRef.current)return; busyRef.current=true;
     const{error}=await SB.rpc("resolve_poll",{p_poll:poll.id,p_outcome:o,p_void:false,p_proof:proof||null});
+    busyRef.current=false;
     if(!mounted.current)return;
     if(error)return onErr(error.message);
     const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win
+    seenStatus.current[poll.id]="resolved";   // mark so the auto-celebrate effect doesn't fire a 2nd time for the resolver
     if(won){ SND.win(); await onResolved(true,poll); } else { SND.tap(); onResolved(false,poll); }
     await load();
   };
@@ -843,7 +866,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(!mounted.current)return; setResponding(false);
     if(error)return onErr(error.message); SND.tap(); await load(); };
   const [reporting,setReporting]=useState(null);
-  const doReport=async(reason)=>{ const poll=reporting; setReporting(null); if(!poll)return; SND.tap(); const{error}=await SB.rpc("report_poll",{p_poll:poll.id,p_reason:reason}); if(!mounted.current)return; if(error)return onErr(error.message); SND.reveal(); onErr({ok:true,msg:t("reportSent")}); };
+  const doReport=async(reason)=>{ const poll=reporting; setReporting(null); if(!poll)return; if(busyRef.current)return; busyRef.current=true; SND.tap(); const{error}=await SB.rpc("report_poll",{p_poll:poll.id,p_reason:reason}); busyRef.current=false; if(!mounted.current)return; if(error){ if(/duplicate|unique|already/i.test(error.message||"")){ SND.reveal(); return onErr({ok:true,msg:t("reportSent")}); } return onErr(error.message); } SND.reveal(); onErr({ok:true,msg:t("reportSent")}); };
   if(creating)return <CreatePoll groups={groups} me={me} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
   if(polls===null)return <Spinner label={t("loadingBets")}/>;
   const all=polls.filter(p=>p.status!=="void"&&p.status!=="pending_consent");
@@ -1094,9 +1117,10 @@ function Groups({groups,me,active,onErr,reload,onEnter}){
   return <div>
     <button onClick={()=>{setSub(null);setMode("list");setMade(null);}} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14,flexWrap:"wrap"}}><span style={{fontSize:24}}>{SEMO[sub]}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:SC[sub]}}>{subName(sub)}</span><span style={{color:"var(--muted)",fontSize:13}}>· {t("yourGroupsIn")}</span></div>
-    {made?<div className="card" style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>{t("groupCreated")}</div><div className="disp tnum goldglow" style={{fontSize:28,fontWeight:900,color:"var(--brand-2)",letterSpacing:"3px",margin:"4px 0 14px"}}>{made.invite_code}</div>
+    {made?<div className="card" style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>{t("groupCreated")}</div><div className="disp tnum goldglow bidi-ltr" style={{fontSize:28,fontWeight:900,color:"var(--brand-2)",letterSpacing:"3px",margin:"4px 0 8px"}}>{made.invite_code}</div>
+      <div style={{color:"var(--muted)",fontSize:12.5,lineHeight:1.5,maxWidth:280,margin:"0 auto 14px"}} dir="auto">{t("groupCreatedSub")}</div>
       <button className="btn" style={{background:"var(--wa)",color:"#06231a",marginBottom:10}} onClick={()=>wa(made)}>{t("inviteWa")}</button>
-      <button className="btn btn-pri" onClick={()=>onEnter(made,sub)}>{t("enterGroup")}</button></div>
+      <button className="btn btn-pri" onClick={()=>onEnter(made,sub)}>{t("enterGroupGo")}</button></div>
     :mode==="create"?<>
       <input className="in" placeholder={t("groupNamePh")} value={name} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
       <button className="btn btn-pri" disabled={busy||!name.trim()} onClick={create} style={{marginBottom:10}}>{t("createBtn")}</button>
@@ -1166,10 +1190,10 @@ function App(){
     {errMsg&&<div className="toastwrap" dir={dirOf(lang)}><div className={"toast"+(isOk?" toast-ok":"")} role="status" aria-live="polite"><span style={{flexShrink:0}}>{isOk?"✅":"⚠️"}</span><span className="tmsg">{errMsg}</span>{!isOk&&errMsg===t("netErr")&&<button className="chip" style={{flexShrink:0,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>{setErr(null);location.reload();}}>{t("retry")}</button>}<button className="tx" aria-label={t("dismiss")} title={t("dismiss")} onClick={()=>setErr(null)}>×</button></div></div>}
     {celebrate&&<Confetti/>}
     {winPts!=null&&<WinModal won={winPts} total={(winPts&&winPts.total!=null)?winPts.total:total} onClose={()=>setWinPts(null)}/>}
-    <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-      <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
-      <div style={{display:"flex",alignItems:"center",gap:8}}>
-        {group&&tab!=="groups"&&tab!=="feed"&&<button className="chip" onClick={()=>setTab("groups")} style={{padding:"5px 10px",fontSize:12}}>👥 <span className="bidi">{group.name}</span> <Chev/></button>}
+    <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
+      <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,justifyContent:"flex-end",flex:1}}>
+        {group&&tab!=="groups"&&tab!=="feed"&&<button className="chip" onClick={()=>setTab("groups")} style={{padding:"5px 10px",fontSize:12,minWidth:0,maxWidth:120,overflow:"hidden"}}>👥 <span className="bidi" style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{group.name}</span> <Chev/></button>}
         <button onClick={()=>{SND.tap();setTab("rules");}} className={"chip"+(tab==="rules"?" on":"")} style={{padding:"5px 9px",fontSize:12}}>📖 {t("navRules")}</button>
         <span className="pill" style={{fontSize:13}}>🏆 <CountUp value={total}/></span>
       </div></div>

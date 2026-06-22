@@ -1,0 +1,10 @@
+# Only the static PWA should be published. Keep SQL/docs/archives OUT of the public deploy.
+backend/
+_archive/
+*.sql
+*.md
+*.zip
+*.src.jsx
+app.html
+app.js
+hunch.html

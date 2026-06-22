@@ -49,13 +49,19 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .clamp2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;word-break:break-word}
 .clamp3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere;word-break:break-word}
 @media (prefers-reduced-motion:reduce){.toast{animation:none!important}}
+.toast-ok{background:linear-gradient(180deg,rgba(20,52,40,.97),rgba(14,40,30,.97))!important;border-color:rgba(45,212,191,.5)!important;color:#C9F7EC!important}
+.toast-ok .tx{color:#C9F7EC}
+.chiprail{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
+.chiprail::-webkit-scrollbar{display:none}
 .bidi-ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
 /* ===== thrill-micro layer ===== */
-.bar.is-locking{animation:lockpulse .65s cubic-bezier(.22,1,.36,1)}
-@keyframes lockpulse{0%{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03)}45%{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 2px rgba(255,194,60,.55),0 0 26px rgba(255,194,60,.4)}100%{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 1px rgba(255,194,60,.18)}}
+.bar.is-locking{position:relative}
+.bar.is-locking::before{content:"";position:absolute;inset:0;border-radius:13px;pointer-events:none;box-shadow:0 0 0 2px rgba(255,194,60,.55),0 0 26px rgba(255,194,60,.4);opacity:0;will-change:opacity;animation:lockpulse .65s cubic-bezier(.22,1,.36,1)}
+@keyframes lockpulse{0%{opacity:0}45%{opacity:1}100%{opacity:.32}}
 .lockspin{width:18px;height:18px;border:2px solid rgba(255,194,60,.25);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite}
-.bar .side.is-picked{animation:sideflash .6s cubic-bezier(.22,1,.36,1)}
-@keyframes sideflash{0%{filter:brightness(1.5)}100%{filter:brightness(1)}}
+.bar .side.is-picked{position:relative}
+.bar .side.is-picked::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.5);opacity:0;pointer-events:none;animation:sideflash .6s cubic-bezier(.22,1,.36,1)}
+@keyframes sideflash{0%{opacity:.5}100%{opacity:0}}
 .bar.is-reveal::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:13px;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.16) 50%,transparent 100%);transform:translateX(-110%);animation:sweep .7s cubic-bezier(.22,1,.36,1) .05s 1}
 @keyframes sweep{to{transform:translateX(110%)}}
 [dir=rtl] .bar.is-reveal::after{animation-name:sweepR}
@@ -83,6 +89,7 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .bar .side{height:100%;transition:width .55s cubic-bezier(.22,1,.36,1)}
 .bar .lab{position:absolute;top:0;height:100%;max-width:60%;display:flex;align-items:center;gap:6px;padding:0 13px;font-weight:800;font-size:14px;background:none;border:none;font-family:inherit;cursor:pointer;color:inherit;white-space:nowrap;overflow:hidden}
 .tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;border-radius:999px;padding:4px 9px}
+.tag-line{border:1px solid color-mix(in srgb,currentColor 38%,transparent)}
 .spin{width:34px;height:34px;border:3px solid var(--line-2);border-top-color:var(--brand-2);border-radius:50%;animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 .nav{display:flex;align-items:center;justify-content:space-around;padding:var(--s3) var(--s2) var(--s4);padding-bottom:calc(var(--s4) + env(safe-area-inset-bottom,0px));background:rgba(21,18,30,.92);border-top:1px solid var(--line)}
@@ -102,7 +109,7 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .grab{width:40px;height:4px;border-radius:9px;background:var(--line-2);margin:0 auto 18px}
 .jackpot{background:linear-gradient(90deg,#FFC23C,#FF4D6D,#FFC23C);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2.2s linear infinite}
 @keyframes shine{to{background-position:200% 0}}
-.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40;border-radius:34px}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:40;border-radius:34px;contain:strict;will-change:contents}
 .confetti i{position:absolute;top:-14px;width:8px;height:13px;border-radius:2px;will-change:transform,opacity;animation:cf2 1.3s cubic-bezier(.4,.6,.6,1) forwards}
 @keyframes cf{0%{transform:translate3d(0,-14px,0) rotate(0);opacity:1}100%{transform:translate3d(0,720px,0) rotate(620deg);opacity:0}}
 @keyframes trophyPop{0%{transform:scale(.2) rotate(-18deg);opacity:0}55%{transform:scale(1.28) rotate(6deg);opacity:1}72%{transform:scale(.92) rotate(-3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
@@ -115,7 +122,7 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .streakRow{display:inline-flex;align-items:center;gap:8px;justify-content:center;background:linear-gradient(90deg,rgba(255,77,109,.18),rgba(255,194,60,.18));border:1px solid rgba(255,194,60,.34);border-radius:999px;padding:7px 15px;font-weight:900;font-size:14px;color:var(--gold);box-shadow:0 0 22px rgba(255,77,109,.28);animation:streakIn .4s ease-out .55s both}
 @keyframes cf2{0%{transform:translate3d(0,-16px,0) rotate(0);opacity:1}100%{transform:translate3d(var(--cfx,0),760px,0) rotate(var(--cfr,640deg));opacity:0}}
 @media (prefers-reduced-motion:reduce){.trophyPop,.winRing,.ptsFlash,.streakRow{animation:none!important}.winRing{display:none}}
-.neon{text-shadow:0 0 18px rgba(167,139,255,.65),0 0 40px rgba(138,107,255,.4);animation:neonpulse 2.8s ease-in-out infinite}
+.neon{text-shadow:0 0 18px rgba(167,139,255,.65),0 0 40px rgba(138,107,255,.4);will-change:text-shadow;animation:neonpulse 2.8s ease-in-out infinite}
 @keyframes neonpulse{0%,100%{text-shadow:0 0 16px rgba(167,139,255,.55),0 0 38px rgba(138,107,255,.32)}50%{text-shadow:0 0 28px rgba(167,139,255,.95),0 0 64px rgba(138,107,255,.55)}}
 .logob{width:78px;height:78px;border-radius:22px;background:linear-gradient(150deg,var(--brand-2),var(--brand) 55%,var(--yes));display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 18px 46px rgba(138,107,255,.5),0 0 30px rgba(255,77,109,.25);animation:float 4s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
@@ -127,8 +134,8 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .why{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
 .whyi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
 .coins{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.coin{position:absolute;font-size:27px;animation:drift linear infinite}
-@keyframes drift{0%{transform:translateY(0) rotate(0);opacity:0}12%{opacity:.15}88%{opacity:.15}100%{transform:translateY(-560px) rotate(48deg);opacity:0}}
+.coin{position:absolute;font-size:27px;will-change:transform,opacity;animation:drift linear infinite}
+@keyframes drift{0%{transform:translate3d(0,0,0) rotate(0);opacity:0}12%{opacity:.15}88%{opacity:.15}100%{transform:translate3d(0,-560px,0) rotate(48deg);opacity:0}}
 .gbtn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;background:#fff;color:#1f1f1f;border:none;border-radius:13px;padding:14px;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.35)}
 .gbtn:active{transform:scale(.97)}
 @media (max-width:480px){.stage{padding:0}.device{width:100%;height:100vh;height:100dvh;max-height:100dvh;border-radius:0;border:none}.confetti{border-radius:0}}
@@ -148,6 +155,7 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .topbar{background:linear-gradient(180deg,rgba(30,26,44,.72),rgba(21,18,30,.55));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
 .card{background:linear-gradient(180deg,rgba(40,35,58,.92),rgba(31,27,46,.96));border:1px solid var(--line-2);box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.04);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
 .hotcard{box-shadow:0 0 0 1px rgba(255,77,109,.34),0 14px 40px rgba(255,77,109,.18)!important}
+.featcard{box-shadow:0 0 0 1px rgba(255,194,60,.45),0 14px 40px rgba(255,194,60,.18)!important}
 .bar{box-shadow:inset 0 1px 4px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.03)}
 .bar .side{box-shadow:0 0 22px rgba(255,255,255,.06)}
 .nav{background:linear-gradient(0deg,rgba(15,12,22,.96),rgba(21,18,30,.86));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
@@ -158,7 +166,7 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .chip{transition:.15s} .chip:hover{border-color:var(--line-2)}
 .fab{box-shadow:0 14px 30px rgba(138,107,255,.55),0 0 26px rgba(255,77,109,.32),inset 0 1px 0 rgba(255,255,255,.3)}
 .fab:hover{filter:brightness(1.08)}
-@media(hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.05)}.btn:hover{filter:brightness(1.06)}.navb:hover{color:var(--muted)}}
+@media(hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.05)}.btn:hover{filter:brightness(1.06)}.navb:not(.on):hover{color:var(--muted)}}
 /* ----- nav active state + FAB lift ----- */
 .navb{position:relative;border-radius:13px;transition:color .18s ease,background .18s ease;padding-block:6px}
 .navb.on{color:var(--brand-2);background:var(--brand-soft)}
@@ -172,6 +180,7 @@ body{font-family:'Heebo',system-ui,sans-serif;font-size:var(--fs-base);line-heig
 .authcard{position:relative;border:1px solid transparent;background:linear-gradient(180deg,rgba(38,33,56,.92),rgba(24,20,36,.94)) padding-box,linear-gradient(150deg,rgba(167,139,255,.65),rgba(255,77,109,.4) 55%,rgba(255,194,60,.45)) border-box;box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 38px rgba(138,107,255,.22),inset 0 1px 0 rgba(255,255,255,.06)}
 .authcard::before{content:"";position:absolute;inset-block-start:0;inset-inline:0;height:42%;border-radius:18px 18px 0 0;background:radial-gradient(120% 100% at 50% 0,rgba(167,139,255,.16),transparent 70%);pointer-events:none}
 .authcard>*{position:relative}
+.authcard::after{display:none}
 /* ----- topbar headline polish ----- */
 .topbar{border-bottom:1px solid var(--line);box-shadow:0 6px 18px rgba(8,6,14,.35)}
 .topbar .disp{letter-spacing:-.03em}
@@ -243,7 +252,7 @@ zh:{chooseSubject:"先选个主题",chooseSubjectSub:"选个主题——然后�
 ar:{chooseSubject:"اختر موضوعاً أولاً",chooseSubjectSub:"اختر موضوعاً — وستظهر لك كل مجموعاتك",yourGroupsIn:"مجموعاتك",codeLabel:"الرمز",subjectLocked:"موضوع المجموعة"}
 };
 for(const _c in _GX){ if(STR[_c]) Object.assign(STR[_c],_GX[_c]); }
-const _GX2={ he:{settings:"הגדרות",langRow:"שפה",soundRow:"צליל",onW:"פועל",offW:"כבוי",autoCheck:"🔮 בדוק תוצאה אוטומטית (גוגל)",checking:"בודק באינטרנט…",cantVerify:"לא הצלחתי לאמת אוטומטית — בחר ידנית או צרף קישור לתמונה",proofUrl:"קישור לתמונת הוכחה (לא חובה)"}, en:{settings:"Settings",langRow:"Language",soundRow:"Sound",onW:"On",offW:"Off",autoCheck:"🔮 Auto-check result (Google)",checking:"Checking the web…",cantVerify:"Couldn't auto-verify — choose manually or add a proof image link",proofUrl:"Proof image link (optional)"} };
+const _GX2={ he:{settings:"הגדרות",langRow:"שפה",soundRow:"צליל",onW:"פועל",offW:"כבוי",proofUrl:"קישור לתמונת הוכחה (לא חובה)"}, en:{settings:"Settings",langRow:"Language",soundRow:"Sound",onW:"On",offW:"Off",proofUrl:"Proof image link (optional)"} };
 for(const _c in _GX2){ if(STR[_c]) Object.assign(STR[_c],_GX2[_c]); }
 const _GX3={
 he:{heroWin:"תשלוט.",futureTime:"בחר תאריך ושעה עתידיים"},
@@ -460,6 +469,19 @@ zh:{firstVoteTip:"提示——在你预测之前，百分比是隐藏的。选�
 ar:{firstVoteTip:"انتبه — النِّسب مخفية حتى تتوقّع. اختر جانباً لتكشفها!"}
 };
 for(const _c in _GX20){ if(STR[_c]) Object.assign(STR[_c],_GX20[_c]); }
+const _GX21={
+he:{emptyFeedSub:"שאלה אחת של כן/לא — והקבוצה כבר משחקת.",emptyFeedCta:"🎯 פתח את הניחוש הראשון",firstVoteTip:"בחר צד כדי לראות מה כולם ניחשו — האחוזים מוסתרים עד שאתה נועל.",groupCreatedSub:"עכשיו פתח ניחוש ראשון — או שתף את הקוד וחכה שיצטרפו.",enterGroupGo:"כניסה — ולפתוח ניחוש ראשון",sixtySec:"לוקח פחות מדקה"},
+en:{emptyFeedSub:"One yes/no question — and the group's in the game.",emptyFeedCta:"🎯 Open the first prediction",firstVoteTip:"Pick a side to see what everyone guessed — the percentages stay hidden until you lock in.",groupCreatedSub:"Now open your first prediction — or share the code and wait for people to join.",enterGroupGo:"Enter & make your first call",sixtySec:"Takes under a minute"},
+es:{emptyFeedSub:"Una pregunta de sí/no — y el grupo ya está jugando.",emptyFeedCta:"🎯 Abre la primera predicción",firstVoteTip:"Elige un lado para ver qué adivinaron todos — los porcentajes se ocultan hasta que confirmas.",groupCreatedSub:"Ahora abre tu primera predicción — o comparte el código y espera a que se unan.",enterGroupGo:"Entrar y hacer tu primera predicción",sixtySec:"Toma menos de un minuto"},
+fr:{emptyFeedSub:"Une question oui/non — et le groupe est lancé.",emptyFeedCta:"🎯 Ouvre le premier pronostic",firstVoteTip:"Choisis un camp pour voir ce que tout le monde a deviné — les pourcentages restent cachés jusqu'à ce que tu valides.",groupCreatedSub:"Maintenant ouvre ton premier pronostic — ou partage le code et attends que les gens rejoignent.",enterGroupGo:"Entrer et faire ton premier pronostic",sixtySec:"Moins d'une minute"},
+pt:{emptyFeedSub:"Uma pergunta de sim/não — e o grupo já está no jogo.",emptyFeedCta:"🎯 Abra o primeiro palpite",firstVoteTip:"Escolha um lado para ver o que todos palpitaram — as porcentagens ficam escondidas até você travar.",groupCreatedSub:"Agora abra seu primeiro palpite — ou compartilhe o código e espere a galera entrar.",enterGroupGo:"Entrar e dar o primeiro palpite",sixtySec:"Leva menos de um minuto"},
+ru:{emptyFeedSub:"Один вопрос да/нет — и компания уже в игре.",emptyFeedCta:"🎯 Создай первый прогноз",firstVoteTip:"Выбери сторону, чтобы увидеть, что угадали остальные — проценты скрыты, пока ты не зафиксируешь.",groupCreatedSub:"Теперь создай первый прогноз — или поделись кодом и подожди, пока присоединятся.",enterGroupGo:"Войти и сделать первый прогноз",sixtySec:"Меньше минуты"},
+de:{emptyFeedSub:"Eine Ja/Nein-Frage — und die Gruppe ist im Spiel.",emptyFeedCta:"🎯 Eröffne den ersten Tipp",firstVoteTip:"Wähl eine Seite, um zu sehen, was alle getippt haben — die Prozente bleiben verborgen, bis du festlegst.",groupCreatedSub:"Jetzt eröffne deinen ersten Tipp — oder teil den Code und warte, bis Leute beitreten.",enterGroupGo:"Betreten & ersten Tipp abgeben",sixtySec:"Dauert unter einer Minute"},
+hi:{emptyFeedSub:"एक हाँ/नहीं सवाल — और ग्रुप खेल में आ गया।",emptyFeedCta:"🎯 पहला अनुमान खोलो",firstVoteTip:"एक साइड चुनो ताकि देख सको सबने क्या अनुमान लगाया — लॉक करने तक प्रतिशत छिपे रहते हैं।",groupCreatedSub:"अब अपना पहला अनुमान खोलो — या कोड शेयर करो और जुड़ने का इंतज़ार करो।",enterGroupGo:"अंदर जाओ और पहला अनुमान लगाओ",sixtySec:"एक मिनट से कम लगता है"},
+zh:{emptyFeedSub:"一个是/否的问题——圈子就开局了。",emptyFeedCta:"🎯 发起第一个竞猜",firstVoteTip:"选一边，看看大家怎么猜——锁定前百分比一直隐藏。",groupCreatedSub:"现在发起你的第一个竞猜——或分享邀请码，等大家加入。",enterGroupGo:"进入并发起第一个竞猜",sixtySec:"不到一分钟"},
+ar:{emptyFeedSub:"سؤال نعم/لا واحد — والمجموعة تدخل اللعبة.",emptyFeedCta:"🎯 افتح أول توقّع",firstVoteTip:"اختر جانباً لترى ما توقّعه الجميع — النِسَب مخفيّة حتى تثبّت اختيارك.",groupCreatedSub:"الآن افتح أول توقّع — أو شارك الرمز وانتظر انضمام الآخرين.",enterGroupGo:"ادخل وافتح أول توقّع",sixtySec:"يستغرق أقل من دقيقة"}
+};
+for(const _c in _GX21){ if(STR[_c]) Object.assign(STR[_c],_GX21[_c]); }
 const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
 const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
@@ -487,7 +509,11 @@ ar:{sport:"رياضة",screen:"الشاشات",reality:"واقع",weather:"ال�
 const subName=(k)=>((SUBN[CUR.lang]||SUBN.en)[k]||k);
 const slabel=(k)=>SEMO[k]+" "+subName(k);
 // group's subject: from DB once migrated, else a local bridge set at creation, else default
-function grpSub(g){ if(!g)return "sport"; try{ return g.subject || localStorage.getItem("eyevos_gsub_"+g.id) || "sport"; }catch(e){ return g.subject||"sport"; } }
+const _gsubCache={};
+function grpSub(g){ if(!g)return "sport"; if(g.subject)return g.subject;
+  const id=g.id; if(id in _gsubCache)return _gsubCache[id];
+  let v="sport"; try{ v=localStorage.getItem("eyevos_gsub_"+id)||"sport"; }catch(e){}
+  _gsubCache[id]=v; return v; }
 
 const pct=(a,b)=>(a+b===0?50:Math.round(a/(a+b)*100));
 const lvl=(x)=>Math.floor(x/50)+1;
@@ -514,17 +540,24 @@ function CountUp({value,dur=650}){
   const [bump,setBump]=useState(false);
   useEffect(()=>{ const from=prev.current,to=value; prev.current=value; if(from===to){setN(to);return;}
     const reduce=prefersReduce();
-    if(to>from){ setBump(true); const b=setTimeout(()=>setBump(false),440); if(reduce){setN(to);return ()=>clearTimeout(b);} }
-    if(reduce){ setN(to); return; }
+    let b=null;
+    if(to>from){ setBump(true); b=setTimeout(()=>setBump(false),440); }
+    if(reduce){ setN(to); return ()=>{ if(b)clearTimeout(b); }; }
     const start=performance.now(); let raf;
     const tick=(x)=>{ const p=Math.min(1,(x-start)/dur); setN(Math.round(from+(to-from)*(1-Math.pow(1-p,3)))); if(p<1)raf=requestAnimationFrame(tick); };
-    raf=requestAnimationFrame(tick); return ()=>cancelAnimationFrame(raf); },[value,dur]);
+    raf=requestAnimationFrame(tick); return ()=>{ if(b)clearTimeout(b); cancelAnimationFrame(raf); };
+  },[value,dur]);
   return <span className={"tnum"+(bump?" bump":"")}>{n}</span>;
 }
 function Countdown({to}){
+  const target=new Date(to).getTime();
   const [now,setNow]=useState(Date.now());
-  useEffect(()=>{const id=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(id);},[]);
-  const ms=new Date(to).getTime()-now;
+  useEffect(()=>{
+    if(isNaN(target)||target-Date.now()<=0)return;
+    const id=setInterval(()=>setNow(Date.now()),1000);
+    return()=>clearInterval(id);
+  },[target]);
+  const ms=target-now;
   if(isNaN(ms))return null;
   if(ms<=0)return <span style={{color:"var(--gold)",fontWeight:700}}>{t("closedW")}</span>;
   const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),ss=s%60,p=n=>String(n).padStart(2,"0");
@@ -548,8 +581,9 @@ function WinModal({won,total,onClose}){
     <div style={{fontSize:50,margin:"4px 0",lineHeight:1}}><span className={reduce?"":"trophyPop"} role="img" aria-label="trophy">🏆</span></div>
     <h3 className="disp" style={{fontSize:23,fontWeight:900,color:"var(--gold)",margin:"0 0 4px"}}>{t("winT")}</h3>
     <div className={"disp goldglow"+(show?" ptsFlash":"")} dir="ltr" style={{fontSize:38,fontWeight:900,color:"var(--gold)",margin:"6px 0",minHeight:46}}>+<CountUp value={show} dur={760}/> <span style={{fontSize:18,fontWeight:800,opacity:.85}}>{t("ptsUnit")}</span></div>
-    {streak>0&&<div className="streakRow" dir="auto">🔥 {t("streakRow",{n:streak})}</div>}
-    <div style={{color:"var(--muted)",fontSize:13,margin:"14px 0 16px"}} dir="auto">{t("winTotal",{n:total})}</div>
+    <div style={{color:"var(--faint)",fontSize:11.5,fontWeight:700,marginTop:-2}} dir="auto">{t("winPtsLbl")}</div>
+    {streak>0&&<div className="streakRow" dir="auto" style={{marginTop:10}}>🔥 {t("streakRow",{n:streak})}</div>}
+    <div style={{color:"var(--muted)",fontSize:13,margin:"14px 0 16px"}} dir="auto">{t("winTotalLbl")}: <span className="tnum" style={{fontWeight:900,color:"var(--text)"}}>{total}</span></div>
     <button className="btn btn-pri" onClick={onClose}>{t("winCont")}</button>
   </div></div>;
 }
@@ -587,10 +621,14 @@ function SignIn({onOpenLang}){
   const [email,setEmail]=useState(""),[sent,setSent]=useState(false),[busy,setBusy]=useState(false),[msg,setMsg]=useState(null);
   const emRef=useRef(null);
   const ticks=[t("qPh"),"⚽ "+subName("sport")+"?","📺 "+subName("reality")+"?","🌦️ "+subName("weather")+"?","🍔 "+subName("food")+"?","📰 "+subName("news")+"?","🎬 "+subName("screen")+"?","🎯 "+subName("life")+"?"];
-  const google=async()=>{ setMsg(null); SND.tap();
-    try{ const r=await fetch("https://nsnbdgudqtygxaalhjsn.supabase.co/auth/v1/settings",{headers:{apikey:"sb_publishable_C6Z1uW15YbRH2kKQzSxTOA_Zb4w4nNc"}}); const s=await r.json();
-      if(!(s&&s.external&&s.external.google)){ setMsg(t("googleOff")); if(emRef.current)emRef.current.focus(); return; }
-    }catch(e){}
+  const [gbusy,setGbusy]=useState(false);
+  const google=async()=>{ if(gbusy)return; setMsg(null); SND.tap(); setGbusy(true);
+    try{ const ac=(typeof AbortController!=="undefined")?new AbortController():null;
+      const to=ac?setTimeout(()=>ac.abort(),6000):null;
+      const r=await fetch("https://nsnbdgudqtygxaalhjsn.supabase.co/auth/v1/settings",{headers:{apikey:"sb_publishable_C6Z1uW15YbRH2kKQzSxTOA_Zb4w4nNc"},signal:ac?ac.signal:undefined}); if(to)clearTimeout(to);
+      const s=await r.json();
+      if(!(s&&s.external&&s.external.google)){ setMsg(t("googleOff")); setGbusy(false); if(emRef.current)emRef.current.focus(); return; }
+    }catch(e){ setMsg(t("netErr")); setGbusy(false); return; }
     const{error}=await SB.auth.signInWithOAuth({provider:"google",options:{redirectTo:REDIRECT}});
     if(error)setMsg(error.message);
   };
@@ -618,7 +656,7 @@ function SignIn({onOpenLang}){
       {msg&&<div className="err" style={{maxWidth:330,margin:"0 auto 12px",textAlign:"start"}}>{msg}</div>}
       <div className="card authcard" style={{maxWidth:330,margin:"0 auto",textAlign:"start"}}>
         <div style={{fontWeight:800,fontSize:15,marginBottom:12,textAlign:"center"}}>{t("signinCard")}</div>
-        <button onClick={google} className="gbtn">
+        <button onClick={google} className="gbtn" disabled={gbusy} style={gbusy?{opacity:.6,cursor:"not-allowed"}:null}>
           <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6.1 29.6 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-2.1 14.1-5.5l-6.5-5.5c-2 1.5-4.7 2.5-7.6 2.5-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.5 5.5C41.4 36.3 44 30.6 44 24c0-1.3-.1-2.3-.4-3.5z"/></svg>{t("continueGoogle")}</button>
         <div style={{display:"flex",alignItems:"center",gap:10,margin:"14px 0",color:"var(--faint)",fontSize:12}}><div style={{flex:1,height:1,background:"var(--line)"}}/>{t("orEmail")}<div style={{flex:1,height:1,background:"var(--line)"}}/></div>
         <input ref={emRef} className="in" type="email" placeholder={t("emailPh")} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==="Enter"&&magic()} style={{marginBottom:10,textAlign:"center"}}/>
@@ -667,11 +705,11 @@ function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onRepo
   const myResult=poll.status==="resolved"&&tl.mine?(tl.mine===poll.resolved_outcome?"win":"lose"):null;
   const shareBet=()=>shareWa(t("shareBet",{q:poll.question,url:REDIRECT}));
   const shareWin=()=>shareWa(t("shareWin",{q:poll.question,url:REDIRECT}));
-  return <div className={"card"+(hot?" hotcard":"")} style={featured?{boxShadow:"0 0 0 1px rgba(255,194,60,.45),0 10px 34px rgba(255,194,60,.18)"}:null}>
+  return <div className={"card"+(hot?" hotcard":"")+(featured?" featcard":"")}>
     {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}><span className="livedot" style={{background:"#2a1800",boxShadow:"0 0 8px rgba(42,24,0,.6)"}}/>{t("hotNow")}</div>}
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
       <div style={{display:"flex",alignItems:"center",gap:7,minWidth:0,flex:1}}><span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>{groupName&&<span style={{fontSize:11,color:"var(--muted)",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>👥 {groupName}</span>}</div>
-      <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag" dir="auto" style={{background:"var(--gold-soft)",color:"var(--gold)",border:"1px solid rgba(255,194,60,.4)"}}>🏆 <span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&poll.status!=="resolved"&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
+      <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag tag-line" dir="auto" style={{background:"var(--gold-soft)",color:"var(--gold)"}}>🏆 <span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&poll.status!=="resolved"&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
     </div>
     <p className="disp clamp3" title={poll.question} style={{fontSize:"var(--fs-lg)",fontWeight:"var(--fw-bold)",margin:"0 0 var(--s3)",lineHeight:"var(--lh-snug)"}}>{poll.question}</p>
     <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe}/>
@@ -721,7 +759,9 @@ function ReportSheet({poll,onPick,onClose}){
 function Feed({groups,me,onErr,onResolved,startCreate}){
   const [polls,setPolls]=useState(null),[tally,setTally]=useState({}),[creating,setCreating]=useState(false),[locking,setLocking]=useState(null),[resolving,setResolving]=useState(null),[topic,setTopic]=useState("all");
   const mounted=useRef(true);
-  const gname={};(groups||[]).forEach(g=>{gname[g.id]=g.name;});
+  const gnameRef=useRef({});
+  if(gnameRef.current.__src!==groups){ const m={__src:groups}; (groups||[]).forEach(g=>{m[g.id]=g.name;}); gnameRef.current=m; }
+  const gname=gnameRef.current;
   useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
   const lastCreate=useRef(startCreate);
   useEffect(()=>{ if(startCreate!==lastCreate.current){ lastCreate.current=startCreate; SND.tap(); setCreating(true); } },[startCreate]);
@@ -729,7 +769,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   const load=async()=>{                  // cross-group: RLS already scopes polls to groups I'm a member of
     const my=++reqId.current;            // request-id: only the newest load() may commit state
     const stale=()=>!mounted.current||my!==reqId.current;
-    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,force_proof,group_id,target_id,personal,proof_url").order("created_at",{ascending:false});
+    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,group_id,target_id,proof_url").order("created_at",{ascending:false});
     if(stale())return;
     if(error)return onErr(error.message);
     setPolls(data||[]);
@@ -792,7 +832,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(!mounted.current)return;
     if(error)return onErr(error.message);
     const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win
-    if(won){ SND.win(); onResolved(true,poll); } else { SND.tap(); onResolved(false,poll); }
+    if(won){ SND.win(); await onResolved(true,poll); } else { SND.tap(); onResolved(false,poll); }
     await load();
   };
   const [responding,setResponding]=useState(false);
@@ -801,7 +841,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
     if(!mounted.current)return; setResponding(false);
     if(error)return onErr(error.message); SND.tap(); await load(); };
   const [reporting,setReporting]=useState(null);
-  const doReport=async(reason)=>{ const poll=reporting; setReporting(null); if(!poll)return; SND.tap(); const{error}=await SB.rpc("report_poll",{p_poll:poll.id,p_reason:reason}); if(!mounted.current)return; if(error)return onErr(error.message); onErr(t("reportSent")); };
+  const doReport=async(reason)=>{ const poll=reporting; setReporting(null); if(!poll)return; SND.tap(); const{error}=await SB.rpc("report_poll",{p_poll:poll.id,p_reason:reason}); if(!mounted.current)return; if(error)return onErr(error.message); SND.reveal(); onErr({ok:true,msg:t("reportSent")}); };
   if(creating)return <CreatePoll groups={groups} me={me} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
   if(polls===null)return <Spinner label={t("loadingBets")}/>;
   const all=polls.filter(p=>p.status!=="void"&&p.status!=="pending_consent");
@@ -811,7 +851,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   let hottestId=null,hn=2;
   list.forEach(p=>{if(p.status==="open"){const tp=tally[p.id]; if(!tp)return; const n=(tp.yes||0)+(tp.no||0); if(n>hn){hn=n;hottestId=p.id;}}});
   return <div>
-    <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:12,scrollbarWidth:"none"}}>
+    <div className="chiprail" style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:12,scrollbarWidth:"none"}}>
       <button className={"chip"+(topic==="all"?" on":"")} onClick={()=>{SND.tap();setTopic("all");}} style={{whiteSpace:"nowrap"}}>🔥 {t("allTopics")}</button>
       {SK.map(k=><button key={k} className={"chip"+(topic===k?" on":"")} onClick={()=>{SND.tap();setTopic(k);}} style={{whiteSpace:"nowrap"}}>{SEMO[k]} {subName(k)}</button>)}
     </div>
@@ -1083,7 +1123,14 @@ function App(){
   useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=dirOf(lang);},[lang]);
   const pickLang=(c)=>{CUR.lang=c;localStorage.setItem("eyevos_lang",c);setLang(c);setLangOpen(false);SND.tap();};
   useEffect(()=>{SB.auth.getSession().then(({data})=>setSession(data.session||null));const{data:s}=SB.auth.onAuthStateChange((_e,ss)=>setSession(ss||null));return()=>s.subscription.unsubscribe();},[]);
-  useEffect(()=>{if(!session){setMe(null);return;}SB.from("profiles").select("id,display_name,photo_url").eq("id",session.user.id).single().then(({data})=>setMe(data||{id:session.user.id,display_name:(session.user.email||"Player").split("@")[0]}));},[session]);
+  useEffect(()=>{if(!session){setMe(null);return;}let live=true;
+    const pull=()=>SB.from("profiles").select("id,display_name,photo_url").eq("id",session.user.id).single().then(({data,error})=>{
+      if(!live)return;
+      if(error&&!data&&/fetch|network|timeout|load failed/i.test(error.message||"")){ setTimeout(()=>{ if(live)pull(); },3000); return; }
+      setMe(data||{id:session.user.id,display_name:(session.user.email||"Player").split("@")[0]});
+    });
+    pull(); return ()=>{live=false;};
+  },[session]);
   const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("*").order("created_at");if(error){setErr(error.message);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:null);};
   useEffect(()=>{if(me)loadGroups();},[me]);
   useEffect(()=>{ const back=()=>{ if(me){ loadGroups(); loadScores(); } }; window.addEventListener("online",back); return ()=>window.removeEventListener("online",back); },[me]);
@@ -1101,7 +1148,7 @@ function App(){
       }catch(e){}
     }
     if(!pts){ pts=Math.max(0,(after||0)-before); }  // fallback only if the ledger row is not readable yet
-    setWinPts({pts,streak}); setCelebrate(true); setTimeout(()=>setCelebrate(false),2600);
+    setWinPts({pts,streak,total:(after!=null?after:total)}); setCelebrate(true); setTimeout(()=>setCelebrate(false),2600);
   };
   const langSheet = langOpen?<LangSheet cur={lang} onPick={pickLang} onClose={()=>setLangOpen(false)}/>:null;
   const langBtn = <button onClick={()=>setLangOpen(true)} className="chip" style={{padding:"6px 9px",fontSize:14}} title="Language">🌐</button>;
@@ -1110,11 +1157,13 @@ function App(){
   if(!session)return <div className="stage"><div className="device"><Coins/><SignIn onOpenLang={()=>setLangOpen(true)}/>{langSheet}</div></div>;
   if(!me||groups===null)return <div className="stage"><div className="device"><Spinner/></div></div>;
 
-  const errMsg = err==null ? null : (/fetch|network|failed to fetch|load failed|timeout|offline/i.test(String(err)) ? t("netErr") : String(err));
+  const isOk = !!(err&&typeof err==="object"&&err.ok);
+  const errRaw = err==null ? null : (isOk ? err.msg : String(err));
+  const errMsg = errRaw==null ? null : ((!isOk && /fetch|network|failed to fetch|load failed|timeout|offline/i.test(errRaw)) ? t("netErr") : errRaw);
   return <div className="stage"><div className="device">
-    {errMsg&&<div className="toastwrap" dir={dirOf(lang)}><div className="toast" role="alert" aria-live="assertive"><span style={{flexShrink:0}}>⚠️</span><span className="tmsg">{errMsg}</span><button className="tx" aria-label={t("dismiss")} title={t("dismiss")} onClick={()=>setErr(null)}>×</button></div></div>}
+    {errMsg&&<div className="toastwrap" dir={dirOf(lang)}><div className={"toast"+(isOk?" toast-ok":"")} role="status" aria-live="polite"><span style={{flexShrink:0}}>{isOk?"✅":"⚠️"}</span><span className="tmsg">{errMsg}</span>{!isOk&&errMsg===t("netErr")&&<button className="chip" style={{flexShrink:0,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>{setErr(null);location.reload();}}>{t("retry")}</button>}<button className="tx" aria-label={t("dismiss")} title={t("dismiss")} onClick={()=>setErr(null)}>×</button></div></div>}
     {celebrate&&<Confetti/>}
-    {winPts!=null&&<WinModal won={winPts} total={total} onClose={()=>setWinPts(null)}/>}
+    {winPts!=null&&<WinModal won={winPts} total={(winPts&&winPts.total!=null)?winPts.total:total} onClose={()=>setWinPts(null)}/>}
     <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
       <div style={{display:"flex",alignItems:"center",gap:8}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
       <div style={{display:"flex",alignItems:"center",gap:8}}>
@@ -1132,7 +1181,7 @@ function App(){
       {tab==="groups"?
         <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{setGroup(g);setTab("board");}}/>
       :groups.length===0?
-        <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎯</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:16}}>{t("noGroupB")}</p><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
+        <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎯</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:8}}>{t("noGroupB")}</p><div style={{display:"inline-flex",alignItems:"center",gap:6,fontSize:12,fontWeight:700,color:"var(--brand-2)",marginBottom:16}}><span aria-hidden="true">⏱️</span>{t("sixtySec")}</div><br/><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
         :tab==="feed"?<Feed groups={groups} me={me} onErr={onErr} onResolved={onResolved} startCreate={startCreate}/>
         :tab==="board"?(group?<Ranks group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)}/>:<PickGroup groups={groups} onPick={(g)=>setGroup(g)}/>)
         :tab==="rules"?<Rules/>

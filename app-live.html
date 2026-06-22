@@ -779,11 +779,13 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
       if(stale())return;
       if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={yes:r.yes||0,no:r.no||0,mine:r.mine||null};}); setTally(tt); }
       else { const{data:v,error:ve}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids); if(stale())return;
-        // p_votes RLS restricts raw votes to MY rows -> fallback only sees my own vote. Never render an all-zero tally over
-        // real counts: keep prior counts, refresh only `mine`. No prior tally -> leave empty (unknown != zero).
-        setTally(prev=>{ const out={}; ids.forEach(id=>{ const p=prev[id]; if(p)out[id]={yes:p.yes,no:p.no,mine:p.mine}; });
-          if(!ve){ const seen={}; (v||[]).forEach(r=>{ out[r.poll_id]=out[r.poll_id]||{yes:0,no:0,mine:null}; if(r.voter_id===me.id){ out[r.poll_id].mine=r.choice; seen[r.poll_id]=true; } });
-            ids.forEach(id=>{ if(!seen[id]&&out[id]&&out[id].mine==null&&prev[id]) out[id].mine=prev[id].mine; }); }  // replication lag: do not wipe my locked pick
+        // COUNT the votes we can read. Before HARDENING, votes RLS returns ALL rows -> correct yes/no counts.
+        // After HARDENING (own-rows only) poll_tally exists and we never reach here; if we ever do, keep the
+        // higher of (counted, prior) so a momentary own-only read can never shrink a real tally back to 0.
+        const tt2={}; if(!ve){ (v||[]).forEach(r=>{ tt2[r.poll_id]=tt2[r.poll_id]||{yes:0,no:0,mine:null}; if(r.choice==="yes"||r.choice==="no")tt2[r.poll_id][r.choice]++; if(r.voter_id===me.id)tt2[r.poll_id].mine=r.choice; }); }
+        setTally(prev=>{ const out={}; ids.forEach(id=>{ const n=tt2[id], p=prev[id];
+          if(n&&p) out[id]={yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
+          else if(n) out[id]=n; else if(p) out[id]={yes:p.yes,no:p.no,mine:p.mine}; });
           return out; });
       }
     }
@@ -851,7 +853,7 @@ function Feed({groups,me,onErr,onResolved,startCreate}){
   let hottestId=null,hn=2;
   list.forEach(p=>{if(p.status==="open"){const tp=tally[p.id]; if(!tp)return; const n=(tp.yes||0)+(tp.no||0); if(n>hn){hn=n;hottestId=p.id;}}});
   return <div>
-    <div className="chiprail" style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:12,scrollbarWidth:"none"}}>
+    <div style={{display:"flex",flexWrap:"wrap",gap:8,paddingBottom:12}}>
       <button className={"chip"+(topic==="all"?" on":"")} onClick={()=>{SND.tap();setTopic("all");}} style={{whiteSpace:"nowrap"}}>🔥 {t("allTopics")}</button>
       {SK.map(k=><button key={k} className={"chip"+(topic===k?" on":"")} onClick={()=>{SND.tap();setTopic(k);}} style={{whiteSpace:"nowrap"}}>{SEMO[k]} {subName(k)}</button>)}
     </div>

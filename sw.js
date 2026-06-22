@@ -33,10 +33,14 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // Other same-origin static: cache-first, fall back to network.
+  // Other same-origin static: cache-first, fall back to network; never resolve to undefined, never cache errors.
   e.respondWith(
-    caches.match(req).then((m) => m || fetch(req).then((r) => {
-      const cp = r.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); return r;
-    }).catch(() => m))
+    caches.match(req).then((m) => {
+      if (m) return m;
+      return fetch(req).then((r) => {
+        if (r && r.ok) { const cp = r.clone(); caches.open(CACHE).then((c) => c.put(req, cp)); }
+        return r;
+      }).catch(() => caches.match(req).then((c) => c || Response.error()));
+    })
   );
 });

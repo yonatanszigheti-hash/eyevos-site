@@ -935,6 +935,18 @@ hi:{joinedGroup:"ग्रुप में शामिल हो गए ✓",jo
 zh:{joinedGroup:"已加入群组 ✓",joinLinkBad:"该邀请链接无效",nTeams:"{n} 支球队"},
 ar:{joinedGroup:"انضممت إلى المجموعة ✓",joinLinkBad:"رابط الدعوة هذا غير صالح",nTeams:"{n} فِرَق"}};
 for(const _c in _GX31){ if(STR[_c]) Object.assign(STR[_c],_GX31[_c]); }
+const _GX32={
+he:{seasonPickLine:"בוחרים תוך 4 ימים מההצטרפות — או עד אמצע העונה",fairPlayCard:"משחק הוגן · בין חברים בלבד · נקודות בלבד, אף פעם לא כסף · מגיל 10"},
+en:{seasonPickLine:"Pick within 4 days of joining — or before mid-season",fairPlayCard:"Fair play · friends only · points only, never money · ages 10+"},
+es:{seasonPickLine:"Elige dentro de 4 días tras unirte — o antes de media temporada",fairPlayCard:"Juego limpio · solo amigos · solo puntos, nunca dinero · desde los 10 años"},
+fr:{seasonPickLine:"Choisis dans les 4 jours après ton arrivée — ou avant la mi-saison",fairPlayCard:"Fair-play · entre amis seulement · des points, jamais d'argent · dès 10 ans"},
+pt:{seasonPickLine:"Escolha em até 4 dias após entrar — ou antes do meio da temporada",fairPlayCard:"Jogo limpo · só entre amigos · só pontos, nunca dinheiro · a partir dos 10 anos"},
+ru:{seasonPickLine:"Выбери в течение 4 дней после входа — или до середины сезона",fairPlayCard:"Честная игра · только для друзей · только очки, никогда не деньги · от 10 лет"},
+de:{seasonPickLine:"Wähle innerhalb von 4 Tagen nach dem Beitritt — oder vor der Saisonhälfte",fairPlayCard:"Fairplay · nur unter Freunden · nur Punkte, niemals Geld · ab 10 Jahren"},
+hi:{seasonPickLine:"जॉइन करने के 4 दिनों के अंदर चुनो — या सीज़न के बीच से पहले",fairPlayCard:"निष्पक्ष खेल · सिर्फ़ दोस्तों के बीच · सिर्फ़ पॉइंट्स, कभी पैसा नहीं · 10 साल से ऊपर"},
+zh:{seasonPickLine:"加入后 4 天内选择——或在赛季过半之前",fairPlayCard:"公平竞赛 · 仅限好友 · 只有积分，永不涉及金钱 · 10 岁以上"},
+ar:{seasonPickLine:"اختر خلال 4 أيام من انضمامك — أو قبل منتصف الموسم",fairPlayCard:"لعب نظيف · بين الأصدقاء فقط · نقاط فقط، لا مال أبداً · من سن 10"}};
+for(const _c in _GX32){ if(STR[_c]) Object.assign(STR[_c],_GX32[_c]); }
 // ===== LEAGUE THEMES (embedded from _build/themes.js) — IP-safe per-league palettes =====
 const LEAGUE_THEME={
   ucl:{primary:"#3b82f6",accent:"#c0c8d6",bg:"#0a1024",text:"#e8ecf5",grad:"linear-gradient(135deg, #0a1024 0%, #16224d 55%, #1e3a8a 100%)"},
@@ -1081,6 +1093,11 @@ const SND={
   toggle(){ this.on=!this.on; localStorage.setItem("eyevos_sound",this.on?"on":"off"); if(this.on)this.tap(); return this.on; },
   buzz(p){ try{ if(navigator&&navigator.vibrate&&!prefersReduce()) navigator.vibrate(p); }catch(e){} }
 };
+// IP-safe club identity: an ORIGINAL badge of the club's initials over its real color (no logos/photos).
+function readableOn(hex){ try{ const c=(hex||"#888888").replace("#",""); const r=parseInt(c.slice(0,2),16)/255,g=parseInt(c.slice(2,4),16)/255,b=parseInt(c.slice(4,6),16)/255; const lin=x=>x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4); const L=.2126*lin(r)+.7152*lin(g)+.0722*lin(b); return L>.42?"#0B0B12":"#FFFFFF"; }catch(e){ return "#FFFFFF"; } }
+function CrestBadge({team,size}){ const s=size||40; const col=(team&&team.color)||"#3A2F55"; const fg=readableOn(col); const sh=((team&&team.short)||((team&&team.name)||"?").replace(/[^A-Za-z0-9]/g,"").slice(0,3)||"?").toUpperCase();
+  return <span role="img" aria-label={team&&team.name} style={{width:s,height:s,borderRadius:Math.round(s*0.28),flex:"0 0 auto",display:"inline-flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:Math.round(s*(sh.length>2?0.34:0.42)),lineHeight:1,letterSpacing:".02em",color:fg,background:"linear-gradient(160deg,"+col+" 0%,"+col+" 44%,rgba(0,0,0,.24) 100%)",boxShadow:"inset 0 0 0 1px "+(fg==="#FFFFFF"?"rgba(255,255,255,.22)":"rgba(0,0,0,.18)")+",inset 0 1px 0 rgba(255,255,255,.18)",fontVariantNumeric:"tabular-nums",overflow:"hidden",verticalAlign:"middle"}}>{sh}</span>;
+}
 function CountUp({value,dur=650,nobump=false}){
   const [n,setN]=useState(value); const prev=useRef(value);
   const [bump,setBump]=useState(false);
@@ -1279,16 +1296,16 @@ function FixtureCard({league,fx,kickoff,now,pred,onSave,saving,onScored}){
   const [showHow,setShowHow]=useState(false);
   const teamRow=(
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,margin:"2px 0 12px"}}>
-      <div style={{flex:1,textAlign:"end",minWidth:0}}>
-        <span style={{fontSize:20,marginInlineEnd:6}} aria-hidden="true">{home.emoji}</span>
-        <span style={{fontWeight:800,fontSize:14.5,color:"var(--lg-text)"}} dir="auto">{home.short}</span>
-        <div style={{fontSize:11,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}} dir="auto">{home.name}</div>
+      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+        <CrestBadge team={home} size={40}/>
+        <span style={{fontWeight:800,fontSize:13.5,color:"var(--lg-text)"}} dir="auto">{home.short}</span>
+        <div style={{fontSize:10.5,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}} dir="auto">{home.name}</div>
       </div>
       <span style={{flexShrink:0,fontSize:12,fontWeight:800,opacity:.7,color:"var(--lg-text)"}}>{t("vsWord")}</span>
-      <div style={{flex:1,textAlign:"start",minWidth:0}}>
-        <span style={{fontWeight:800,fontSize:14.5,color:"var(--lg-text)"}} dir="auto">{away.short}</span>
-        <span style={{fontSize:20,marginInlineStart:6}} aria-hidden="true">{away.emoji}</span>
-        <div style={{fontSize:11,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}} dir="auto">{away.name}</div>
+      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+        <CrestBadge team={away} size={40}/>
+        <span style={{fontWeight:800,fontSize:13.5,color:"var(--lg-text)"}} dir="auto">{away.short}</span>
+        <div style={{fontSize:10.5,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}} dir="auto">{away.name}</div>
       </div>
     </div>
   );
@@ -1384,7 +1401,7 @@ function SeasonPicks({league,teams,players,picks,windowOpen,onChampion,onTopScor
     return <button type="button" role="radio" aria-checked={selected} aria-label={team.name} disabled={locked} onClick={()=>onPick(team.id)} className="card"
       style={{margin:0,padding:"14px 10px",cursor:locked?"default":"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,textAlign:"center",color:"var(--lg-text)",
         background:selected?(team.color+"26"):"var(--lg-bg)",border:"2px solid "+(selected?team.color:"var(--line)"),opacity:locked&&!selected?.55:1,boxShadow:selected?("0 0 0 1px "+team.color+" inset"):"none"}}>
-      <span style={{fontSize:26,lineHeight:1}} aria-hidden="true">{team.emoji}</span>
+      <CrestBadge team={team} size={44}/>
       <span style={{fontWeight:800,fontSize:13.5}}>{team.short}</span>
       <span style={{fontSize:11.5,opacity:.85}} dir="auto">{team.name}</span>
       {selected&&<span style={{fontSize:11,fontWeight:800,color:team.color}}>✓</span>}
@@ -1422,7 +1439,7 @@ function SeasonPicks({league,teams,players,picks,windowOpen,onChampion,onTopScor
         <div role="radiogroup" aria-label={t("pickChampion")} style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
           {safeTeams.map(team=><TeamTile key={team.id} team={team} selected={champion===team.id} onPick={chooseChampion}/>)}
         </div>}
-      {championTeam&&<div style={{marginTop:10,fontSize:13}}><span style={{opacity:.8}}>{t("championLabel")}: </span><span style={{fontWeight:800}} dir="auto">{championTeam.emoji} {championTeam.name}</span></div>}
+      {championTeam&&<div style={{marginTop:10,fontSize:13}}><span style={{opacity:.8}}>{t("championLabel")}: </span><span style={{fontWeight:800,display:"inline-flex",alignItems:"center",gap:6}} dir="auto"><CrestBadge team={championTeam} size={18}/>{championTeam.name}</span></div>}
     </section>
     <section style={{marginBottom:18}}>
       <h3 style={{margin:"0 0 2px",fontSize:16,fontWeight:800}}>{t("pickTopScorer")}</h3>
@@ -1434,7 +1451,7 @@ function SeasonPicks({league,teams,players,picks,windowOpen,onChampion,onTopScor
           return <button key={team.id} type="button" role="radio" aria-checked={activeT} aria-label={team.name} disabled={locked} onClick={()=>chooseScorerTeam(team.id)} className="chip"
             style={{flexShrink:0,padding:"8px 12px",fontSize:13,fontWeight:800,cursor:locked?"default":"pointer",display:"flex",alignItems:"center",gap:6,
               background:activeT?(team.color+"2e"):"transparent",color:"var(--lg-text)",border:"1.5px solid "+(activeT?team.color:"var(--line)"),opacity:locked&&!activeT?.55:1}}>
-            <span aria-hidden="true">{team.emoji}</span>{team.short}</button>; })}
+            <CrestBadge team={team} size={18}/>{team.short}</button>; })}
       </div>
       {!scorerTeamId?<div className="card" style={{margin:0,padding:"22px 16px",textAlign:"center",borderStyle:"dashed",borderColor:"var(--lg-primary)",color:"var(--lg-text)",background:"var(--lg-bg)",fontSize:13.5}}>{t("pickTeamFirst")}</div>
         :squad.length===0?<Spinner/>:
@@ -1442,7 +1459,7 @@ function SeasonPicks({league,teams,players,picks,windowOpen,onChampion,onTopScor
           <div style={{fontSize:12.5,fontWeight:700,opacity:.85,marginBottom:8}}>{t("squadOf",{team:(tById[scorerTeamId]||{}).name||""})} · {t("chooseFromSquad")}</div>
           {squad.map(pl=><PlayerRow key={pl.id} pl={pl}/>)}
         </div>}
-      {scorerPlayer&&<div style={{marginTop:10,fontSize:13}}><span style={{opacity:.8}}>{t("topScorerLabel")}: </span><span style={{fontWeight:800}} dir="auto">{scorerPlayer.avatar} {scorerPlayer.name}{tById[scorerPlayer.teamId]?" · "+tById[scorerPlayer.teamId].short:""}</span></div>}
+      {scorerPlayer&&<div style={{marginTop:10,fontSize:13}}><span style={{opacity:.8}}>{t("topScorerLabel")}: </span><span style={{fontWeight:800}} dir="auto">⚽ {scorerPlayer.name}{tById[scorerPlayer.teamId]?" · "+tById[scorerPlayer.teamId].short:""}</span></div>}
     </section>
     {locked&&<div className="card" style={{margin:0,padding:"12px 14px",textAlign:"center",background:"rgba(0,0,0,.28)",border:"1px solid var(--line)",color:"var(--lg-text)",fontWeight:800,fontSize:13.5}}>{t("picksLocked")}</div>}
   </div>;
@@ -1656,9 +1673,9 @@ function Rules(){
       </div></div>
     <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>{t("seasonPicks")}</div>
       {row(t("champWorth"),"+12")}{row(t("scorerWorth"),"+12")}
-      <div style={{display:"flex",justifyContent:"space-between",padding:"9px 0"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{t("seasonReset")}</span><span style={{color:"var(--brand-2)",fontWeight:800}}>∞</span></div></div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--no)"}}>{t("allowedT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("al1")}</li><li>{t("al3")}</li></ul></div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--yes)"}}>{t("forbidT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("fo1")}</li><li>{t("fo3")}</li></ul></div>
+      <div style={{display:"flex",justifyContent:"space-between",padding:"9px 0"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{t("seasonReset")}</span><span style={{color:"var(--brand-2)",fontWeight:800}}>∞</span></div>
+      <div style={{fontSize:12,color:"var(--faint)",lineHeight:1.7,paddingTop:6}}>· {t("seasonPickLine")}</div></div>
+    <div className="card" style={{textAlign:"center"}}><div style={{fontSize:12.5,color:"var(--muted)",fontWeight:700,lineHeight:1.6}}>{t("fairPlayCard")}</div></div>
     <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700,marginBottom:4}}>{t("sampleDataNote")}</p>
     <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700}}>{t("apiReadyNote")} · {t("footerNote")}</p>
   </div>;

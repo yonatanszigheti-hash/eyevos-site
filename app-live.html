@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<title>Eyevos · LIVE</title>
+<title>Eyevos · Football</title>
 <meta name="theme-color" content="#0C0A14" />
 <meta name="color-scheme" content="dark" />
 <link rel="manifest" href="manifest.webmanifest" />
@@ -207,6 +207,18 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px s
 .btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 /* ----- bottom-nav: keep every label on ONE line so the bar stays aligned in all 10 langs ----- */
 .nav .navb{flex:1 1 0;min-width:0;max-width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:4px;gap:3px;line-height:1.15;font-size:clamp(9.5px,2.4vw,11px)}
+/* ===== football layer ===== */
+:root{--lg-primary:#8A6BFF;--lg-accent:#A78BFF;--lg-bg:#15121E;--lg-text:#F4F1FA;--lg-grad:linear-gradient(135deg,#150a24 0%,#1E1A2C 55%,#8A6BFF 100%)}
+.demobadge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,194,60,.14);color:var(--gold);border:1px solid rgba(255,194,60,.34);border-radius:999px;padding:3px 9px;font-size:10.5px;font-weight:800;letter-spacing:.04em}
+.demodot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:blink 1.6s ease-in-out infinite}
+.lgband{background:var(--lg-grad);color:var(--lg-text)}
+.stepbtn{width:46px;height:46px;flex-shrink:0;border-radius:13px;border:1px solid var(--line-2);background:var(--ink-3);color:var(--text);font-size:24px;font-weight:800;line-height:1;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;transition:transform .12s,background .12s}
+.stepbtn:active{transform:scale(.9)}
+.stepbtn:disabled{opacity:.4;cursor:not-allowed}
+@media(hover:hover){.stepbtn:not(:disabled):hover{background:var(--ink-4)}}
+.stepnum{min-width:44px;text-align:center;font-weight:900;font-size:30px;font-variant-numeric:tabular-nums}
+.lgtile{position:relative;overflow:hidden}
+.lgtile::after{display:none}
 </style>
 </head>
 <body>
@@ -215,6 +227,7 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px s
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/@babel/standalone@7.25.9/babel.min.js"></script>
+<script src="leagues.js"></script>
 <script type="text/babel" data-presets="react">
 const { useState, useEffect, useRef } = React;
 const SB = window.supabase.createClient("https://nsnbdgudqtygxaalhjsn.supabase.co", "sb_publishable_C6Z1uW15YbRH2kKQzSxTOA_Zb4w4nNc",
@@ -546,6 +559,409 @@ zh:{emptyFeedSub:"一个是/否的问题——圈子就开局了。",emptyFeedCt
 ar:{emptyFeedSub:"سؤال نعم/لا واحد — والمجموعة تدخل اللعبة.",emptyFeedCta:"🎯 افتح أول توقّع",firstVoteTip:"اختر جانباً لترى ما توقّعه الجميع — النِسَب مخفيّة حتى تثبّت اختيارك.",groupCreatedSub:"الآن افتح أول توقّع — أو شارك الرمز وانتظر انضمام الآخرين.",enterGroupGo:"ادخل وافتح أول توقّع",sixtySec:"يستغرق أقل من دقيقة"}
 };
 for(const _c in _GX21){ if(STR[_c]) Object.assign(STR[_c],_GX21[_c]); }
+// ===== EYEVOS FOOTBALL i18n merge block (_GX30) — all new football strings, 10 languages =====
+const _GX30={
+he:{
+  pickLeague:"בחר ליגה ⚽", pickLeagueSub:"בחר ליגה — ואז תראה את המשחקים ותנחש תוצאות",
+  leaguesT:"ליגות", chooseYourLeague:"איזו ליגה שלך?",
+  createGroupL:"+ צור קבוצה לליגה", groupForLeague:"קבוצה ל{league}",
+  shareGroupWa:"📤 שתף קבוצה בוואטסאפ", groupInviteWa:"בוא לקבוצה \"{name}\" ב‑Eyevos ⚽ נחש תוצאות ב{league} ותתחרה איתי: {url}",
+  inviteByLink:"מזמינים בקישור — בלי קוד", linkCopied:"הקישור הועתק ✓",
+  fixtures:"משחקים", fixturesOf:"משחקי {league}", roundLabel:"מחזור",
+  upcomingT:"משחקים קרובים", finishedT:"משחקים שהסתיימו", noFixtures:"אין עדיין משחקים בליגה הזו.",
+  vsWord:"נגד", homeShort:"בית", awayShort:"חוץ",
+  kickoff:"שריקת פתיחה", kickoffIn:"בעיטת פתיחה בעוד", kickoffInDHM:"בעוד {d}ימ׳ {h}ש׳ {m}דק׳",
+  kickoffInHM:"בעוד {h}ש׳ {m}דק׳", kickoffInM:"בעוד {m} דק׳",
+  beforeKickoff:"נחש לפני שריקת הפתיחה", lockedAtKickoff:"🔒 ננעל בשריקת הפתיחה", predictionsLockAtKickoff:"הניחושים נסגרים בשריקת הפתיחה",
+  predict:"נחש תוצאה", predictScore:"נחש את התוצאה", yourPrediction:"הניחוש שלך", noPredictionYet:"עדיין לא ניחשת את המשחק הזה",
+  enterScore:"הזן תוצאה", homeGoals:"שערי בית", awayGoals:"שערי חוץ",
+  savePrediction:"🎯 שמור ניחוש", savingPrediction:"שומר ניחוש…", predictionSaved:"הניחוש נשמר ✓",
+  editPrediction:"✏️ ערוך ניחוש", predictionLocked:"הניחוש ננעל",
+  matchResult:"תוצאת המשחק", finalScore:"תוצאה סופית", resultPending:"מחכים לתוצאה", liveResult:"תוצאה",
+  youScoredPts:"קיבלת {pts} נק׳", pointsWord:"נקודות", pts:"נק׳", pointsForMatch:"נקודות מהמשחק",
+  correctDirection:"כיוון נכון (ניצחון/תיקו) · 3 נק׳", oneScore:"תוצאה אחת מדויקת · 1 נק׳", exactScore:"בול! תוצאה מדויקת",
+  noPoints:"0 נק׳ הפעם", howPointsWork:"איך מחשבים נקודות",
+  hpDirection:"ניחשת נכון מי ניצח (או תיקו) — 3 נקודות", hpOne:"לא הכיוון, אבל קלעת נכון את מספר השערים של קבוצה אחת — נקודה", hpZero:"אחרת — 0",
+  leaderboard:"טבלת דירוג 🏆", leaderboardOf:"דירוג {league}", rankWord:"#", playerWord:"שחקן",
+  totalPoints:"סך הנקודות", emptyLeaderboard:"🏆 עוד אין נקודות. נחש משחק ותתחיל לטפס 🚀", youRow:"אתה",
+  seasonPicks:"בחירות העונה ⭐", seasonPicksSub:"שתי בחירות לכל העונה — אלוף ומלך שערים. כל אחת שווה 12 נקודות.",
+  pickWindowEnds:"חלון הבחירה נסגר בעוד {d} ימים", pickWindowClosed:"חלון בחירות העונה נסגר",
+  pickWindowHint:"אפשר לבחור עד 4 ימים מההצטרפות (או עד אמצע העונה)", picksLocked:"בחירות העונה ננעלו 🔒",
+  pickChampion:"בחר אלופה 🏆", championLabel:"האלופה שבחרת", pickChampionSub:"איזו קבוצה תרים את הגביע?",
+  pickTopScorer:"בחר מלך שערים ⚽", topScorerLabel:"מלך השערים שבחרת", pickTopScorerSub:"מי יסיים עם הכי הרבה שערים?",
+  pickTeamFirst:"בחר קודם קבוצה — ואז שחקן מהסגל שלה", squadOf:"סגל {team}", chooseFromSquad:"בחר מהסגל",
+  champWorth:"אלופה נכונה = +12 נק׳", scorerWorth:"מלך שערים נכון = +12 נק׳",
+  savePicks:"⭐ שמור בחירות", picksSaved:"הבחירות נשמרו ✓", changePick:"שנה בחירה",
+  posGK:"שוער", posDF:"הגנה", posMF:"קישור", posFW:"התקפה",
+  sampleDataNote:"⚠️ נתוני דמו — שמות אמיתיים, אך משחקים ותוצאות לדוגמה בלבד (אין עדיין חיבור לנתונים חיים).",
+  apiReadyNote:"מוכן לחיבור נתונים חיים", demoBadge:"דמו",
+  backToFixtures:"חזרה למשחקים", backToLeagues:"חזרה לליגות"
+},
+en:{
+  pickLeague:"Pick a league ⚽", pickLeagueSub:"Choose a league — then see the fixtures and predict scores",
+  leaguesT:"Leagues", chooseYourLeague:"Which league is yours?",
+  createGroupL:"+ Create a league group", groupForLeague:"Group for {league}",
+  shareGroupWa:"📤 Share group on WhatsApp", groupInviteWa:"Join the group \"{name}\" on Eyevos ⚽ predict {league} scores and take me on: {url}",
+  inviteByLink:"Invite by link — no code", linkCopied:"Link copied ✓",
+  fixtures:"Fixtures", fixturesOf:"{league} fixtures", roundLabel:"Round",
+  upcomingT:"Upcoming", finishedT:"Finished", noFixtures:"No fixtures in this league yet.",
+  vsWord:"vs", homeShort:"Home", awayShort:"Away",
+  kickoff:"Kickoff", kickoffIn:"Kickoff in", kickoffInDHM:"in {d}d {h}h {m}m",
+  kickoffInHM:"in {h}h {m}m", kickoffInM:"in {m}m",
+  beforeKickoff:"Predict before kickoff", lockedAtKickoff:"🔒 Locks at kickoff", predictionsLockAtKickoff:"Predictions close at kickoff",
+  predict:"Predict score", predictScore:"Predict the score", yourPrediction:"Your prediction", noPredictionYet:"You haven't predicted this match yet",
+  enterScore:"Enter score", homeGoals:"Home goals", awayGoals:"Away goals",
+  savePrediction:"🎯 Save prediction", savingPrediction:"Saving prediction…", predictionSaved:"Prediction saved ✓",
+  editPrediction:"✏️ Edit prediction", predictionLocked:"Prediction locked",
+  matchResult:"Match result", finalScore:"Final score", resultPending:"Awaiting result", liveResult:"Result",
+  youScoredPts:"You scored {pts} pts", pointsWord:"points", pts:"pts", pointsForMatch:"points from this match",
+  correctDirection:"Correct direction (win/draw) · 3 pts", oneScore:"One team's score exact · 1 pt", exactScore:"Spot on! Exact score",
+  noPoints:"0 pts this time", howPointsWork:"How points work",
+  hpDirection:"You called the winner (or draw) right — 3 points", hpOne:"Not the direction, but you nailed one team's goal count — 1 point", hpZero:"Otherwise — 0",
+  leaderboard:"Leaderboard 🏆", leaderboardOf:"{league} leaderboard", rankWord:"#", playerWord:"Player",
+  totalPoints:"Total points", emptyLeaderboard:"🏆 No points yet. Predict a match and start climbing 🚀", youRow:"You",
+  seasonPicks:"Season picks ⭐", seasonPicksSub:"Two picks for the whole season — champion and top scorer. Each worth 12 points.",
+  pickWindowEnds:"Pick window ends in {d} days", pickWindowClosed:"Season-pick window has closed",
+  pickWindowHint:"Pick within 4 days of joining (or before the season's halfway point)", picksLocked:"Season picks locked 🔒",
+  pickChampion:"Pick the champion 🏆", championLabel:"Your champion pick", pickChampionSub:"Which team lifts the trophy?",
+  pickTopScorer:"Pick the top scorer ⚽", topScorerLabel:"Your top-scorer pick", pickTopScorerSub:"Who finishes with the most goals?",
+  pickTeamFirst:"Pick a team first — then a player from its squad", squadOf:"{team} squad", chooseFromSquad:"Choose from the squad",
+  champWorth:"Correct champion = +12 pts", scorerWorth:"Correct top scorer = +12 pts",
+  savePicks:"⭐ Save picks", picksSaved:"Picks saved ✓", changePick:"Change pick",
+  posGK:"GK", posDF:"DF", posMF:"MF", posFW:"FW",
+  sampleDataNote:"⚠️ SAMPLE data — real names, but demo fixtures and results only (no live data feed yet).",
+  apiReadyNote:"Ready for a live data feed", demoBadge:"DEMO",
+  backToFixtures:"Back to fixtures", backToLeagues:"Back to leagues"
+},
+es:{
+  pickLeague:"Elige una liga ⚽", pickLeagueSub:"Elige una liga — y verás los partidos y predices marcadores",
+  leaguesT:"Ligas", chooseYourLeague:"¿Cuál es tu liga?",
+  createGroupL:"+ Crear un grupo de liga", groupForLeague:"Grupo de {league}",
+  shareGroupWa:"📤 Compartir grupo por WhatsApp", groupInviteWa:"Únete al grupo \"{name}\" en Eyevos ⚽ predice marcadores de {league} y compite conmigo: {url}",
+  inviteByLink:"Invitar por enlace — sin código", linkCopied:"Enlace copiado ✓",
+  fixtures:"Partidos", fixturesOf:"Partidos de {league}", roundLabel:"Jornada",
+  upcomingT:"Próximos", finishedT:"Finalizados", noFixtures:"Aún no hay partidos en esta liga.",
+  vsWord:"vs", homeShort:"Local", awayShort:"Visitante",
+  kickoff:"Inicio", kickoffIn:"Comienza en", kickoffInDHM:"en {d}d {h}h {m}m",
+  kickoffInHM:"en {h}h {m}m", kickoffInM:"en {m}m",
+  beforeKickoff:"Predice antes del inicio", lockedAtKickoff:"🔒 Se bloquea al inicio", predictionsLockAtKickoff:"Las predicciones cierran al inicio",
+  predict:"Predecir marcador", predictScore:"Predice el marcador", yourPrediction:"Tu predicción", noPredictionYet:"Aún no has predicho este partido",
+  enterScore:"Introduce el marcador", homeGoals:"Goles local", awayGoals:"Goles visitante",
+  savePrediction:"🎯 Guardar predicción", savingPrediction:"Guardando predicción…", predictionSaved:"Predicción guardada ✓",
+  editPrediction:"✏️ Editar predicción", predictionLocked:"Predicción bloqueada",
+  matchResult:"Resultado del partido", finalScore:"Marcador final", resultPending:"Esperando resultado", liveResult:"Resultado",
+  youScoredPts:"Conseguiste {pts} pts", pointsWord:"puntos", pts:"pts", pointsForMatch:"puntos de este partido",
+  correctDirection:"Dirección correcta (victoria/empate) · 3 pts", oneScore:"Goles exactos de un equipo · 1 pt", exactScore:"¡Clavado! Marcador exacto",
+  noPoints:"0 pts esta vez", howPointsWork:"Cómo funcionan los puntos",
+  hpDirection:"Acertaste quién gana (o empate) — 3 puntos", hpOne:"No la dirección, pero acertaste los goles de un equipo — 1 punto", hpZero:"Si no — 0",
+  leaderboard:"Clasificación 🏆", leaderboardOf:"Clasificación de {league}", rankWord:"#", playerWord:"Jugador",
+  totalPoints:"Puntos totales", emptyLeaderboard:"🏆 Aún sin puntos. Predice un partido y empieza a subir 🚀", youRow:"Tú",
+  seasonPicks:"Predicciones de temporada ⭐", seasonPicksSub:"Dos elecciones para toda la temporada — campeón y máximo goleador. Cada una vale 12 puntos.",
+  pickWindowEnds:"La ventana de elección cierra en {d} días", pickWindowClosed:"La ventana de elecciones de temporada se cerró",
+  pickWindowHint:"Elige dentro de los 4 días de unirte (o antes de la mitad de la temporada)", picksLocked:"Elecciones de temporada bloqueadas 🔒",
+  pickChampion:"Elige el campeón 🏆", championLabel:"Tu campeón elegido", pickChampionSub:"¿Qué equipo levanta el trofeo?",
+  pickTopScorer:"Elige el máximo goleador ⚽", topScorerLabel:"Tu goleador elegido", pickTopScorerSub:"¿Quién acaba con más goles?",
+  pickTeamFirst:"Elige un equipo primero — luego un jugador de su plantilla", squadOf:"Plantilla de {team}", chooseFromSquad:"Elige de la plantilla",
+  champWorth:"Campeón correcto = +12 pts", scorerWorth:"Goleador correcto = +12 pts",
+  savePicks:"⭐ Guardar elecciones", picksSaved:"Elecciones guardadas ✓", changePick:"Cambiar elección",
+  posGK:"POR", posDF:"DEF", posMF:"CEN", posFW:"DEL",
+  sampleDataNote:"⚠️ Datos de MUESTRA — nombres reales, pero partidos y resultados de demostración (aún sin datos en vivo).",
+  apiReadyNote:"Listo para datos en vivo", demoBadge:"DEMO",
+  backToFixtures:"Volver a los partidos", backToLeagues:"Volver a las ligas"
+},
+fr:{
+  pickLeague:"Choisis un championnat ⚽", pickLeagueSub:"Choisis un championnat — puis vois les matchs et pronostique les scores",
+  leaguesT:"Championnats", chooseYourLeague:"C'est quoi ton championnat ?",
+  createGroupL:"+ Créer un groupe de championnat", groupForLeague:"Groupe de {league}",
+  shareGroupWa:"📤 Partager le groupe sur WhatsApp", groupInviteWa:"Rejoins le groupe \"{name}\" sur Eyevos ⚽ pronostique les scores de {league} et affronte-moi : {url}",
+  inviteByLink:"Inviter par lien — sans code", linkCopied:"Lien copié ✓",
+  fixtures:"Matchs", fixturesOf:"Matchs de {league}", roundLabel:"Journée",
+  upcomingT:"À venir", finishedT:"Terminés", noFixtures:"Pas encore de matchs dans ce championnat.",
+  vsWord:"vs", homeShort:"Dom.", awayShort:"Ext.",
+  kickoff:"Coup d'envoi", kickoffIn:"Coup d'envoi dans", kickoffInDHM:"dans {d}j {h}h {m}min",
+  kickoffInHM:"dans {h}h {m}min", kickoffInM:"dans {m}min",
+  beforeKickoff:"Pronostique avant le coup d'envoi", lockedAtKickoff:"🔒 Verrouillé au coup d'envoi", predictionsLockAtKickoff:"Les pronostics ferment au coup d'envoi",
+  predict:"Pronostiquer le score", predictScore:"Pronostique le score", yourPrediction:"Ton pronostic", noPredictionYet:"Tu n'as pas encore pronostiqué ce match",
+  enterScore:"Saisis le score", homeGoals:"Buts dom.", awayGoals:"Buts ext.",
+  savePrediction:"🎯 Enregistrer le pronostic", savingPrediction:"Enregistrement…", predictionSaved:"Pronostic enregistré ✓",
+  editPrediction:"✏️ Modifier le pronostic", predictionLocked:"Pronostic verrouillé",
+  matchResult:"Résultat du match", finalScore:"Score final", resultPending:"En attente du résultat", liveResult:"Résultat",
+  youScoredPts:"Tu as marqué {pts} pts", pointsWord:"points", pts:"pts", pointsForMatch:"points pour ce match",
+  correctDirection:"Bonne tendance (victoire/nul) · 3 pts", oneScore:"Score exact d'une équipe · 1 pt", exactScore:"Pile poil ! Score exact",
+  noPoints:"0 pt cette fois", howPointsWork:"Comment marchent les points",
+  hpDirection:"Tu as trouvé le vainqueur (ou le nul) — 3 points", hpOne:"Pas la tendance, mais tu as trouvé les buts d'une équipe — 1 point", hpZero:"Sinon — 0",
+  leaderboard:"Classement 🏆", leaderboardOf:"Classement de {league}", rankWord:"#", playerWord:"Joueur",
+  totalPoints:"Points totaux", emptyLeaderboard:"🏆 Pas encore de points. Pronostique un match et commence à grimper 🚀", youRow:"Toi",
+  seasonPicks:"Choix de la saison ⭐", seasonPicksSub:"Deux choix pour toute la saison — champion et meilleur buteur. Chacun vaut 12 points.",
+  pickWindowEnds:"La fenêtre de choix ferme dans {d} jours", pickWindowClosed:"La fenêtre des choix de saison est fermée",
+  pickWindowHint:"Choisis dans les 4 jours après avoir rejoint (ou avant la mi-saison)", picksLocked:"Choix de saison verrouillés 🔒",
+  pickChampion:"Choisis le champion 🏆", championLabel:"Ton champion choisi", pickChampionSub:"Quelle équipe soulève le trophée ?",
+  pickTopScorer:"Choisis le meilleur buteur ⚽", topScorerLabel:"Ton buteur choisi", pickTopScorerSub:"Qui finit avec le plus de buts ?",
+  pickTeamFirst:"Choisis d'abord une équipe — puis un joueur de son effectif", squadOf:"Effectif de {team}", chooseFromSquad:"Choisis dans l'effectif",
+  champWorth:"Champion correct = +12 pts", scorerWorth:"Meilleur buteur correct = +12 pts",
+  savePicks:"⭐ Enregistrer les choix", picksSaved:"Choix enregistrés ✓", changePick:"Changer de choix",
+  posGK:"G", posDF:"DEF", posMF:"MIL", posFW:"ATT",
+  sampleDataNote:"⚠️ Données d'EXEMPLE — noms réels, mais matchs et résultats de démo seulement (pas encore de flux de données en direct).",
+  apiReadyNote:"Prêt pour un flux de données en direct", demoBadge:"DÉMO",
+  backToFixtures:"Retour aux matchs", backToLeagues:"Retour aux championnats"
+},
+pt:{
+  pickLeague:"Escolha uma liga ⚽", pickLeagueSub:"Escolha uma liga — e veja os jogos e dê palpites nos placares",
+  leaguesT:"Ligas", chooseYourLeague:"Qual é a sua liga?",
+  createGroupL:"+ Criar um grupo de liga", groupForLeague:"Grupo de {league}",
+  shareGroupWa:"📤 Compartilhar grupo no WhatsApp", groupInviteWa:"Entre no grupo \"{name}\" no Eyevos ⚽ dê palpites nos placares de {league} e me enfrente: {url}",
+  inviteByLink:"Convidar por link — sem código", linkCopied:"Link copiado ✓",
+  fixtures:"Jogos", fixturesOf:"Jogos de {league}", roundLabel:"Rodada",
+  upcomingT:"Próximos", finishedT:"Encerrados", noFixtures:"Ainda não há jogos nesta liga.",
+  vsWord:"x", homeShort:"Casa", awayShort:"Fora",
+  kickoff:"Pontapé inicial", kickoffIn:"Começa em", kickoffInDHM:"em {d}d {h}h {m}min",
+  kickoffInHM:"em {h}h {m}min", kickoffInM:"em {m}min",
+  beforeKickoff:"Dê o palpite antes do pontapé inicial", lockedAtKickoff:"🔒 Trava no pontapé inicial", predictionsLockAtKickoff:"Os palpites fecham no pontapé inicial",
+  predict:"Palpitar placar", predictScore:"Dê o palpite no placar", yourPrediction:"Seu palpite", noPredictionYet:"Você ainda não palpitou neste jogo",
+  enterScore:"Informe o placar", homeGoals:"Gols casa", awayGoals:"Gols fora",
+  savePrediction:"🎯 Salvar palpite", savingPrediction:"Salvando palpite…", predictionSaved:"Palpite salvo ✓",
+  editPrediction:"✏️ Editar palpite", predictionLocked:"Palpite travado",
+  matchResult:"Resultado do jogo", finalScore:"Placar final", resultPending:"Aguardando resultado", liveResult:"Resultado",
+  youScoredPts:"Você fez {pts} pts", pointsWord:"pontos", pts:"pts", pointsForMatch:"pontos deste jogo",
+  correctDirection:"Direção certa (vitória/empate) · 3 pts", oneScore:"Gols exatos de um time · 1 pt", exactScore:"Na mosca! Placar exato",
+  noPoints:"0 pt desta vez", howPointsWork:"Como funcionam os pontos",
+  hpDirection:"Você acertou quem vence (ou empate) — 3 pontos", hpOne:"Não a direção, mas acertou os gols de um time — 1 ponto", hpZero:"Caso contrário — 0",
+  leaderboard:"Classificação 🏆", leaderboardOf:"Classificação de {league}", rankWord:"#", playerWord:"Jogador",
+  totalPoints:"Pontos totais", emptyLeaderboard:"🏆 Ainda sem pontos. Dê um palpite e comece a subir 🚀", youRow:"Você",
+  seasonPicks:"Palpites da temporada ⭐", seasonPicksSub:"Duas escolhas para toda a temporada — campeão e artilheiro. Cada uma vale 12 pontos.",
+  pickWindowEnds:"A janela de escolha fecha em {d} dias", pickWindowClosed:"A janela de palpites da temporada fechou",
+  pickWindowHint:"Escolha em até 4 dias após entrar (ou antes da metade da temporada)", picksLocked:"Palpites da temporada travados 🔒",
+  pickChampion:"Escolha o campeão 🏆", championLabel:"Seu campeão escolhido", pickChampionSub:"Qual time levanta o troféu?",
+  pickTopScorer:"Escolha o artilheiro ⚽", topScorerLabel:"Seu artilheiro escolhido", pickTopScorerSub:"Quem termina com mais gols?",
+  pickTeamFirst:"Escolha um time primeiro — depois um jogador do elenco", squadOf:"Elenco do {team}", chooseFromSquad:"Escolha do elenco",
+  champWorth:"Campeão certo = +12 pts", scorerWorth:"Artilheiro certo = +12 pts",
+  savePicks:"⭐ Salvar palpites", picksSaved:"Palpites salvos ✓", changePick:"Mudar palpite",
+  posGK:"GOL", posDF:"ZAG", posMF:"MEI", posFW:"ATA",
+  sampleDataNote:"⚠️ Dados de AMOSTRA — nomes reais, mas jogos e resultados de demonstração (ainda sem feed de dados ao vivo).",
+  apiReadyNote:"Pronto para um feed de dados ao vivo", demoBadge:"DEMO",
+  backToFixtures:"Voltar aos jogos", backToLeagues:"Voltar às ligas"
+},
+ru:{
+  pickLeague:"Выбери лигу ⚽", pickLeagueSub:"Выбери лигу — и увидишь матчи и сможешь прогнозировать счёт",
+  leaguesT:"Лиги", chooseYourLeague:"Какая лига твоя?",
+  createGroupL:"+ Создать компанию для лиги", groupForLeague:"Компания для {league}",
+  shareGroupWa:"📤 Поделиться компанией в WhatsApp", groupInviteWa:"Заходи в компанию «{name}» в Eyevos ⚽ прогнозируй счёт в {league} и сразись со мной: {url}",
+  inviteByLink:"Приглашение по ссылке — без кода", linkCopied:"Ссылка скопирована ✓",
+  fixtures:"Матчи", fixturesOf:"Матчи {league}", roundLabel:"Тур",
+  upcomingT:"Ближайшие", finishedT:"Завершённые", noFixtures:"В этой лиге пока нет матчей.",
+  vsWord:"—", homeShort:"Дома", awayShort:"В гостях",
+  kickoff:"Стартовый свисток", kickoffIn:"Начало через", kickoffInDHM:"через {d}д {h}ч {m}м",
+  kickoffInHM:"через {h}ч {m}м", kickoffInM:"через {m} мин",
+  beforeKickoff:"Прогнозируй до стартового свистка", lockedAtKickoff:"🔒 Закроется на стартовом свистке", predictionsLockAtKickoff:"Прогнозы закрываются со стартовым свистком",
+  predict:"Прогноз счёта", predictScore:"Прогнозируй счёт", yourPrediction:"Твой прогноз", noPredictionYet:"Ты ещё не прогнозировал этот матч",
+  enterScore:"Введи счёт", homeGoals:"Голы хозяев", awayGoals:"Голы гостей",
+  savePrediction:"🎯 Сохранить прогноз", savingPrediction:"Сохраняем прогноз…", predictionSaved:"Прогноз сохранён ✓",
+  editPrediction:"✏️ Изменить прогноз", predictionLocked:"Прогноз зафиксирован",
+  matchResult:"Итог матча", finalScore:"Итоговый счёт", resultPending:"Ждём результат", liveResult:"Результат",
+  youScoredPts:"Ты набрал {pts} оч.", pointsWord:"очков", pts:"оч.", pointsForMatch:"очков за этот матч",
+  correctDirection:"Верный исход (победа/ничья) · 3 оч.", oneScore:"Точный счёт одной команды · 1 оч.", exactScore:"В точку! Точный счёт",
+  noPoints:"0 оч. на этот раз", howPointsWork:"Как начисляются очки",
+  hpDirection:"Ты угадал, кто победит (или ничья) — 3 очка", hpOne:"Не исход, но ты угадал число голов одной команды — 1 очко", hpZero:"Иначе — 0",
+  leaderboard:"Таблица лидеров 🏆", leaderboardOf:"Таблица лидеров {league}", rankWord:"#", playerWord:"Игрок",
+  totalPoints:"Всего очков", emptyLeaderboard:"🏆 Очков пока нет. Сделай прогноз на матч и начинай подниматься 🚀", youRow:"Ты",
+  seasonPicks:"Выбор сезона ⭐", seasonPicksSub:"Два выбора на весь сезон — чемпион и лучший бомбардир. Каждый стоит 12 очков.",
+  pickWindowEnds:"Окно выбора закроется через {d} дн.", pickWindowClosed:"Окно сезонного выбора закрыто",
+  pickWindowHint:"Выбирай в течение 4 дней после вступления (или до середины сезона)", picksLocked:"Выбор сезона зафиксирован 🔒",
+  pickChampion:"Выбери чемпиона 🏆", championLabel:"Твой выбор чемпиона", pickChampionSub:"Какая команда поднимет трофей?",
+  pickTopScorer:"Выбери бомбардира ⚽", topScorerLabel:"Твой выбор бомбардира", pickTopScorerSub:"Кто закончит с наибольшим числом голов?",
+  pickTeamFirst:"Сначала выбери команду — затем игрока из её состава", squadOf:"Состав {team}", chooseFromSquad:"Выбери из состава",
+  champWorth:"Верный чемпион = +12 оч.", scorerWorth:"Верный бомбардир = +12 оч.",
+  savePicks:"⭐ Сохранить выбор", picksSaved:"Выбор сохранён ✓", changePick:"Изменить выбор",
+  posGK:"ВРТ", posDF:"ЗАЩ", posMF:"ПЗЩ", posFW:"НАП",
+  sampleDataNote:"⚠️ ПРИМЕРНЫЕ данные — имена реальные, но матчи и результаты только демонстрационные (живого источника данных пока нет).",
+  apiReadyNote:"Готово к подключению живых данных", demoBadge:"ДЕМО",
+  backToFixtures:"Назад к матчам", backToLeagues:"Назад к лигам"
+},
+de:{
+  pickLeague:"Wähl eine Liga ⚽", pickLeagueSub:"Wähl eine Liga — dann siehst du die Spiele und tippst die Ergebnisse",
+  leaguesT:"Ligen", chooseYourLeague:"Welche Liga ist deine?",
+  createGroupL:"+ Liga-Gruppe erstellen", groupForLeague:"Gruppe für {league}",
+  shareGroupWa:"📤 Gruppe per WhatsApp teilen", groupInviteWa:"Komm in die Gruppe \"{name}\" bei Eyevos ⚽ tippe {league}-Ergebnisse und tritt gegen mich an: {url}",
+  inviteByLink:"Per Link einladen — ohne Code", linkCopied:"Link kopiert ✓",
+  fixtures:"Spiele", fixturesOf:"{league}-Spiele", roundLabel:"Spieltag",
+  upcomingT:"Kommende", finishedT:"Beendet", noFixtures:"In dieser Liga gibt's noch keine Spiele.",
+  vsWord:"gegen", homeShort:"Heim", awayShort:"Gast",
+  kickoff:"Anpfiff", kickoffIn:"Anpfiff in", kickoffInDHM:"in {d}T {h}Std {m}Min",
+  kickoffInHM:"in {h}Std {m}Min", kickoffInM:"in {m}Min",
+  beforeKickoff:"Tippe vor dem Anpfiff", lockedAtKickoff:"🔒 Wird beim Anpfiff gesperrt", predictionsLockAtKickoff:"Tipps schließen beim Anpfiff",
+  predict:"Ergebnis tippen", predictScore:"Tippe das Ergebnis", yourPrediction:"Dein Tipp", noPredictionYet:"Du hast dieses Spiel noch nicht getippt",
+  enterScore:"Ergebnis eingeben", homeGoals:"Tore Heim", awayGoals:"Tore Gast",
+  savePrediction:"🎯 Tipp speichern", savingPrediction:"Tipp wird gespeichert…", predictionSaved:"Tipp gespeichert ✓",
+  editPrediction:"✏️ Tipp bearbeiten", predictionLocked:"Tipp gesperrt",
+  matchResult:"Spielergebnis", finalScore:"Endstand", resultPending:"Ergebnis ausstehend", liveResult:"Ergebnis",
+  youScoredPts:"Du hast {pts} Pkt. geholt", pointsWord:"Punkte", pts:"Pkt.", pointsForMatch:"Punkte für dieses Spiel",
+  correctDirection:"Richtige Tendenz (Sieg/Unentschieden) · 3 Pkt.", oneScore:"Tore eines Teams exakt · 1 Pkt.", exactScore:"Volltreffer! Exaktes Ergebnis",
+  noPoints:"0 Pkt. diesmal", howPointsWork:"So zählen die Punkte",
+  hpDirection:"Du hast den Sieger (oder das Unentschieden) richtig getippt — 3 Punkte", hpOne:"Nicht die Tendenz, aber die Toranzahl eines Teams genau — 1 Punkt", hpZero:"Sonst — 0",
+  leaderboard:"Rangliste 🏆", leaderboardOf:"{league}-Rangliste", rankWord:"#", playerWord:"Spieler",
+  totalPoints:"Punkte gesamt", emptyLeaderboard:"🏆 Noch keine Punkte. Tipp ein Spiel und kletter los 🚀", youRow:"Du",
+  seasonPicks:"Saison-Tipps ⭐", seasonPicksSub:"Zwei Tipps für die ganze Saison — Meister und Torschützenkönig. Jeder ist 12 Punkte wert.",
+  pickWindowEnds:"Tipp-Fenster endet in {d} Tagen", pickWindowClosed:"Das Saison-Tipp-Fenster ist geschlossen",
+  pickWindowHint:"Tippe innerhalb von 4 Tagen nach dem Beitritt (oder vor der Saisonhälfte)", picksLocked:"Saison-Tipps gesperrt 🔒",
+  pickChampion:"Tippe den Meister 🏆", championLabel:"Dein Meister-Tipp", pickChampionSub:"Welches Team holt den Pokal?",
+  pickTopScorer:"Tippe den Torschützenkönig ⚽", topScorerLabel:"Dein Torjäger-Tipp", pickTopScorerSub:"Wer beendet die Saison mit den meisten Toren?",
+  pickTeamFirst:"Wähl zuerst ein Team — dann einen Spieler aus dem Kader", squadOf:"{team}-Kader", chooseFromSquad:"Aus dem Kader wählen",
+  champWorth:"Richtiger Meister = +12 Pkt.", scorerWorth:"Richtiger Torschützenkönig = +12 Pkt.",
+  savePicks:"⭐ Tipps speichern", picksSaved:"Tipps gespeichert ✓", changePick:"Tipp ändern",
+  posGK:"TW", posDF:"ABW", posMF:"MF", posFW:"ST",
+  sampleDataNote:"⚠️ BEISPIEL-Daten — echte Namen, aber nur Demo-Spiele und -Ergebnisse (noch kein Live-Datenfeed).",
+  apiReadyNote:"Bereit für einen Live-Datenfeed", demoBadge:"DEMO",
+  backToFixtures:"Zurück zu den Spielen", backToLeagues:"Zurück zu den Ligen"
+},
+hi:{
+  pickLeague:"एक लीग चुनो ⚽", pickLeagueSub:"एक लीग चुनो — फिर मैच देखो और स्कोर का अनुमान लगाओ",
+  leaguesT:"लीग", chooseYourLeague:"आपकी लीग कौन सी है?",
+  createGroupL:"+ लीग ग्रुप बनाओ", groupForLeague:"{league} का ग्रुप",
+  shareGroupWa:"📤 WhatsApp पर ग्रुप शेयर करो", groupInviteWa:"Eyevos पर \"{name}\" ग्रुप में आओ ⚽ {league} के स्कोर का अनुमान लगाओ और मुझसे टक्कर लो: {url}",
+  inviteByLink:"लिंक से इनवाइट करो — कोई कोड नहीं", linkCopied:"लिंक कॉपी हो गया ✓",
+  fixtures:"मैच", fixturesOf:"{league} के मैच", roundLabel:"राउंड",
+  upcomingT:"आने वाले", finishedT:"समाप्त", noFixtures:"इस लीग में अभी कोई मैच नहीं है।",
+  vsWord:"बनाम", homeShort:"घर", awayShort:"बाहर",
+  kickoff:"किकऑफ़", kickoffIn:"किकऑफ़ में", kickoffInDHM:"{d}दि {h}घं {m}मि में",
+  kickoffInHM:"{h}घं {m}मि में", kickoffInM:"{m} मि में",
+  beforeKickoff:"किकऑफ़ से पहले अनुमान लगाओ", lockedAtKickoff:"🔒 किकऑफ़ पर लॉक हो जाएगा", predictionsLockAtKickoff:"किकऑफ़ पर अनुमान बंद हो जाते हैं",
+  predict:"स्कोर का अनुमान", predictScore:"स्कोर का अनुमान लगाओ", yourPrediction:"आपका अनुमान", noPredictionYet:"आपने अभी इस मैच का अनुमान नहीं लगाया",
+  enterScore:"स्कोर डालो", homeGoals:"घरेलू गोल", awayGoals:"बाहरी गोल",
+  savePrediction:"🎯 अनुमान सेव करो", savingPrediction:"अनुमान सेव हो रहा है…", predictionSaved:"अनुमान सेव हो गया ✓",
+  editPrediction:"✏️ अनुमान एडिट करो", predictionLocked:"अनुमान लॉक्ड",
+  matchResult:"मैच का नतीजा", finalScore:"अंतिम स्कोर", resultPending:"नतीजे का इंतज़ार", liveResult:"नतीजा",
+  youScoredPts:"आपको {pts} पॉइंट मिले", pointsWord:"पॉइंट्स", pts:"पॉइंट", pointsForMatch:"इस मैच से पॉइंट्स",
+  correctDirection:"सही दिशा (जीत/ड्रॉ) · 3 पॉइंट", oneScore:"एक टीम का स्कोर सही · 1 पॉइंट", exactScore:"बिल्कुल सही! एकदम सटीक स्कोर",
+  noPoints:"इस बार 0 पॉइंट", howPointsWork:"पॉइंट कैसे मिलते हैं",
+  hpDirection:"आपने सही बताया कौन जीतेगा (या ड्रॉ) — 3 पॉइंट", hpOne:"दिशा नहीं, पर एक टीम के गोल सही — 1 पॉइंट", hpZero:"वरना — 0",
+  leaderboard:"लीडरबोर्ड 🏆", leaderboardOf:"{league} लीडरबोर्ड", rankWord:"#", playerWord:"खिलाड़ी",
+  totalPoints:"कुल पॉइंट्स", emptyLeaderboard:"🏆 अभी कोई पॉइंट नहीं। एक मैच का अनुमान लगाओ और चढ़ना शुरू करो 🚀", youRow:"आप",
+  seasonPicks:"सीज़न पिक्स ⭐", seasonPicksSub:"पूरे सीज़न के लिए दो पिक्स — चैंपियन और टॉप स्कोरर। हर एक 12 पॉइंट का।",
+  pickWindowEnds:"पिक विंडो {d} दिनों में बंद होगी", pickWindowClosed:"सीज़न पिक की विंडो बंद हो गई",
+  pickWindowHint:"जॉइन करने के 4 दिनों के भीतर चुनो (या सीज़न के आधे से पहले)", picksLocked:"सीज़न पिक्स लॉक्ड 🔒",
+  pickChampion:"चैंपियन चुनो 🏆", championLabel:"आपका चुना चैंपियन", pickChampionSub:"कौन सी टीम ट्रॉफी उठाएगी?",
+  pickTopScorer:"टॉप स्कोरर चुनो ⚽", topScorerLabel:"आपका चुना टॉप स्कोरर", pickTopScorerSub:"सबसे ज़्यादा गोल किसके होंगे?",
+  pickTeamFirst:"पहले एक टीम चुनो — फिर उसके स्क्वॉड से एक खिलाड़ी", squadOf:"{team} का स्क्वॉड", chooseFromSquad:"स्क्वॉड से चुनो",
+  champWorth:"सही चैंपियन = +12 पॉइंट", scorerWorth:"सही टॉप स्कोरर = +12 पॉइंट",
+  savePicks:"⭐ पिक्स सेव करो", picksSaved:"पिक्स सेव हो गईं ✓", changePick:"पिक बदलो",
+  posGK:"गोल", posDF:"डिफ़", posMF:"मिड", posFW:"फ़ॉर",
+  sampleDataNote:"⚠️ नमूना डेटा — नाम असली हैं, पर मैच और नतीजे सिर्फ़ डेमो के लिए (अभी लाइव डेटा फ़ीड नहीं है)।",
+  apiReadyNote:"लाइव डेटा फ़ीड के लिए तैयार", demoBadge:"डेमो",
+  backToFixtures:"मैचों पर वापस", backToLeagues:"लीगों पर वापस"
+},
+zh:{
+  pickLeague:"选一个联赛 ⚽", pickLeagueSub:"选一个联赛——然后查看赛程并预测比分",
+  leaguesT:"联赛", chooseYourLeague:"哪个是你的联赛？",
+  createGroupL:"+ 创建联赛圈子", groupForLeague:"{league} 圈子",
+  shareGroupWa:"📤 用 WhatsApp 分享圈子", groupInviteWa:"快来 Eyevos 上的「{name}」圈子 ⚽ 预测 {league} 的比分，来和我较量：{url}",
+  inviteByLink:"用链接邀请——无需邀请码", linkCopied:"链接已复制 ✓",
+  fixtures:"赛程", fixturesOf:"{league} 赛程", roundLabel:"轮次",
+  upcomingT:"即将开始", finishedT:"已结束", noFixtures:"这个联赛还没有比赛。",
+  vsWord:"vs", homeShort:"主", awayShort:"客",
+  kickoff:"开球", kickoffIn:"开球倒计时", kickoffInDHM:"还有 {d}天 {h}时 {m}分",
+  kickoffInHM:"还有 {h}时 {m}分", kickoffInM:"还有 {m} 分钟",
+  beforeKickoff:"开球前预测", lockedAtKickoff:"🔒 开球时锁定", predictionsLockAtKickoff:"预测在开球时截止",
+  predict:"预测比分", predictScore:"预测比分", yourPrediction:"你的预测", noPredictionYet:"你还没预测这场比赛",
+  enterScore:"输入比分", homeGoals:"主队进球", awayGoals:"客队进球",
+  savePrediction:"🎯 保存预测", savingPrediction:"正在保存预测…", predictionSaved:"预测已保存 ✓",
+  editPrediction:"✏️ 修改预测", predictionLocked:"预测已锁定",
+  matchResult:"比赛结果", finalScore:"最终比分", resultPending:"等待结果", liveResult:"结果",
+  youScoredPts:"你拿到 {pts} 分", pointsWord:"分", pts:"分", pointsForMatch:"本场比赛得分",
+  correctDirection:"方向正确（胜/平）· 3 分", oneScore:"猜中一队进球数 · 1 分", exactScore:"完全命中！比分全对",
+  noPoints:"这次 0 分", howPointsWork:"积分怎么算",
+  hpDirection:"你猜中谁赢（或平局）——3 分", hpOne:"方向没中，但猜中了一队的进球数——1 分", hpZero:"否则——0 分",
+  leaderboard:"排行榜 🏆", leaderboardOf:"{league} 排行榜", rankWord:"#", playerWord:"玩家",
+  totalPoints:"总积分", emptyLeaderboard:"🏆 还没有积分。预测一场比赛，开始往上爬 🚀", youRow:"你",
+  seasonPicks:"赛季预选 ⭐", seasonPicksSub:"整个赛季的两项预选——冠军和最佳射手。每项 12 分。",
+  pickWindowEnds:"预选窗口还有 {d} 天关闭", pickWindowClosed:"赛季预选窗口已关闭",
+  pickWindowHint:"加入后 4 天内预选（或在赛季过半前）", picksLocked:"赛季预选已锁定 🔒",
+  pickChampion:"选冠军 🏆", championLabel:"你选的冠军", pickChampionSub:"哪支球队捧起奖杯？",
+  pickTopScorer:"选最佳射手 ⚽", topScorerLabel:"你选的最佳射手", pickTopScorerSub:"谁最终进球最多？",
+  pickTeamFirst:"先选一支球队——再从它的阵容里选一名球员", squadOf:"{team} 阵容", chooseFromSquad:"从阵容中选择",
+  champWorth:"冠军猜对 = +12 分", scorerWorth:"最佳射手猜对 = +12 分",
+  savePicks:"⭐ 保存预选", picksSaved:"预选已保存 ✓", changePick:"更改预选",
+  posGK:"门将", posDF:"后卫", posMF:"中场", posFW:"前锋",
+  sampleDataNote:"⚠️ 示例数据——名字是真实的，但赛程和结果仅为演示（尚未接入实时数据源）。",
+  apiReadyNote:"已为实时数据源做好准备", demoBadge:"演示",
+  backToFixtures:"返回赛程", backToLeagues:"返回联赛"
+},
+ar:{
+  pickLeague:"اختر دوري ⚽", pickLeagueSub:"اختر دورياً — ثم شاهد المباريات وتوقّع النتائج",
+  leaguesT:"الدوريات", chooseYourLeague:"ما هو دوريك؟",
+  createGroupL:"+ أنشئ مجموعة للدوري", groupForLeague:"مجموعة {league}",
+  shareGroupWa:"📤 شارك المجموعة عبر WhatsApp", groupInviteWa:"تعال إلى مجموعة \"{name}\" على Eyevos ⚽ توقّع نتائج {league} ونافسني: {url}",
+  inviteByLink:"الدعوة برابط — بلا رمز", linkCopied:"تم نسخ الرابط ✓",
+  fixtures:"المباريات", fixturesOf:"مباريات {league}", roundLabel:"الجولة",
+  upcomingT:"القادمة", finishedT:"المنتهية", noFixtures:"لا مباريات في هذا الدوري بعد.",
+  vsWord:"ضد", homeShort:"أرض", awayShort:"خارج",
+  kickoff:"صافرة البداية", kickoffIn:"البداية خلال", kickoffInDHM:"خلال {d}ي {h}س {m}د",
+  kickoffInHM:"خلال {h}س {m}د", kickoffInM:"خلال {m} د",
+  beforeKickoff:"توقّع قبل صافرة البداية", lockedAtKickoff:"🔒 يُقفَل عند صافرة البداية", predictionsLockAtKickoff:"التوقّعات تُغلَق عند صافرة البداية",
+  predict:"توقّع النتيجة", predictScore:"توقّع النتيجة", yourPrediction:"توقّعك", noPredictionYet:"لم تتوقّع هذه المباراة بعد",
+  enterScore:"أدخل النتيجة", homeGoals:"أهداف الأرض", awayGoals:"أهداف الخارج",
+  savePrediction:"🎯 احفظ التوقّع", savingPrediction:"جارٍ حفظ التوقّع…", predictionSaved:"تم حفظ التوقّع ✓",
+  editPrediction:"✏️ عدّل التوقّع", predictionLocked:"التوقّع مُقفَل",
+  matchResult:"نتيجة المباراة", finalScore:"النتيجة النهائية", resultPending:"بانتظار النتيجة", liveResult:"النتيجة",
+  youScoredPts:"حصلت على {pts} نقطة", pointsWord:"نقاط", pts:"نقطة", pointsForMatch:"نقاط من هذه المباراة",
+  correctDirection:"الاتجاه الصحيح (فوز/تعادل) · 3 نقاط", oneScore:"نتيجة فريق واحد بالضبط · نقطة", exactScore:"في الصميم! النتيجة بالضبط",
+  noPoints:"0 نقطة هذه المرة", howPointsWork:"كيف تُحسَب النقاط",
+  hpDirection:"توقّعت الفائز (أو التعادل) بشكل صحيح — 3 نقاط", hpOne:"ليس الاتجاه، لكنك أصبت عدد أهداف فريق واحد — نقطة", hpZero:"غير ذلك — 0",
+  leaderboard:"لوحة الترتيب 🏆", leaderboardOf:"ترتيب {league}", rankWord:"#", playerWord:"لاعب",
+  totalPoints:"مجموع النقاط", emptyLeaderboard:"🏆 لا نقاط بعد. توقّع مباراة وابدأ الصعود 🚀", youRow:"أنت",
+  seasonPicks:"اختيارات الموسم ⭐", seasonPicksSub:"اختياران للموسم بأكمله — البطل والهدّاف. كل واحد بـ 12 نقطة.",
+  pickWindowEnds:"نافذة الاختيار تُغلَق خلال {d} أيام", pickWindowClosed:"أُغلِقت نافذة اختيارات الموسم",
+  pickWindowHint:"اختر خلال 4 أيام من الانضمام (أو قبل منتصف الموسم)", picksLocked:"اختيارات الموسم مُقفَلة 🔒",
+  pickChampion:"اختر البطل 🏆", championLabel:"بطلك المختار", pickChampionSub:"أي فريق يرفع الكأس؟",
+  pickTopScorer:"اختر الهدّاف ⚽", topScorerLabel:"هدّافك المختار", pickTopScorerSub:"من سينهي بأكثر الأهداف؟",
+  pickTeamFirst:"اختر فريقاً أولاً — ثم لاعباً من قائمته", squadOf:"قائمة {team}", chooseFromSquad:"اختر من القائمة",
+  champWorth:"البطل الصحيح = +12 نقطة", scorerWorth:"الهدّاف الصحيح = +12 نقطة",
+  savePicks:"⭐ احفظ الاختيارات", picksSaved:"تم حفظ الاختيارات ✓", changePick:"غيّر الاختيار",
+  posGK:"حارس", posDF:"دفاع", posMF:"وسط", posFW:"هجوم",
+  sampleDataNote:"⚠️ بيانات تجريبية — الأسماء حقيقية، لكن المباريات والنتائج للعرض فقط (لا يوجد مصدر بيانات حيّ بعد).",
+  apiReadyNote:"جاهز لمصدر بيانات حيّ", demoBadge:"تجريبي",
+  backToFixtures:"العودة إلى المباريات", backToLeagues:"العودة إلى الدوريات"
+}
+};
+for(const _c in _GX30){ if(STR[_c]) Object.assign(STR[_c],_GX30[_c]); }
+const _GX31={
+he:{joinedGroup:"הצטרפת לקבוצה ✓",joinLinkBad:"קישור ההזמנה לא תקין",nTeams:"{n} קבוצות"},
+en:{joinedGroup:"Joined the group ✓",joinLinkBad:"That invite link isn't valid",nTeams:"{n} teams"},
+es:{joinedGroup:"Te uniste al grupo ✓",joinLinkBad:"Ese enlace de invitación no es válido",nTeams:"{n} equipos",seasonPicks:"Predicciones de temporada ⭐"},
+fr:{joinedGroup:"Tu as rejoint le groupe ✓",joinLinkBad:"Ce lien d'invitation n'est pas valide",nTeams:"{n} équipes"},
+pt:{joinedGroup:"Você entrou no grupo ✓",joinLinkBad:"Esse link de convite não é válido",nTeams:"{n} times"},
+ru:{joinedGroup:"Вы вступили в группу ✓",joinLinkBad:"Эта ссылка-приглашение недействительна",nTeams:"{n} команд"},
+de:{joinedGroup:"Gruppe beigetreten ✓",joinLinkBad:"Dieser Einladungslink ist ungültig",nTeams:"{n} Teams"},
+hi:{joinedGroup:"ग्रुप में शामिल हो गए ✓",joinLinkBad:"यह इनवाइट लिंक मान्य नहीं है",nTeams:"{n} टीमें"},
+zh:{joinedGroup:"已加入群组 ✓",joinLinkBad:"该邀请链接无效",nTeams:"{n} 支球队"},
+ar:{joinedGroup:"انضممت إلى المجموعة ✓",joinLinkBad:"رابط الدعوة هذا غير صالح",nTeams:"{n} فِرَق"}};
+for(const _c in _GX31){ if(STR[_c]) Object.assign(STR[_c],_GX31[_c]); }
+// ===== LEAGUE THEMES (embedded from _build/themes.js) — IP-safe per-league palettes =====
+const LEAGUE_THEME={
+  ucl:{primary:"#3b82f6",accent:"#c0c8d6",bg:"#0a1024",text:"#e8ecf5",grad:"linear-gradient(135deg, #0a1024 0%, #16224d 55%, #1e3a8a 100%)"},
+  il:{primary:"#2f9ee6",accent:"#eaf4fb",bg:"#0a1626",text:"#e6f1fb",grad:"linear-gradient(135deg, #0a1626 0%, #143a5c 55%, #2f9ee6 100%)"},
+  epl:{primary:"#7c3aed",accent:"#ff2db0",bg:"#150a24",text:"#f1e9fb",grad:"linear-gradient(135deg, #150a24 0%, #3a1063 55%, #7c3aed 100%)"},
+  tr:{primary:"#e11d48",accent:"#f5b841",bg:"#240a10",text:"#fbe8ec",grad:"linear-gradient(135deg, #240a10 0%, #5c1422 55%, #e11d48 100%)"},
+  de:{primary:"#ef4444",accent:"#facc15",bg:"#161616",text:"#f4eeee",grad:"linear-gradient(135deg, #161616 0%, #3a1414 55%, #d20515 100%)"},
+  it:{primary:"#0ea5e9",accent:"#22d3ee",bg:"#071626",text:"#e4f3fb",grad:"linear-gradient(135deg, #071626 0%, #0c3a5c 55%, #0ea5e9 100%)"},
+  fr:{primary:"#2563eb",accent:"#ef4444",bg:"#0b1020",text:"#e8ecf8",grad:"linear-gradient(135deg, #0b1020 0%, #14224d 50%, #2563eb 100%)"},
+  es:{primary:"#f97316",accent:"#fbbf24",bg:"#240f04",text:"#fceee2",grad:"linear-gradient(135deg, #240f04 0%, #5c2608 55%, #f97316 100%)"},
+  se:{primary:"#1d6fd4",accent:"#fecc02",bg:"#06122a",text:"#e6eefb",grad:"linear-gradient(135deg, #06122a 0%, #0e3270 55%, #1d6fd4 100%)"},
+  cn:{primary:"#dc2626",accent:"#10b981",bg:"#200808",text:"#fbe9e9",grad:"linear-gradient(135deg, #200808 0%, #581212 55%, #dc2626 100%)"},
+  be:{primary:"#eab308",accent:"#ef4444",bg:"#1a1503",text:"#f7f1dc",grad:"linear-gradient(135deg, #100d02 0%, #3a3008 50%, #eab308 100%)"},
+  jp:{primary:"#6366f1",accent:"#fb7185",bg:"#0f0a24",text:"#ece9fb",grad:"linear-gradient(135deg, #0f0a24 0%, #2a1c5c 55%, #6366f1 100%)"},
+  us:{primary:"#1d4ed8",accent:"#e23744",bg:"#070d20",text:"#e7ecfb",grad:"linear-gradient(135deg, #070d20 0%, #11205c 50%, #1d4ed8 100%)"}
+};
+const _DEFAULT_LG={primary:"#8A6BFF",accent:"#A78BFF",bg:"#15121E",text:"#F4F1FA",grad:"linear-gradient(135deg,#150a24 0%,#1E1A2C 55%,#8A6BFF 100%)"};
+function applyLeagueTheme(key){
+  const th=LEAGUE_THEME[key]||_DEFAULT_LG; const r=document.documentElement.style;
+  r.setProperty("--lg-primary",th.primary); r.setProperty("--lg-accent",th.accent);
+  r.setProperty("--lg-bg",th.bg); r.setProperty("--lg-text",th.text); r.setProperty("--lg-grad",th.grad);
+  return th;
+}
+function clearLeagueTheme(){ const r=document.documentElement.style;
+  r.setProperty("--lg-primary",_DEFAULT_LG.primary); r.setProperty("--lg-accent",_DEFAULT_LG.accent);
+  r.setProperty("--lg-bg",_DEFAULT_LG.bg); r.setProperty("--lg-text",_DEFAULT_LG.text); r.setProperty("--lg-grad",_DEFAULT_LG.grad);
+}
 const _qlang=(function(){try{return new URLSearchParams(location.search).get("lang");}catch(e){return null;}})();
 const CUR={ lang: (_qlang && STR[_qlang]) ? _qlang : (localStorage.getItem("eyevos_lang") || "en") };  // ?lang= wins (landing demo, not persisted) → else saved choice → else English
 function dirOf(l){ const x=LANGS.find(o=>o.c===l); return x?x.d:"ltr"; }
@@ -557,33 +973,92 @@ function safeText(x){ return (x==null?"":String(x)).replace(/[​-‏‪-‮⁦-
 const _RMQ=(typeof matchMedia!=="undefined")?matchMedia("(prefers-reduced-motion:reduce)"):null;   // cached once, O(1) read
 const prefersReduce=()=>!!(_RMQ&&_RMQ.matches);
 
-/* ===================== subjects ===================== */
-const SK=["sport","screen","reality","weather","news","food","family","life"];
-const SEMO={sport:"⚽",screen:"🎬",reality:"📺",weather:"🌦️",news:"📰",food:"🍔",family:"👨‍👩‍👧",life:"🎯"};
-const SC={sport:"#FF8A4D",screen:"#9D7BFF",reality:"#FF4D9D",weather:"#5BC8FF",news:"#FFC23C",food:"#46D36A",family:"#2DD4BF",life:"#C77DFF"};
-const SUBN={
-he:{sport:"ספורט",screen:"מסכים",reality:"ריאליטי",weather:"מזג אוויר",news:"אקטואליה",food:"אוכל",family:"משפחה",life:"חיים"},
-en:{sport:"Sports",screen:"Screens",reality:"Reality",weather:"Weather",news:"News",food:"Food",family:"Family",life:"Life"},
-es:{sport:"Deportes",screen:"Pantallas",reality:"Reality",weather:"Clima",news:"Noticias",food:"Comida",family:"Familia",life:"Vida"},
-fr:{sport:"Sport",screen:"Écrans",reality:"Téléréalité",weather:"Météo",news:"Actu",food:"Bouffe",family:"Famille",life:"Vie"},
-pt:{sport:"Esportes",screen:"Telas",reality:"Reality",weather:"Clima",news:"Notícias",food:"Comida",family:"Família",life:"Vida"},
-ru:{sport:"Спорт",screen:"Экраны",reality:"Реалити",weather:"Погода",news:"Новости",food:"Еда",family:"Семья",life:"Жизнь"},
-de:{sport:"Sport",screen:"Bildschirme",reality:"Reality",weather:"Wetter",news:"News",food:"Essen",family:"Familie",life:"Leben"},
-hi:{sport:"खेल",screen:"स्क्रीन",reality:"रियलिटी",weather:"मौसम",news:"समाचार",food:"खाना",family:"परिवार",life:"ज़िंदगी"},
-zh:{sport:"体育",screen:"屏幕",reality:"真人秀",weather:"天气",news:"新闻",food:"美食",family:"家庭",life:"生活"},
-ar:{sport:"رياضة",screen:"الشاشات",reality:"واقع",weather:"الطقس",news:"أخبار",food:"طعام",family:"العائلة",life:"الحياة"}
-};
-const subName=(k)=>((SUBN[CUR.lang]||SUBN.en)[k]||k);
-const slabel=(k)=>SEMO[k]+" "+subName(k);
-// group's subject: from DB once migrated, else a local bridge set at creation, else default
-const _gsubCache={};
-function grpSub(g){ if(!g)return "sport"; if(g.subject)return g.subject;
-  const id=g.id; if(id in _gsubCache)return _gsubCache[id];
-  let v="sport"; try{ v=localStorage.getItem("eyevos_gsub_"+id)||"sport"; }catch(e){}
-  _gsubCache[id]=v; return v; }
+/* ===================== football data layer (SAMPLE / API-ready) ===================== */
+// LEAGUES: bundled sample loaded via <script src="leagues.js"> → window.EYEVOS_LEAGUES.
+// One adapter swap (this loader) replaces sample with a live feed; no screen changes.
+const _LGDATA=(typeof window!=="undefined"&&window.EYEVOS_LEAGUES)?window.EYEVOS_LEAGUES:{leagues:[]};
+const LEAGUES=Array.isArray(_LGDATA.leagues)?_LGDATA.leagues:[];
+const LEAGUE_BY_KEY={}; LEAGUES.forEach(l=>{ LEAGUE_BY_KEY[l.key]=l; });
+function getLeague(key){ return LEAGUE_BY_KEY[key]||null; }
+function leagueTheme(key){ return LEAGUE_THEME[key]||(getLeague(key)&&getLeague(key).theme)||_DEFAULT_LG; }
+// runtime kickoff: offset(hours) → absolute epoch ms, stamped ONCE at app load (never trust a build-time date).
+const LOAD_NOW=Date.now();
+function kickoffMs(fx){ return LOAD_NOW + (Number(fx.kickoffOffsetHours)||0)*3600000; }
+function teamsOf(key){ const l=getLeague(key); return (l&&l.teams)||[]; }
+function playersOf(key){ const l=getLeague(key); return (l&&l.players)||[]; }
+function fixturesOfLeague(key){ const l=getLeague(key); return (l&&l.fixtures)||[]; }
+function teamById(key,id){ return teamsOf(key).find(t=>t.id===id)||null; }
+function playerById(key,id){ return playersOf(key).find(p=>p.id===id)||null; }
 
-const pct=(a,b)=>(a+b===0?50:Math.round(a/(a+b)*100));
-const lvl=(x)=>Math.floor(x/50)+1;
+/* ---- SCORING (authoritative — mirrors logic-spec §2) ---- */
+// dirP=sign(ph-pa); dirR=sign(rh-ra); dir match → 3; else one goal exact → 1; else 0.
+function scoreMatch(rh,ra,ph,pa){
+  if(ph==null||pa==null||rh==null||ra==null) return 0;
+  const dP=Math.sign(ph-pa), dR=Math.sign(rh-ra);
+  if(dP===dR) return 3;
+  if(ph===rh||pa===ra) return 1;
+  return 0;
+}
+function isExact(rh,ra,ph,pa){ return ph===rh&&pa===ra; }
+
+/* ---- LOCAL-FIRST DEMO STORE (namespaced by signed-in user id) ----
+   The new RPCs (create_group p_league / join_group by id / predict_match /
+   save_season_picks / group_board) are NOT live yet. So we WIRE the RPCs but on
+   ANY error fall back to localStorage, computed in-client against the sample results.
+   This becomes multiplayer the moment FOOTBALL-schema.sql is run. */
+const DEMO={
+  uid:"anon",
+  setUser(id){ this.uid=id||"anon"; },
+  _k(suffix){ return "eyevos_fb_"+this.uid+"_"+suffix; },
+  _read(suffix,fallback){ try{ const v=localStorage.getItem(this._k(suffix)); return v?JSON.parse(v):fallback; }catch(e){ return fallback; } },
+  _write(suffix,val){ try{ localStorage.setItem(this._k(suffix),JSON.stringify(val)); }catch(e){} },
+  // groups: [{id,name,league,created_at,joined_at}]
+  groups(){ const g=this._read("groups",[]); return Array.isArray(g)?g:[]; },
+  saveGroups(list){ this._write("groups",list); },
+  addGroup(g){ const list=this.groups(); if(!list.some(x=>x.id===g.id)) list.unshift(g); this.saveGroups(list); return g; },
+  // predictions: { [groupId]: { [fixtureId]: {h,a,at} } }
+  preds(){ return this._read("preds",{})||{}; },
+  savePreds(p){ this._write("preds",p); },
+  getPred(gid,fid){ const p=this.preds(); return (p[gid]&&p[gid][fid])||null; },
+  setPred(gid,fid,h,a){ const p=this.preds(); if(!p[gid])p[gid]={}; p[gid][fid]={h:h,a:a,at:Date.now()}; this.savePreds(p); },
+  // season picks: { [groupId]: {champion,topScorer} }
+  picks(){ return this._read("picks",{})||{}; },
+  savePicks(p){ this._write("picks",p); },
+  getPicks(gid){ const p=this.picks(); return p[gid]||{champion:null,topScorer:null}; },
+  setPicks(gid,champion,topScorer){ const p=this.picks(); p[gid]={champion:champion,topScorer:topScorer}; this.savePicks(p); },
+  // celebrated wins ledger: { "<groupId>:<fixtureId>": true } so confetti/SND.win fire once per win, EVER (survives the feed remount + tab re-entry)
+  _celeb(){ return this._read("celeb",{})||{}; },
+  wasCelebrated(key){ return !!this._celeb()[key]; },
+  markCelebrated(key){ const c=this._celeb(); if(!c[key]){ c[key]=true; this._write("celeb",c); } }
+};
+function newGroupId(){ return "g_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+// SEASON-PICK WINDOW (demo): min(joined+4d, seasonStart+seasonDays/2). seasonStart=joined, seasonDays=120.
+const SEASON_DAYS=120;
+function pickDeadlineMs(group){
+  const joined=group&&group.joined_at?Date.parse(group.joined_at):(group&&group.created_at?Date.parse(group.created_at):LOAD_NOW);
+  const base=isNaN(joined)?LOAD_NOW:joined;
+  return Math.min(base+4*86400000, base+(SEASON_DAYS*86400000)/2);
+}
+// compute a member's points in a group from their LOCAL predictions vs sample results.
+// Returns {match, exact, champion, scorer, total}. Season picks pay only when the league
+// resolves (demo: sample data is never "resolved", so champion/scorer stay 0 — no fake +12).
+function computeGroupPoints(group){
+  let match=0, exact=0;
+  if(!group) return {match:0,exact:0,champion:0,scorer:0,total:0};
+  const fixtures=fixturesOfLeague(group.league);
+  fixtures.forEach(fx=>{
+    if(!fx.result) return;
+    const pr=DEMO.getPred(group.id,fx.id);
+    if(!pr) return;
+    const p=scoreMatch(fx.result.home,fx.result.away,pr.h,pr.a);
+    match+=p;
+    if(isExact(fx.result.home,fx.result.away,pr.h,pr.a)) exact++;
+  });
+  return {match:match,exact:exact,champion:0,scorer:0,total:match};
+}
+function userTotalPoints(){
+  let total=0; DEMO.groups().forEach(g=>{ total+=computeGroupPoints(g).total; }); return total;
+}
 const AVATARS=["😎","🦊","🐯","🦁","🐼","🦄","🐲","🦅","🐺","🐙","🎯","🔥","👑","⚡","🎮","🏆","🌟","💎","🚀","🍀"];
 function Avatar({p,size}){
   const s=size||58, st={width:s,height:s,borderRadius:Math.round(s*.26),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0};
@@ -637,12 +1112,6 @@ function Countdown({to}){
   const s=Math.floor(ms/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),ss=s%60,p=n=>String(n).padStart(2,"0");
   return <span className="tnum" style={{fontWeight:700,color:s<3600?"var(--yes)":"var(--muted)"}}>{d>0?d+t("dUnit")+" ":""}{p(h)}:{p(m)}:{p(ss)}</span>;
 }
-function payouts(t2){
-  const gate=(t2.yes+t2.no)>=6 && t2.yes>=2 && t2.no>=2;
-  const min = gate ? (t2.yes<t2.no?"yes":(t2.no<t2.yes?"no":null)) : null;
-  return { yes: min==="yes"?8:5, no: min==="no"?8:5, gate, min };
-}
-function fmtClose(iso){ try{ return new Date(iso).toLocaleString(CUR.lang,{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; } }
 function shareWa(text){ window.open("https://wa.me/?text="+encodeURIComponent(text),"_blank"); }
 function Spinner({label}){return <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:12,padding:"60px 0",color:"var(--muted)"}}><div className="spin"/><div style={{fontSize:13,fontWeight:700}}>{label||t("connecting")}</div></div>;}
 function WinModal({won,total,onClose}){
@@ -692,11 +1161,19 @@ function Coins(){
   const set=[["🎯","7%","-1s","13s"],["📺","80%","-8s","16s"],["⚽","22%","-5s","15s"],["🏆","90%","-11s","14s"],["🔥","46%","-3s","17s"],["⭐","64%","-6s","12s"],["🌦️","34%","-9s","18s"],["📰","54%","-2s","15s"]];
   return <div className="coins">{set.map((c,i)=><span key={i} className="coin" style={{left:c[1],bottom:"-40px",animationDelay:c[2],animationDuration:c[3]}}>{c[0]}</span>)}</div>;
 }
-const TICK=["⚽ ⚽?","📺 📺?","🌦️ 🌦️?","🍔 🍔?","📰 📰?","🎯 🎯?","🏀 🏀?","🎬 🎬?"];
 function SignIn({onOpenLang}){
   const [email,setEmail]=useState(""),[sent,setSent]=useState(false),[busy,setBusy]=useState(false),[msg,setMsg]=useState(null),[resent,setResent]=useState(false);
   const emRef=useRef(null);
-  const ticks=[t("qPh"),"⚽ "+subName("sport")+"?","📺 "+subName("reality")+"?","🌦️ "+subName("weather")+"?","🍔 "+subName("food")+"?","📰 "+subName("news")+"?","🎬 "+subName("screen")+"?","🎯 "+subName("life")+"?"];
+  // league-flavored ticker: team emoji + a sample home–away matchup, copy only (no logic)
+  const ticks=(function(){
+    const out=[]; LEAGUES.slice(0,8).forEach(l=>{
+      const fx=(l.fixtures||[])[0]; const ts=l.teams||[];
+      if(fx){ const h=ts.find(x=>x.id===fx.homeId), a=ts.find(x=>x.id===fx.awayId);
+        if(h&&a) out.push((l.emoji||"⚽")+" "+h.short+" "+(h.emoji||"")+" – "+(a.emoji||"")+" "+a.short+" ?"); }
+      else out.push((l.emoji||"⚽")+" "+l.name+" ?");
+    });
+    return out.length?out:["⚽ ⚽ – ⚽ ⚽ ?"];
+  })();
   const [gbusy,setGbusy]=useState(false);
   const google=async()=>{ if(gbusy)return; setMsg(null); SND.tap(); setGbusy(true);
     try{ const ac=(typeof AbortController!=="undefined")?new AbortController():null;
@@ -721,7 +1198,7 @@ function SignIn({onOpenLang}){
     <div className="ticker" style={{marginBottom:20}}><div className="run">{[...ticks,...ticks].map((x,i)=><span className="tk" key={i}>{x}</span>)}</div></div>
     <div style={{display:"flex",justifyContent:"center",marginBottom:14}}><div className="logob">🎯</div></div>
     <div className="disp neon" style={{fontSize:42,fontWeight:900,marginBottom:6}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></div>
-    <div className="livebadge" style={{marginBottom:16}}><span className="livedot"/> {t("liveBadge")}</div>
+    <div className="livebadge" style={{marginBottom:16}}><span className="livedot"/> {t("demoBadge")}</div>
     {sent?
       <div className="card" style={{maxWidth:330,margin:"10px auto"}}><div style={{fontSize:44,marginBottom:8}}>📧</div><div style={{fontWeight:800,fontSize:17,marginBottom:6}}>{t("linkSentT")}</div><div style={{color:"var(--muted)",fontSize:13.5,lineHeight:1.6}}>{t("linkSentB",{email:"⁦"+email+"⁩"})}</div>
         {msg&&<div className="err" style={{marginTop:12,textAlign:"start"}}>{msg}</div>}
@@ -757,372 +1234,345 @@ function SignIn({onOpenLang}){
   </div>;
 }
 
-/* ---------- feed ---------- */
-function Bar({poll,tl,onVote,locking,disabled}){
-  const total=(tl.total!=null?tl.total:(tl.yes+tl.no)),y=pct(tl.yes,tl.no),voted=tl.mine;
-  // entitled = the yes/no split is REAL for this viewer — mirrors poll_tally's server rule EXACTLY (split
-  // exposed only when the caller voted OR the poll is locked/resolved). A poll merely past closes_at but still
-  // status='open' (cron hasn't locked it) returns yes/no=0 for a non-voter, so we must NOT reveal a fake 50/50.
-  const entitled=(!!voted||poll.status==="locked"||poll.status==="resolved")&&!locking;
-  // lockedOut = voting is no longer possible (already voted, poll closed/locked/resolved, or it's about you).
-  const lockedOut=(disabled||!!voted||poll.status!=="open");
-  const [revealed,setRevealed]=useState(false);
-  const prevReveal=useRef(entitled);
-  useEffect(()=>{
-    if(entitled&&!prevReveal.current){ setRevealed(true); const id=setTimeout(()=>setRevealed(false),760); prevReveal.current=entitled; return ()=>clearTimeout(id); }
-    prevReveal.current=entitled;
-  },[entitled]);
-  return <div>
-    <div className={"bar"+(locking?" is-locking":"")+(revealed?" is-reveal":"")}>
-      {locking?<div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:9,color:"var(--gold)",fontWeight:800,fontSize:14}}><div className="lockspin"/>{t("locking")}</div>
-      :<><div className={"side"+(entitled&&voted==="yes"?" is-picked":"")} style={{width:(entitled?y:50)+"%",background:voted==="yes"?"var(--yes)":"var(--yes-soft)"}}/>
-      <div className={"side"+(entitled&&voted==="no"?" is-picked":"")} style={{width:(entitled?100-y:50)+"%",background:voted==="no"?"var(--no)":"var(--no-soft)"}}/>
-      <button className="lab" style={{insetInlineStart:0,color:voted==="yes"?"#2A0410":"var(--yes)",textShadow:voted==="yes"?"0 1px 1px rgba(255,255,255,.35)":"none"}} disabled={lockedOut} onClick={()=>onVote("yes")}><span aria-hidden="true" style={{fontWeight:900}}>✓</span> {t("yes")} {entitled?<span className="tnum" dir="ltr"><CountUp value={y} dur={420}/>%</span>:""}</button>
-      <button className="lab" style={{insetInlineEnd:0,color:voted==="no"?"#06302b":"var(--no)"}} disabled={lockedOut} onClick={()=>onVote("no")}>{entitled?<span className="tnum" dir="ltr"><CountUp value={100-y} dur={420}/>%</span>:""} {t("no")} <span aria-hidden="true" style={{fontWeight:900}}>✗</span></button></>}
-    </div>
-    <div style={{display:"flex",justifyContent:"space-between",marginTop:8,fontSize:12,color:"var(--muted)",fontWeight:600}}>
-      <span className="tnum bidi">{total>0?t("betsN",{n:total}):t("beFirst")}</span><span style={{color:lockedOut?"var(--muted)":"var(--brand-2)",fontWeight:700}}>{lockedOut?t("locked"):t("pickSide")}</span></div>
-  </div>;
+/* ---------- football: countdown helpers ---------- */
+// kickoff countdown text from absolute ms, via i18n tokens {d}/{h}/{m}
+function kickoffText(targetMs,now){
+  const ms=targetMs-now; if(ms<=0) return null;
+  const totalMin=Math.floor(ms/60000), d=Math.floor(totalMin/1440), h=Math.floor((totalMin%1440)/60), m=totalMin%60;
+  if(d>0) return t("kickoffInDHM",{d:d,h:h,m:m});
+  if(h>0) return t("kickoffInHM",{h:h,m:m});
+  return t("kickoffInM",{m:Math.max(1,m)});
 }
-function PollCard({poll,tl,me,onVote,onResolve,locking,featured,groupName,onReport}){
-  const total=(tl.total!=null?tl.total:(tl.yes+tl.no));
-  const hot=poll.status==="open"&&total>=8;
-  const closed=poll.status==="open"&&new Date(poll.closes_at)<new Date();
-  const canResolve=(poll.status==="open"&&closed)||poll.status==="locked";
-  const mayResolve=canResolve&&poll.author_id===me.id;
-  const aboutMe=!!poll.target_id&&poll.target_id===me.id;
-  const myResult=poll.status==="resolved"&&tl.mine?(tl.mine===poll.resolved_outcome?"win":"lose"):null;
-  const shareBet=()=>shareWa(t("shareBet",{q:poll.question,url:REDIRECT}));
-  const shareWin=()=>shareWa(t("shareWin",{q:poll.question,url:REDIRECT}));
-  return <div className={"card"+(hot?" hotcard":"")+(featured?" featcard":"")}>
-    {featured&&<div style={{display:"inline-flex",alignItems:"center",gap:5,marginBottom:9,background:"linear-gradient(90deg,#FFC23C,#FF4D6D)",color:"#2a1800",fontWeight:900,fontSize:11,borderRadius:999,padding:"4px 10px"}}><span className="livedot" style={{background:"#2a1800",boxShadow:"0 0 8px rgba(42,24,0,.6)"}}/>{t("hotNow")}</div>}
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:9}}>
-      <div style={{display:"flex",alignItems:"center",gap:7,minWidth:0,flex:1}}><span className="tag" style={{background:SC[poll.subject]+"1f",color:SC[poll.subject]}}>{SEMO[poll.subject]} {subName(poll.subject)}</span>{groupName&&<span style={{fontSize:11,color:"var(--muted)",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>👥 {groupName}</span>}</div>
-      <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{poll.status==="resolved"&&<span className="tag tag-line" dir="auto" style={{background:poll.resolved_outcome==="yes"?"rgba(255,77,109,.22)":"rgba(45,212,191,.22)",color:poll.resolved_outcome==="yes"?"#FF8095":"var(--no)"}}>🏆<span aria-hidden="true" style={{fontWeight:900}}>{poll.resolved_outcome==="yes"?"✓":"✗"}</span> {poll.resolved_outcome==="yes"?t("yes"):t("no")}</span>}<button onClick={shareBet} className="chip" style={{padding:"4px 8px",fontSize:12}} title={t("shareBtn")} aria-label={t("shareBtn")}>📤</button>{poll.author_id!==me.id&&<button onClick={()=>onReport&&onReport()} className="chip" style={{padding:"4px 8px",fontSize:12,color:"var(--faint)"}} title={t("reportBtn")} aria-label={t("reportBtn")}>🚩</button>}</div>
+
+/* ---------- football: ScoreStepper ---------- */
+function ScoreStepper({value,onChange,label,disabled,color}){
+  const dec=()=>{ if(disabled||value<=0)return; SND.tap(); onChange(value-1); };
+  const inc=()=>{ if(disabled||value>=20)return; SND.tap(); onChange(value+1); };
+  return <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
+    <div style={{fontSize:11.5,fontWeight:800,color:"var(--lg-text)",opacity:.85,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}}>{label}</div>
+    <div style={{display:"flex",alignItems:"center",gap:6}}>
+      <button type="button" className="stepbtn" disabled={disabled||value<=0} aria-label={"−1 "+label} onClick={dec}>–</button>
+      <span className="stepnum bidi-ltr" style={{color:color||"var(--lg-text)"}} aria-label={label} role="status">{value}</span>
+      <button type="button" className="stepbtn" disabled={disabled||value>=20} aria-label={"+1 "+label} onClick={inc}>+</button>
     </div>
-    <p className="disp clamp3" title={safeText(poll.question)}style={{fontSize:"var(--fs-lg)",fontWeight:"var(--fw-bold)",margin:"0 0 var(--s3)",lineHeight:"var(--lh-snug)"}}>{safeText(poll.question)}</p>
-    <Bar poll={poll} tl={tl} onVote={(c)=>onVote(poll,c)} locking={locking} disabled={aboutMe||closed}/>
-    {poll.status==="open"&&!aboutMe&&<>
-      <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",columnGap:8,rowGap:6,marginTop:10,background:"var(--ink-3)",border:"1px solid var(--line)",borderRadius:11,padding:"8px 12px",fontSize:12.5,fontWeight:700}}>
-        <span dir="ltr" style={{color:"var(--gold)",fontWeight:900,flexShrink:0}}>🎯 +5</span>
-        <span style={{color:"var(--faint)",flexShrink:0}}>·</span>
-        <span style={{color:"var(--gold)",minWidth:0,overflowWrap:"anywhere"}}>🔥 {t("bonusHint")}</span>
-        <span style={{marginInlineStart:"auto",color:"var(--muted)",fontWeight:800,fontSize:11.5,flexShrink:0,whiteSpace:"nowrap"}} dir="auto" title={t("cueLegend")}>{t("cueLegend")}</span>
-      </div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:9,fontSize:12,color:"var(--faint)",fontWeight:600,gap:8}}>
-        <span style={{display:"inline-flex",alignItems:"center",gap:5}}><span aria-hidden="true">⏱</span>{closed?<span>{t("closedW")}</span>:<span dir="ltr" style={{unicodeBidi:"isolate"}}><Countdown to={poll.closes_at}/></span>}<span style={{opacity:.65}} dir="ltr"> · {fmtClose(poll.closes_at)}</span></span>
-      </div>
-    </>}
-    {poll.status==="open"&&aboutMe&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,background:"var(--brand-soft)",color:"var(--brand-2)",fontWeight:700,fontSize:13,textAlign:"center"}}>{t("aboutYou")}</div>}
-    {canResolve&&!mayResolve&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,background:"var(--ink-3)",color:"var(--muted)",fontWeight:700,fontSize:12.5,textAlign:"center"}}>{t("awaitResolve")}</div>}
-    {myResult&&<div style={{marginTop:10,padding:"9px 12px",borderRadius:11,fontWeight:800,fontSize:13.5,textAlign:"center",background:myResult==="win"?"rgba(255,194,60,.14)":"var(--ink-3)",color:myResult==="win"?"var(--gold)":"var(--muted)"}}>
-      {myResult==="win"?t("wonB"):t("lostB")}
-      {myResult==="win"&&<button onClick={shareWin} className="chip" style={{marginInlineStart:8,padding:"3px 9px",fontSize:12}}>{t("shareBtn")}</button>}
-      {myResult==="lose"&&<div style={{marginTop:4,fontWeight:600,fontSize:12,color:"var(--faint)"}}>{t("lostNudge")}</div>}
-    </div>}
-    {poll.status==="resolved"&&!tl.mine&&!aboutMe&&<div style={{marginTop:10,padding:"8px 12px",borderRadius:11,fontWeight:600,fontSize:12.5,textAlign:"center",background:"var(--ink-3)",color:"var(--faint)"}} dir="auto">{t("didntVote")}</div>}
-    {poll.status==="resolved"&&/^https?:\/\//.test(poll.proof_url||"")&&<div style={{marginTop:10}}>
-      <img src={poll.proof_url} alt={t("viewProof")} loading="lazy" referrerPolicy="no-referrer" onError={e=>{e.target.style.display="none";}} style={{display:"block",width:"100%",maxHeight:240,objectFit:"cover",borderRadius:12,border:"1px solid var(--line)"}}/>
-      <a href={poll.proof_url} target="_blank" rel="noopener noreferrer" style={{display:"block",marginTop:6,textAlign:"center",fontSize:12.5,fontWeight:700,color:"var(--brand-2)"}}>🔗 {t("viewProof")}</a>
-    </div>}
-    {mayResolve&&<button className="btn btn-gold" style={{marginTop:11,fontSize:14,padding:11}} onClick={()=>onResolve(poll)}>{t("resolveBtn")}</button>}
-  </div>;
-}
-function ResolveSheet({poll,onPick,onClose}){
-  const [proof,setProof]=useState("");   // manual resolution + optional proof-image link (free path; no external API)
-  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
-    <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 6px"}}>{t("resolveT")}</h3>
-    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{safeText(poll.question)}</p>
-    <button className="btn" style={{background:"var(--yes)",color:"var(--on-yes)",marginBottom:10}} onClick={()=>onPick("yes",proof.trim()||null)}>{t("resYes")}</button>
-    <button className="btn" style={{background:"var(--no)",color:"var(--on-no)",marginBottom:12}} onClick={()=>onPick("no",proof.trim()||null)}>{t("resNo")}</button>
-    <input className="in" aria-label={t("proofUrl")} placeholder={t("proofUrl")} value={proof} onChange={e=>setProof(e.target.value)} style={{marginBottom:12,fontSize:13}}/>
-    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5}}>{t("resHint")}</p>
-    <button className="btn btn-ghost" onClick={onClose} style={{marginTop:10}}>{t("back")}</button>
-  </div></div>;
-}
-function ReportSheet({poll,onPick,onClose}){
-  const reasons=[["spam","🔁"],["harassment","🙅"],["inappropriate","⚠️"],["other","💬"]];
-  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
-    <h3 className="disp" style={{textAlign:"center",fontSize:19,fontWeight:800,margin:"0 0 6px"}}>{t("reportTitle")}</h3>
-    <p style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{safeText(poll.question)}</p>
-    {reasons.map(([k,emo])=><button key={k} className="chip" onClick={()=>onPick(k)} style={{display:"flex",width:"100%",justifyContent:"flex-start",gap:10,padding:"13px 14px",marginBottom:10,fontSize:14.5,borderRadius:13}}><span aria-hidden="true">{emo}</span>{t("reason_"+k)}</button>)}
-    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,marginTop:2}}>{t("reportHint")}</p>
-    <button className="btn btn-ghost" onClick={onClose} style={{marginTop:10}}>{t("back")}</button>
-  </div></div>;
-}
-function Feed({groups,me,onErr,onResolved,startCreate}){
-  const [polls,setPolls]=useState(null),[tally,setTally]=useState({}),[creating,setCreating]=useState(false),[locking,setLocking]=useState(null),[resolving,setResolving]=useState(null),[topic,setTopic]=useState("all");
-  const mounted=useRef(true);
-  const gnameRef=useRef({});
-  if(gnameRef.current.__src!==groups){ const m={__src:groups}; (groups||[]).forEach(g=>{m[g.id]=g.name;}); gnameRef.current=m; }
-  const gname=gnameRef.current;
-  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
-  const lastCreate=useRef(startCreate);
-  useEffect(()=>{ if(startCreate!==lastCreate.current){ lastCreate.current=startCreate; SND.tap(); setCreating(true); } },[startCreate]);
-  const reqId=useRef(0);
-  const busyRef=useRef(false);                 // single in-flight guard shared across resolve / report
-  const seenStatus=useRef({});                 // poll.id -> last status, to detect a fresh resolve and celebrate every winner
-  const winChecked=useRef(false);              // skip celebration on the first paint (don't celebrate old history)
-  const load=async()=>{                  // cross-group: RLS already scopes polls to groups I'm a member of
-    const my=++reqId.current;            // request-id: only the newest load() may commit state
-    const stale=()=>!mounted.current||my!==reqId.current;
-    const{data,error}=await SB.from("polls").select("id,subject,type,question,status,closes_at,author_id,resolved_outcome,group_id,target_id,proof_url").order("created_at",{ascending:false});
-    if(stale())return;
-    if(error)return onErr(error.message);
-    setPolls(prev=>{ const next=data||[];   // skip the full feed re-render when nothing actually changed
-      if(prev&&prev.length===next.length&&prev.every((p,i)=>{ const n=next[i]; return n&&p.id===n.id&&p.status===n.status&&p.resolved_outcome===n.resolved_outcome&&p.closes_at===n.closes_at&&p.proof_url===n.proof_url&&p.question===n.question; })) return prev;
-      return next; });
-    if(data&&data.length){const ids=data.map(p=>p.id);
-      const tt={};
-      const rpc=await SB.rpc("poll_tally",{p_polls:ids});           // counts only (private); falls back if RPC not created yet
-      if(stale())return;
-      if(!rpc.error&&rpc.data){ rpc.data.forEach(r=>{tt[r.poll_id]={total:r.total||0,yes:r.yes||0,no:r.no||0,mine:r.mine||null};});
-        // monotonic merge: tallies only grow and my own pick never vanishes — a read on a lagging replica
-        // (missing my just-cast vote) must not reset mine->null (bar re-hides) or shrink counts to 0.
-        setTally(prev=>{ const out={}; ids.forEach(id=>{ const n=tt[id], p=prev[id];
-          if(n&&p) out[id]={total:Math.max(n.total,p.total||0),yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
-          else if(n) out[id]=n; else if(p) out[id]=p; });
-          return out; }); }
-      else { const{data:v,error:ve}=await SB.from("votes").select("poll_id,choice,voter_id").in("poll_id",ids); if(stale())return;
-        // COUNT the votes we can read. Before HARDENING, votes RLS returns ALL rows -> correct yes/no counts.
-        // After HARDENING (own-rows only) poll_tally exists and we never reach here; if we ever do, keep the
-        // higher of (counted, prior) so a momentary own-only read can never shrink a real tally back to 0.
-        const tt2={}; if(!ve){ (v||[]).forEach(r=>{ tt2[r.poll_id]=tt2[r.poll_id]||{total:0,yes:0,no:0,mine:null}; if(r.choice==="yes"||r.choice==="no"){tt2[r.poll_id][r.choice]++;tt2[r.poll_id].total++;} if(r.voter_id===me.id)tt2[r.poll_id].mine=r.choice; }); }
-        setTally(prev=>{ const out={}; ids.forEach(id=>{ const n=tt2[id], p=prev[id];
-          if(n&&p) out[id]={total:Math.max(n.total,p.total||0),yes:Math.max(n.yes,p.yes),no:Math.max(n.no,p.no),mine:(n.mine!=null?n.mine:p.mine)};
-          else if(n) out[id]=n; else if(p) out[id]=p; });
-          return out; });
-      }
-    }
-    else setTally({});
-  };
-  useEffect(()=>{   // celebrate EVERY winner: detect a poll that just flipped to resolved where I voted the winning side
-    const ps=polls||[];
-    ps.forEach(p=>{ const prev=seenStatus.current[p.id];
-      if(!winChecked.current){ seenStatus.current[p.id]=p.status; return; }   // first paint: record, never celebrate history
-      if(p.status==="resolved" && prev && prev!=="resolved"){ const tp=tally[p.id]; const mine=tp?tp.mine:undefined;
-        if(tp===undefined) return;   // tally for this poll hasn't arrived yet — DON'T advance seenStatus, so the re-run after tally loads still sees the fresh flip
-        if(mine && mine===p.resolved_outcome && p.target_id!==me.id){ SND.win(); onResolved(true,p); } }
-      seenStatus.current[p.id]=p.status;   // advance only after we celebrated or confirmed nothing to celebrate
-    });
-    if(ps.length) winChecked.current=true;
-  },[polls,tally]);
-  useEffect(()=>{load();},[]);
-  useEffect(()=>{                       // realtime + a light always-on visible poll (others' votes don't stream once votes-RLS is own-rows)
-    let tmr=null, poll=null, ch=null, dead=false, reconn=null;
-    const schedule=()=>{ if(tmr)clearTimeout(tmr); tmr=setTimeout(()=>{if(mounted.current)load();},400); };
-    const startPolling=()=>{ if(poll||dead)return; poll=setInterval(()=>{ if(mounted.current&&!document.hidden&&navigator.onLine!==false)load(); },12000); };
-    const stopPolling=()=>{ if(poll){clearInterval(poll);poll=null;} };
-    const sub=()=>{
-      ch=SB.channel("rt-feed")
-        .on("postgres_changes",{event:"*",schema:"public",table:"votes"},schedule)
-        .on("postgres_changes",{event:"*",schema:"public",table:"polls"},schedule)
-        .subscribe((status)=>{
-          if(dead)return;
-          if(status==="SUBSCRIBED"){ if(mounted.current)load(); }   // keep polling on too (covers other members' votes)
-          else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"||status==="CLOSED"){
-            if(ch){ SB.removeChannel(ch); ch=null; }
-            if(reconn)clearTimeout(reconn);
-            reconn=setTimeout(()=>{ reconn=null; if(!dead&&mounted.current)sub(); },4000);
-          }
-        });
-    };
-    sub(); startPolling();
-    const onVis=()=>{ if(document.hidden||dead||!mounted.current)return; load();   // self-heal a socket the OS killed while backgrounded
-      if(reconn)return;   // a reconnect is already queued — don't open a second rt-feed channel
-      const st=ch&&ch.state; if(st!=="joined"&&st!=="joining"){ if(ch){SB.removeChannel(ch);ch=null;} sub(); } };
-    document.addEventListener("visibilitychange",onVis);
-    return ()=>{ dead=true; document.removeEventListener("visibilitychange",onVis); if(tmr)clearTimeout(tmr); if(reconn)clearTimeout(reconn); stopPolling(); if(ch)SB.removeChannel(ch); };
-  },[]);
-  const vote=async(poll,choice)=>{
-    if(locking)return;
-    SND.lock(); setLocking(poll.id);
-    const t0=Date.now();
-    const{error}=await SB.rpc("cast_vote",{p_poll:poll.id,p_choice:choice});
-    const wait=Math.max(0,650-(Date.now()-t0)); await new Promise(r=>setTimeout(r,wait));
-    if(!mounted.current)return;
-    setLocking(null);
-    if(error){ if(/fetch|network|load failed|timeout|offline/i.test(error.message||"")||navigator.onLine===false){ return onErr(t("netErr")); } return onErr(error.message); }   // a dropped/offline vote must NOT leave a fake optimistic 'mine' — bail before the optimistic write
-    setTally(prev=>{ const cur=prev[poll.id]||{total:0,yes:0,no:0,mine:null}; const c2={...cur,mine:choice}; if(!cur.mine){ c2[choice]=(cur[choice]||0)+1; c2.total=(cur.total||0)+1; } return {...prev,[poll.id]:c2}; }); // optimistically count MY vote: set mine + bump my side AND total so the bar/picks-count include me instantly (before load() returns)
-    try{ localStorage.setItem("eyevos_voted_once","1"); }catch(e){}   // retire the first-vote coachmark
-    SND.reveal();   // results uncover for this card — soft confirmation tone
-    await load();
-  };
-  const doResolve=async(o,proof)=>{
-    const poll=resolving; setResolving(null); if(!poll)return;
-    if(busyRef.current)return; busyRef.current=true;
-    const{error}=await SB.rpc("resolve_poll",{p_poll:poll.id,p_outcome:o,p_void:false,p_proof:proof||null});
-    busyRef.current=false;
-    if(!mounted.current)return;
-    if(error)return onErr(error.message);
-    seenStatus.current[poll.id]="resolved";   // mark BEFORE the await/celebration so the polls-effect can never double-fire for the resolver
-    const mine=(tally[poll.id]||{}).mine; const won=mine===o;   // celebrate ONLY a real win
-    if(won){ SND.win(); SND.buzz([0,45,35,110]); await onResolved(true,poll); } else { SND.tap(); onResolved(false,poll); }
-    await load();
-  };
-  const [responding,setResponding]=useState(false);
-  const respond=async(poll,approve)=>{ if(responding)return; setResponding(true);
-    const{error}=await SB.rpc("respond_consent",{p_poll:poll.id,p_approve:approve});
-    if(!mounted.current)return; setResponding(false);
-    if(error)return onErr(error.message); SND.tap(); await load(); };
-  const [reporting,setReporting]=useState(null);
-  const doReport=async(reason)=>{ const poll=reporting; setReporting(null); if(!poll)return; if(busyRef.current)return; busyRef.current=true; SND.tap(); const{error}=await SB.rpc("report_poll",{p_poll:poll.id,p_reason:reason}); busyRef.current=false; if(!mounted.current)return; if(error){ if(/duplicate|unique|already/i.test(error.message||"")){ SND.reveal(); return onErr({ok:true,msg:t("reportSent")}); } return onErr(error.message); } SND.reveal(); onErr({ok:true,msg:t("reportSent")}); };
-  if(creating)return <CreatePoll groups={groups} me={me} onDone={()=>{setCreating(false);load();}} onCancel={()=>setCreating(false)} onErr={onErr}/>;
-  if(polls===null)return <Spinner label={t("loadingBets")}/>;
-  const all=polls.filter(p=>p.status!=="void"&&p.status!=="pending_consent");
-  const list=topic==="all"?all:all.filter(p=>p.subject===topic);
-  const inbox=polls.filter(p=>p.status==="pending_consent"&&p.target_id===me.id);
-  const waiting=polls.filter(p=>p.status==="pending_consent"&&p.author_id===me.id&&p.target_id!==me.id);
-  let hottestId=null,hn=3;
-  list.forEach(p=>{if(p.status==="open"){const tp=tally[p.id]; if(!tp)return; const n=(tp.total!=null?tp.total:((tp.yes||0)+(tp.no||0))); if(n>hn){hn=n;hottestId=p.id;}}});   // use total: yes/no are hidden pre-vote, only total is real for everyone
-  return <div>
-    <div style={{display:"flex",flexWrap:"wrap",gap:8,paddingBottom:12}}>
-      <button className={"chip"+(topic==="all"?" on":"")} aria-pressed={topic==="all"} onClick={()=>{SND.tap();setTopic("all");}} style={{whiteSpace:"nowrap"}}>🔥 {t("allTopics")}</button>
-      {SK.map(k=><button key={k} className={"chip"+(topic===k?" on":"")} aria-pressed={topic===k} onClick={()=>{SND.tap();setTopic(k);}} style={{whiteSpace:"nowrap"}}>{SEMO[k]} {subName(k)}</button>)}
-    </div>
-    <button className="btn btn-pri" onClick={()=>{SND.tap();setCreating(true);}} style={{marginBottom:13}}>{t("newBet")}</button>
-    {(()=>{ let firstUnvoted=true; try{ firstUnvoted=!localStorage.getItem("eyevos_voted_once"); }catch(e){} const hasVotable=list.some(p=>p.status==="open"&&!(tally[p.id]&&tally[p.id].mine)&&p.target_id!==me.id); return (firstUnvoted&&hasVotable)?
-      <div className="card" style={{display:"flex",alignItems:"center",gap:10,padding:"11px 13px",marginBottom:13,border:"1px solid var(--brand)",background:"var(--brand-soft)"}}>
-        <span style={{fontSize:22}} aria-hidden="true">👇</span>
-        <div style={{fontSize:13,lineHeight:1.45,fontWeight:600}}>{t("firstVoteTip")}</div>
-      </div>:null; })()}
-    {inbox.length>0&&<div className="card" style={{border:"1px solid var(--brand)",background:"var(--brand-soft)",marginBottom:13,padding:13}}>
-      <div style={{fontWeight:800,fontSize:14,marginBottom:4}}>🙋 {t("pendInbox")}</div>
-      <div style={{fontSize:12,color:"var(--muted)",lineHeight:1.5,marginBottom:10}}>{t("consentBlurb")}</div>
-      {inbox.map(p=><div key={p.id} style={{marginBottom:8}}>
-        <div style={{fontSize:14,fontWeight:600,marginBottom:8}} title={safeText(p.question)}>{safeText(p.question)}</div>
-        <div style={{display:"flex",gap:8}}>
-          <button className="btn" style={{background:"var(--yes)",color:"var(--on-yes)",padding:8}} onClick={()=>respond(p,true)}>{t("approveW")}</button>
-          <button className="btn btn-ghost" style={{padding:8}} onClick={()=>respond(p,false)}>{t("declineW")}</button>
-        </div></div>)}
-    </div>}
-    {waiting.length>0&&<div className="card" style={{marginBottom:13,padding:11,fontSize:12.5,color:"var(--muted)"}}>{t("waitApprove")} · {waiting.length}</div>}
-    {list.length===0&&<div className="card" style={{textAlign:"center",padding:"26px 18px",borderStyle:"dashed",borderColor:"var(--brand)"}}>
-      <div style={{fontSize:46,marginBottom:8}} aria-hidden="true">🎯</div>
-      <div style={{fontWeight:800,fontSize:16,marginBottom:6}}>{t("emptyFeed")}</div>
-      <div style={{color:"var(--muted)",fontSize:13,lineHeight:1.5,maxWidth:260,margin:"0 auto 16px"}}>{t("emptyFeedSub")}</div>
-      <button className="btn btn-pri" style={{maxWidth:260,margin:"0 auto"}} onClick={()=>{SND.tap();setCreating(true);}}>{t("emptyFeedCta")}</button>
-    </div>}
-    {list.map(p=><PollCard key={p.id} poll={p} tl={tally[p.id]||{yes:0,no:0,mine:null}} me={me} onVote={vote} onResolve={(pl)=>setResolving(pl)} locking={locking===p.id} featured={p.id===hottestId} groupName={gname[p.group_id]} onReport={()=>setReporting(p)}/>)}
-    {resolving&&<ResolveSheet poll={resolving} onPick={doResolve} onClose={()=>setResolving(null)}/>}
-    {reporting&&<ReportSheet poll={reporting} onPick={doReport} onClose={()=>setReporting(null)}/>}
-  </div>;
-}
-function CreatePoll({groups,me,onDone,onCancel,onErr}){
-  const have=SK.filter(k=>groups.some(g=>grpSub(g)===k));
-  const pad=n=>String(n).padStart(2,"0");
-  const fmt=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes());
-  const nowStr=fmt(new Date(Date.now()+60000));   // floor the picker 1 min ahead so 'now' is never selectable
-  const [ctopic,setCtopic]=useState(null);
-  const [gid,setGid]=useState(null);
-  const [kind,setKind]=useState("general");
-  const [target,setTarget]=useState(null);
-  const [members,setMembers]=useState([]);
-  const [q,setQ]=useState(""),[when,setWhen]=useState(fmt(new Date(Date.now()+24*3600000))),[busy,setBusy]=useState(false);
-  const inTopic=ctopic?groups.filter(g=>grpSub(g)===ctopic):[];
-  const grp=inTopic.find(g=>g.id===gid)||inTopic[0]||null;
-  useEffect(()=>{ if(ctopic){ const f=groups.filter(g=>grpSub(g)===ctopic); setGid(f[0]?f[0].id:null);} },[ctopic]);
-  useEffect(()=>{ setKind("general"); setTarget(null); },[gid,ctopic]);
-  useEffect(()=>{ if(!grp){setMembers([]);return;} let alive=true; (async()=>{ const{data,error}=await SB.from("group_members").select("profile_id,profiles(display_name,photo_url)").eq("group_id",grp.id); if(!alive)return; if(error){ onErr(t("netErr")); return; }   // surface a transient fetch failure instead of silently showing the empty-state (looks like the group has no members)
-    setMembers((data||[]).filter(m=>m.profile_id!==me.id)); })(); return ()=>{alive=false;}; },[grp&&grp.id]);
-  const ts=when?new Date(when).getTime():0;
-  const validWhen=!!ts&&ts>Date.now();
-  const okPerson=kind!=="person"||!!target;
-  const submit=async()=>{if(q.trim().length<5||!grp)return;
-    if(!when||new Date(when).getTime()<=Date.now()){onErr(t("futureTime"));return;}   // re-check at click time: validWhen is render-scoped and goes stale if a near-future pick lapses while the form sits open
-    if(kind==="person"&&!target){onErr(t("mustTag"));return;}
-    setBusy(true);
-    const{error}=await SB.rpc("create_poll",{p_group:grp.id,p_subject:ctopic,p_type:kind==="person"?"person":"event",p_personal:kind==="person",p_question:q.trim(),p_target:kind==="person"?target:null,p_force_proof:false,p_closes_at:new Date(when).toISOString()});
-    setBusy(false);if(error)return onErr(error.message);SND.tap();if(kind==="person")onErr({ok:true,msg:t("sentForConsent")});onDone();};   // a person poll lands in pending_consent and is filtered from the feed — tell the author it was sent, not vanished
-  if(!ctopic)return <div>
-    <button onClick={onCancel} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
-    <h2 className="disp" style={{fontSize:22,margin:"0 0 6px"}}>{t("newBetT")}</h2>
-    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("pickTopicSub")}</p>
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-      {have.map(k=><button key={k} onClick={()=>{SND.tap();setCtopic(k);}} className="card" style={{margin:0,padding:"18px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",border:"1px solid "+SC[k]+"55",background:SC[k]+"14"}}>
-        <span style={{fontSize:30}}>{SEMO[k]}</span><span style={{fontWeight:800,fontSize:14.5,color:SC[k]}}>{subName(k)}</span></button>)}
-    </div>
-  </div>;
-  return <div>
-    <button onClick={()=>setCtopic(null)} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:14,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
-    <h2 className="disp" style={{fontSize:22,margin:"0 0 14px"}}>{SEMO[ctopic]} {subName(ctopic)}</h2>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("postIn")}</div>
-    <div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,marginBottom:16,scrollbarWidth:"none"}}>
-      {inTopic.map(g=><button key={g.id} className={"chip"+((grp&&g.id===grp.id)?" on":"")} onClick={()=>setGid(g.id)} style={{whiteSpace:"nowrap"}}>👥 {g.name}</button>)}
-    </div>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("kindAbout")}</div>
-    <div style={{display:"flex",gap:8,marginBottom:14}}>
-      <button className={"chip"+(kind==="general"?" on":"")} style={{flex:1,justifyContent:"center"}} onClick={()=>{setKind("general");setTarget(null);}}>{t("kGen")}</button>
-      <button className={"chip"+(kind==="person"?" on":"")} style={{flex:1,justifyContent:"center"}} onClick={()=>setKind("person")}>{t("kPers")}</button>
-    </div>
-    {kind==="person"&&<div style={{marginBottom:14}}>
-      <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("tagWho")}</div>
-      {members.length===0?<div className="card" style={{margin:0,padding:14,textAlign:"center"}}><div style={{fontSize:28,marginBottom:6}}>🙋</div><div style={{color:"var(--muted)",fontSize:12.5,marginBottom:4}}>{t("noMembers")}</div><div style={{color:"var(--faint)",fontSize:11.5,lineHeight:1.5,marginBottom:12}}>{t("noMembersHint")}</div><button className="btn btn-pri" style={{padding:11,fontSize:14,marginBottom:8}} onClick={()=>{SND.tap();setKind("general");setTarget(null);}}>{t("switchGeneral")}</button>{grp&&<button className="btn btn-ghost" style={{padding:11,fontSize:13}} onClick={()=>shareWa(t("inviteText",{name:grp.name,code:grp.invite_code,url:REDIRECT}))}>{t("inviteWa")}</button>}</div>
-      :<div style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,scrollbarWidth:"none"}}>
-        {members.map(m=><button key={m.profile_id} className={"chip"+(target===m.profile_id?" on":"")} onClick={()=>setTarget(m.profile_id)} style={{whiteSpace:"nowrap"}}>{m.profiles?m.profiles.display_name:"—"}</button>)}
-      </div>}
-    </div>}
-    <textarea className="in" rows="3" maxLength={280} aria-label={t("qPh")} placeholder={t("qPh")} value={q} onChange={e=>setQ(e.target.value)} style={{resize:"none",marginBottom:6}}/>
-    <div dir="auto" style={{fontSize:11,fontWeight:700,textAlign:"end",marginBottom:14,color:q.trim().length<5?"var(--gold)":"var(--faint)"}}>{q.trim().length<5?t("qTooShort"):(280-q.length)+" "+t("charsLeft")}</div>
-    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:8}}>{t("whenClose")}</div>
-    <input className="in" type="datetime-local" dir="ltr" aria-label={t("whenClose")} min={nowStr} value={when} onChange={e=>setWhen(e.target.value)} style={{marginBottom:8,colorScheme:"dark",textAlign:dirOf(CUR.lang)==="rtl"?"right":"left"}}/>
-    {validWhen?<div style={{height:10}}/>:<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:14}}>{t("futureTime")}</div>}
-    <button className="btn btn-pri" disabled={busy||q.trim().length<5||!validWhen||!grp||!okPerson} onClick={submit}>{busy?t("placingW"):t("placeBet")}</button>
   </div>;
 }
 
-/* ---------- ranks ---------- */
-function PickGroup({groups,onPick}){
-  const [sub,setSub]=useState(null);
-  const have=SK.filter(k=>groups.some(g=>grpSub(g)===k));
-  if(!sub)return <div>
-    <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:4}}>{t("pickTopicT")}</div>
-    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("pickTopicSub")}</p>
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-      {have.map(k=><button key={k} onClick={()=>{SND.tap();setSub(k);}} className="card" style={{margin:0,padding:"18px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",border:"1px solid "+SC[k]+"55",background:SC[k]+"14"}}>
-        <span style={{fontSize:30}}>{SEMO[k]}</span><span style={{fontWeight:800,fontSize:14.5,color:SC[k]}}>{subName(k)}</span></button>)}
+/* ---------- football: FixtureCard ---------- */
+// per ui-spec §5b — three states: A upcoming-unpredicted, B upcoming-predicted, C locked/finished.
+function FixtureCard({league,fx,kickoff,now,pred,onSave,saving,onScored}){
+  const home=teamById(league.key,fx.homeId)||{name:"?",short:"?",emoji:"⚽",color:"#888"};
+  const away=teamById(league.key,fx.awayId)||{name:"?",short:"?",emoji:"⚽",color:"#888"};
+  const locked=now>=kickoff;
+  const result=fx.result||null;
+  const [editing,setEditing]=useState(false);
+  const [h,setH]=useState(pred?pred.h:0);
+  const [a,setA]=useState(pred?pred.a:0);
+  useEffect(()=>{ if(pred){ setH(pred.h); setA(pred.a); } },[pred&&pred.h,pred&&pred.a]);
+  const showStepper=!locked && (editing || !pred);
+  const pts = (result&&pred)?scoreMatch(result.home,result.away,pred.h,pred.a):null;
+  const exact = (result&&pred)?isExact(result.home,result.away,pred.h,pred.a):false;
+  // confetti/SND.win only when this match's result first shows AND points>0 (honesty)
+  const firedRef=useRef(false);
+  const celebKey=(group&&group.id?group.id:"_")+":"+fx.id;
+  useEffect(()=>{ if(result&&pred&&pts>0&&!firedRef.current&&!DEMO.wasCelebrated(celebKey)){ firedRef.current=true; DEMO.markCelebrated(celebKey); if(onScored)onScored(pts); } },[result,pred&&pred.h,pred&&pred.a,pts,celebKey]);
+  const [showHow,setShowHow]=useState(false);
+  const teamRow=(
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,margin:"2px 0 12px"}}>
+      <div style={{flex:1,textAlign:"end",minWidth:0}}>
+        <span style={{fontSize:20,marginInlineEnd:6}} aria-hidden="true">{home.emoji}</span>
+        <span style={{fontWeight:800,fontSize:14.5,color:"var(--lg-text)"}} dir="auto">{home.short}</span>
+        <div style={{fontSize:11,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}} dir="auto">{home.name}</div>
+      </div>
+      <span style={{flexShrink:0,fontSize:12,fontWeight:800,opacity:.7,color:"var(--lg-text)"}}>{t("vsWord")}</span>
+      <div style={{flex:1,textAlign:"start",minWidth:0}}>
+        <span style={{fontWeight:800,fontSize:14.5,color:"var(--lg-text)"}} dir="auto">{away.short}</span>
+        <span style={{fontSize:20,marginInlineStart:6}} aria-hidden="true">{away.emoji}</span>
+        <div style={{fontSize:11,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}} dir="auto">{away.name}</div>
+      </div>
     </div>
-  </div>;
-  const inSub=groups.filter(g=>grpSub(g)===sub);
-  return <div>
-    <button onClick={()=>setSub(null)} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
-    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><span style={{fontSize:24}}>{SEMO[sub]}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:SC[sub]}}>{subName(sub)}</span></div>
-    {inSub.map(g=><button key={g.id} onClick={()=>{SND.tap();onPick(g);}} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,width:"100%",textAlign:"start",cursor:"pointer",border:"1px solid var(--line)",background:"var(--ink-2)",color:"var(--text)"}}>
-      <div style={{width:38,height:38,borderRadius:11,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
-      <div style={{flex:1}}><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum bidi-ltr" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div><Chev/></button>)}
+  );
+  return <div className="card" style={{background:"var(--lg-bg)",border:"1px solid var(--line-2)",color:"var(--lg-text)"}}>
+    {/* status chip row */}
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8,gap:8}}>
+      <span style={{fontSize:11,fontWeight:800,opacity:.7}}>{fx.round}</span>
+      {!locked
+        ? <span className="chip" style={{padding:"3px 9px",fontSize:11.5,fontWeight:800,background:"rgba(255,255,255,.08)",border:"1px solid var(--line-2)",color:"var(--lg-text)",minHeight:0}}>
+            <span aria-hidden="true">⏱</span> <span className="bidi-ltr">{t("kickoffIn")} {kickoffText(kickoff,now)||""}</span>
+          </span>
+        : result
+          ? <span className="chip" style={{padding:"3px 9px",fontSize:11.5,fontWeight:800,background:"var(--lg-primary)",border:"none",color:"#fff",minHeight:0}}>{t("finalScore")}</span>
+          : <span className="chip" style={{padding:"3px 9px",fontSize:11.5,fontWeight:800,background:"rgba(255,255,255,.08)",border:"1px solid var(--line-2)",color:"var(--lg-text)",minHeight:0}}>⏳ {t("resultPending")}</span>}
+    </div>
+    {teamRow}
+    {/* ===== STATE C: locked/finished ===== */}
+    {locked ? <div>
+      {result && <div style={{textAlign:"center",margin:"4px 0 10px"}}>
+        <div style={{fontSize:11,fontWeight:700,opacity:.7}}>{t("finalScore")}</div>
+        <div className="disp bidi-ltr" style={{fontSize:34,fontWeight:900,color:"var(--lg-text)"}}>{result.home}<span style={{opacity:.5,margin:"0 8px"}}>–</span>{result.away}</div>
+      </div>}
+      <div style={{textAlign:"center",fontSize:13,marginBottom:result?10:0}}>
+        {pred
+          ? <span><span style={{opacity:.75}}>{t("yourPrediction")}: </span><span className="bidi-ltr" style={{fontWeight:800}}>{pred.h}–{pred.a}</span></span>
+          : <span style={{opacity:.7}}>🔒 {t("noPredictionYet")}</span>}
+      </div>
+      {result && pred && <div style={{textAlign:"center"}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:8,padding:"7px 14px",borderRadius:999,fontWeight:900,fontSize:14,
+          background:pts>0?"var(--gold-soft)":"rgba(255,255,255,.06)",color:pts>0?"var(--gold)":"var(--lg-text)",border:"1px solid "+(pts>0?"rgba(255,194,60,.4)":"var(--line)")}}>
+          🏆 {t("youScoredPts",{pts:pts})}
+        </div>
+        <div style={{fontSize:12,opacity:.85,marginTop:8}}>
+          {exact?t("exactScore"):pts===3?t("correctDirection"):pts===1?t("oneScore"):t("noPoints")}
+        </div>
+        <button type="button" onClick={()=>{SND.tap();setShowHow(s=>!s);}} style={{background:"none",border:"none",color:"var(--lg-accent)",fontWeight:700,fontSize:12,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>{t("howPointsWork")} {showHow?"▲":"▼"}</button>
+        {showHow && <div style={{fontSize:11.5,opacity:.85,lineHeight:1.7,marginTop:6,textAlign:"start",background:"rgba(0,0,0,.2)",borderRadius:10,padding:"8px 12px"}}>
+          <div>· {t("hpDirection")}</div><div>· {t("hpOne")}</div><div>· {t("hpZero")}</div>
+        </div>}
+      </div>}
+      {result && !pred && <div style={{textAlign:"center",fontSize:12,opacity:.7,marginTop:4}}>{t("predictionLocked")}</div>}
+    </div>
+    /* ===== STATE A/B: upcoming ===== */
+    : <div>
+      {showStepper ? <div>
+        <div style={{display:"flex",alignItems:"flex-end",gap:8,marginBottom:12}}>
+          <ScoreStepper value={h} onChange={setH} label={home.short} color={home.color}/>
+          <span style={{paddingBottom:14,fontWeight:900,fontSize:20,opacity:.5}}>–</span>
+          <ScoreStepper value={a} onChange={setA} label={away.short} color={away.color}/>
+        </div>
+        <button className="btn btn-pri" disabled={saving} onClick={()=>{ onSave(h,a); setEditing(false); }} style={{background:"var(--lg-primary)"}}>
+          {saving?t("savingPrediction"):t("savePrediction")}
+        </button>
+        <div style={{textAlign:"center",fontSize:11.5,opacity:.7,marginTop:8}}>{t("beforeKickoff")} · {t("lockedAtKickoff")}</div>
+      </div> : <div>
+        <div style={{textAlign:"center",margin:"2px 0 6px"}}>
+          <span style={{opacity:.75,fontSize:13}}>{t("yourPrediction")}: </span>
+          <span className="bidi-ltr disp" style={{fontWeight:900,fontSize:22,color:"var(--lg-text)"}}>{pred.h}–{pred.a}</span>
+        </div>
+        <button className="btn btn-ghost" onClick={()=>{SND.tap();setEditing(true);}}>{t("editPrediction")}</button>
+        <div style={{textAlign:"center",fontSize:11.5,opacity:.7,marginTop:8}}>{t("lockedAtKickoff")}</div>
+      </div>}
+    </div>}
   </div>;
 }
-function Ranks({group,me,onErr,onChange}){
-  const [rows,setRows]=useState(null);
-  const gsub=grpSub(group);
-  useEffect(()=>{let alive=true;(async()=>{
-    const mq=await SB.from("group_members").select("profile_id,profiles(display_name,photo_url)").eq("group_id",group.id);  // everyone is on the board from day one (0 pts)
-    if(!alive)return; if(mq.error)return onErr(mq.error.message);
-    const by={};(mq.data||[]).forEach(r=>{const k=r.profile_id;by[k]={id:k,name:r.profiles?r.profiles.display_name:"—",photo:r.profiles?r.profiles.photo_url:null,total:0};});
-    const sq=await SB.from("member_scores").select("profile_id,points").eq("group_id",group.id);
-    if(!alive)return; if(sq.error)return onErr(sq.error.message);
-    (sq.data||[]).forEach(r=>{const k=r.profile_id;if(!by[k])by[k]={id:k,name:"—",photo:null,total:0};by[k].total+=r.points;});
-    setRows(Object.values(by));})();return ()=>{alive=false;};},[group.id]);
-  if(rows===null)return <Spinner label={t("loadingRanks")}/>;
-  const ranked=[...rows].sort((a,b)=>b.total-a.total||(a.name||"").localeCompare(b.name||"")||(a.id<b.id?-1:a.id>b.id?1:0));   // deterministic tiebreak: equal totals order by name then id, so medals + rows don't reshuffle each visit
-  const medal=["🥇","🥈","🥉"];
-  return <div>
-    <div className="card" style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",marginBottom:13}}>
-      <div style={{width:36,height:36,borderRadius:10,background:SC[gsub]+"1f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>{SEMO[gsub]}</div>
-      <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:14.5}}>{group.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{subName(gsub)} · {t("codeLabel")}: <b className="tnum" style={{color:"var(--text)",letterSpacing:"1px"}}>{group.invite_code}</b> · <span className="tnum" dir="ltr">{rows.length}/40</span> {t("membersWord")}</div></div>
-      <button onClick={()=>shareWa(t("inviteText",{name:group.name,code:group.invite_code,url:REDIRECT+"?join="+group.invite_code}))} className="chip" style={{padding:8}} aria-label={t("aShareWa")} title={t("aShareWa")}>📤</button>
+
+/* ---------- football: SeasonPicks (adapted from cmp-season) ---------- */
+function SeasonPicks({league,teams,players,picks,windowOpen,onChampion,onTopScorer}){
+  const safeTeams=Array.isArray(teams)?teams:[];
+  const safePlayers=Array.isArray(players)?players:[];
+  const p=picks||{};
+  const [nowMs,setNowMs]=useState(Date.now());
+  useEffect(()=>{ if(!windowOpen||!p.deadlineMs)return; const id=setInterval(()=>setNowMs(Date.now()),1000); return ()=>clearInterval(id); },[windowOpen,p.deadlineMs]);
+  const deadlinePassed=typeof p.deadlineMs==="number"&&nowMs>=p.deadlineMs;
+  const locked=!windowOpen||deadlinePassed||!!p.resolved;
+  const open=!locked;
+  const daysLeft=(typeof p.deadlineMs==="number")?Math.max(0,Math.ceil((p.deadlineMs-nowMs)/86400000)):null;
+  const [champion,setChampion]=useState(p.champion||null);
+  const [topScorer,setTopScorer]=useState(p.topScorer||null);
+  const pickedScorer=React.useMemo(()=>safePlayers.find(pl=>pl.id===(p.topScorer||topScorer))||null,[safePlayers,p.topScorer,topScorer]);
+  const [scorerTeamId,setScorerTeamId]=useState((pickedScorer&&pickedScorer.teamId)||p.champion||null);
+  useEffect(()=>{ setChampion(p.champion||null); },[p.champion]);
+  useEffect(()=>{ setTopScorer(p.topScorer||null); },[p.topScorer]);
+  const tById=React.useMemo(()=>{ const m={}; safeTeams.forEach(t0=>{ m[t0.id]=t0; }); return m; },[safeTeams]);
+  const squad=React.useMemo(()=>safePlayers.filter(pl=>pl.teamId===scorerTeamId),[safePlayers,scorerTeamId]);
+  const championTeam=champion?tById[champion]:null;
+  const scorerPlayer=topScorer?safePlayers.find(pl=>pl.id===topScorer):null;
+  function chooseChampion(teamId){ if(locked)return; SND.tap(); setChampion(teamId); if(!scorerTeamId)setScorerTeamId(teamId); if(onChampion)onChampion(teamId); }
+  function chooseScorerTeam(teamId){ if(locked)return; SND.tap(); setScorerTeamId(teamId); }
+  function chooseScorer(playerId){ if(locked)return; SND.win(); setTopScorer(playerId); if(onTopScorer)onTopScorer(playerId); }
+  const posLabel=(pos)=>t("pos"+(pos||"MF"));
+  function TeamTile({team,selected,onPick}){
+    return <button type="button" role="radio" aria-checked={selected} aria-label={team.name} disabled={locked} onClick={()=>onPick(team.id)} className="card"
+      style={{margin:0,padding:"14px 10px",cursor:locked?"default":"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:6,textAlign:"center",color:"var(--lg-text)",
+        background:selected?(team.color+"26"):"var(--lg-bg)",border:"2px solid "+(selected?team.color:"var(--line)"),opacity:locked&&!selected?.55:1,boxShadow:selected?("0 0 0 1px "+team.color+" inset"):"none"}}>
+      <span style={{fontSize:26,lineHeight:1}} aria-hidden="true">{team.emoji}</span>
+      <span style={{fontWeight:800,fontSize:13.5}}>{team.short}</span>
+      <span style={{fontSize:11.5,opacity:.85}} dir="auto">{team.name}</span>
+      {selected&&<span style={{fontSize:11,fontWeight:800,color:team.color}}>✓</span>}
+    </button>;
+  }
+  function PlayerRow({pl}){
+    const selected=pl.id===topScorer;
+    const initials=(pl.name||"").split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase()||"•";
+    return <button type="button" role="radio" aria-checked={selected} aria-label={pl.name+" · "+posLabel(pl.pos)} disabled={locked} onClick={()=>chooseScorer(pl.id)} className="card"
+      style={{margin:0,marginBottom:8,padding:"10px 12px",width:"100%",cursor:locked?"default":"pointer",display:"flex",alignItems:"center",gap:10,textAlign:"start",color:"var(--lg-text)",
+        background:selected?"var(--lg-primary)":"var(--lg-bg)",border:"1px solid "+(selected?"var(--lg-primary)":"var(--line)"),opacity:locked&&!selected?.55:1}}>
+      <span aria-hidden="true" style={{width:34,height:34,borderRadius:10,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,background:"rgba(255,255,255,.10)"}}>{pl.avatar||initials}</span>
+      <span style={{flex:1,fontWeight:700,fontSize:14}} dir="auto">{pl.name}</span>
+      <span className="chip" style={{padding:"2px 8px",fontSize:11,fontWeight:800,background:"rgba(255,255,255,.12)",color:"var(--lg-text)",border:"none",minHeight:0}}>{posLabel(pl.pos)}</span>
+      {selected&&<span style={{fontSize:13,fontWeight:800}} aria-hidden="true">✓</span>}
+    </button>;
+  }
+  return <div style={{color:"var(--lg-text)"}}>
+    <div className="card" style={{margin:"0 0 14px",padding:"12px 14px",background:open?"var(--lg-bg)":"rgba(0,0,0,.28)",border:"1px solid "+(open?"var(--lg-primary)":"var(--line)"),color:"var(--lg-text)"}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+        <span style={{fontSize:18}} aria-hidden="true">⭐</span>
+        <span style={{fontWeight:800,fontSize:15}}>{t("seasonPicks")}</span>
+        <span className="chip" style={{marginInlineStart:"auto",padding:"4px 10px",fontSize:12,fontWeight:800,minHeight:0,background:open?"var(--lg-accent)":"transparent",color:open?"#0b0b0b":"var(--lg-text)",border:open?"none":"1px solid var(--line)"}}>
+          {open?(daysLeft!=null?t("pickWindowEnds",{d:daysLeft}):t("seasonPicks")):t("picksLocked")}
+        </span>
+      </div>
+      <div style={{fontSize:12.5,opacity:.85,marginTop:6,lineHeight:1.5}}>{open?t("pickWindowHint"):t("pickWindowClosed")}</div>
     </div>
-    {onChange&&<button onClick={onChange} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",margin:"0 0 12px",fontFamily:"inherit",fontSize:13}}>↺ {t("changeGroup")}</button>}
-    {ranked.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("emptyRanks")}</div>}
-    {ranked.map((r,i)=>{const isMe=r.id===me.id;
-      if(i===0||r.total!==ranked[i-1].total)r._rank=i+1;else r._rank=ranked[i-1]._rank;   // dense rank: equal totals share a place (1,1,3)
-      const place=r._rank;const pod=place<=3&&r.total>0;const mi=place-1;const ring=["rgba(255,194,60,.55)","rgba(208,214,232,.5)","rgba(214,150,92,.5)"][mi];const medalBg=["linear-gradient(150deg,#FFE08A,#F5A623)","linear-gradient(150deg,#E8EDF7,#AEB6CC)","linear-gradient(150deg,#E5B07E,#B97A43)"][mi];const medalFg=["#5a3b00","#2a2f3d","#3a2208"][mi];return <div key={r.id} className={"card lbrow"+(pod?" lbpod":"")} style={{display:"flex",alignItems:"center",gap:11,padding:pod?"13px 12px":11,marginBottom:pod?10:8,borderColor:isMe?"var(--brand)":(pod?ring:"var(--line)"),background:isMe?"var(--brand-soft)":undefined,"--lbglow":pod?ring:"transparent"}}>
-      {pod?<span className="lbmed" dir="ltr" style={{background:medalBg,color:medalFg}}>{medal[mi]}</span>
+    <div style={{fontSize:11.5,color:"var(--faint)",margin:"0 2px 14px",lineHeight:1.5}}>{t("sampleDataNote")}</div>
+    <section style={{marginBottom:22}}>
+      <h3 style={{margin:"0 0 2px",fontSize:16,fontWeight:800}}>{t("pickChampion")}</h3>
+      <div style={{fontSize:12.5,opacity:.85,marginBottom:4}}>{t("pickChampionSub")}</div>
+      <div style={{fontSize:12,fontWeight:800,color:"var(--lg-accent)",marginBottom:10}}>{t("champWorth")}</div>
+      {safeTeams.length===0?<Spinner/>:
+        <div role="radiogroup" aria-label={t("pickChampion")} style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          {safeTeams.map(team=><TeamTile key={team.id} team={team} selected={champion===team.id} onPick={chooseChampion}/>)}
+        </div>}
+      {championTeam&&<div style={{marginTop:10,fontSize:13}}><span style={{opacity:.8}}>{t("championLabel")}: </span><span style={{fontWeight:800}} dir="auto">{championTeam.emoji} {championTeam.name}</span></div>}
+    </section>
+    <section style={{marginBottom:18}}>
+      <h3 style={{margin:"0 0 2px",fontSize:16,fontWeight:800}}>{t("pickTopScorer")}</h3>
+      <div style={{fontSize:12.5,opacity:.85,marginBottom:4}}>{t("pickTopScorerSub")}</div>
+      <div style={{fontSize:12,fontWeight:800,color:"var(--lg-accent)",marginBottom:10}}>{t("scorerWorth")}</div>
+      <div style={{fontSize:12.5,fontWeight:700,marginBottom:8}}>{t("pickTeamFirst")}</div>
+      <div role="radiogroup" aria-label={t("pickTeamFirst")} style={{display:"flex",gap:8,overflowX:"auto",paddingBottom:6,marginBottom:12,scrollbarWidth:"none"}}>
+        {safeTeams.map(team=>{ const activeT=scorerTeamId===team.id;
+          return <button key={team.id} type="button" role="radio" aria-checked={activeT} aria-label={team.name} disabled={locked} onClick={()=>chooseScorerTeam(team.id)} className="chip"
+            style={{flexShrink:0,padding:"8px 12px",fontSize:13,fontWeight:800,cursor:locked?"default":"pointer",display:"flex",alignItems:"center",gap:6,
+              background:activeT?(team.color+"2e"):"transparent",color:"var(--lg-text)",border:"1.5px solid "+(activeT?team.color:"var(--line)"),opacity:locked&&!activeT?.55:1}}>
+            <span aria-hidden="true">{team.emoji}</span>{team.short}</button>; })}
+      </div>
+      {!scorerTeamId?<div className="card" style={{margin:0,padding:"22px 16px",textAlign:"center",borderStyle:"dashed",borderColor:"var(--lg-primary)",color:"var(--lg-text)",background:"var(--lg-bg)",fontSize:13.5}}>{t("pickTeamFirst")}</div>
+        :squad.length===0?<Spinner/>:
+        <div role="radiogroup" aria-label={t("squadOf",{team:(tById[scorerTeamId]||{}).name||""})}>
+          <div style={{fontSize:12.5,fontWeight:700,opacity:.85,marginBottom:8}}>{t("squadOf",{team:(tById[scorerTeamId]||{}).name||""})} · {t("chooseFromSquad")}</div>
+          {squad.map(pl=><PlayerRow key={pl.id} pl={pl}/>)}
+        </div>}
+      {scorerPlayer&&<div style={{marginTop:10,fontSize:13}}><span style={{opacity:.8}}>{t("topScorerLabel")}: </span><span style={{fontWeight:800}} dir="auto">{scorerPlayer.avatar} {scorerPlayer.name}{tById[scorerPlayer.teamId]?" · "+tById[scorerPlayer.teamId].short:""}</span></div>}
+    </section>
+    {locked&&<div className="card" style={{margin:0,padding:"12px 14px",textAlign:"center",background:"rgba(0,0,0,.28)",border:"1px solid var(--line)",color:"var(--lg-text)",fontWeight:800,fontSize:13.5}}>{t("picksLocked")}</div>}
+  </div>;
+}
+
+/* ---------- football: LeagueBoard (adapted from cmp-board) ---------- */
+function LeagueBoard({rows,me}){
+  const list=rows||[];
+  const myId=me&&me.id;
+  const norm=list.map(r=>{
+    const id=r.profile_id!=null?r.profile_id:r.id;
+    const name=(r.display_name!=null?r.display_name:r.name)||"—";
+    const photo=r.photo_url!=null?r.photo_url:(r.photo!=null?r.photo:null);
+    const total=Number(r.total)||0;
+    return {id,name,photo,total,exact:Number(r.exact_count)||0,champPts:Number(r.champion_points)||0,scorerPts:Number(r.scorer_points)||0,isMe:r.is_me===true||(myId!=null&&id===myId)};
+  });
+  if(norm.length===0) return <div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center",lineHeight:1.6}}>{t("emptyLeaderboard")}</div>;
+  const ranked=[...norm].sort((a,b)=>b.total-a.total||b.exact-a.exact||(a.name||"").localeCompare(b.name||"")||(a.id<b.id?-1:a.id>b.id?1:0));
+  const medal=["🥇","🥈","🥉"];
+  const medalBg=["linear-gradient(150deg,#FFE08A,#F5A623)","linear-gradient(150deg,#E8EDF7,#AEB6CC)","linear-gradient(150deg,#E5B07E,#B97A43)"];
+  const medalFg=["#5a3b00","#2a2f3d","#3a2208"];
+  const ring=["rgba(255,194,60,.55)","rgba(208,214,232,.5)","rgba(214,150,92,.5)"];
+  const PicksStatus=({r})=>{
+    const dot=(won,emoji,label,worthKey)=><span title={t(worthKey)} aria-label={t(label)+(won?" +12":"")} style={{display:"inline-flex",alignItems:"center",gap:3,fontSize:11,fontWeight:800,lineHeight:1,padding:"3px 6px",borderRadius:999,background:won?"var(--lg-primary,var(--brand))":"var(--ink-3)",color:won?"#fff":"var(--faint)",opacity:won?1:.8}}><span aria-hidden="true">{emoji}</span><span className="tnum" dir="ltr">{won?"+12":"—"}</span></span>;
+    return <span style={{display:"inline-flex",gap:5,flexShrink:0}}>{dot(r.champPts>0,"🏆","championLabel","champWorth")}{dot(r.scorerPts>0,"⚽","topScorerLabel","scorerWorth")}</span>;
+  };
+  return <div>{ranked.map((r,i)=>{
+    if(i===0||r.total!==ranked[i-1].total) r._rank=i+1; else r._rank=ranked[i-1]._rank;
+    const place=r._rank, pod=place<=3&&r.total>0, mi=place-1, isMe=r.isMe;
+    return <div key={r.id} className={"card lbrow"+(pod?" lbpod":"")} style={{display:"flex",alignItems:"center",gap:11,padding:pod?"13px 12px":11,marginBottom:pod?10:8,borderColor:isMe?"var(--lg-primary,var(--brand))":(pod?ring[mi]:"var(--line)"),background:isMe?"var(--brand-soft)":undefined,"--lbglow":pod?ring[mi]:"transparent"}}>
+      {pod?<span className="lbmed" dir="ltr" style={{background:medalBg[mi],color:medalFg[mi]}}>{medal[mi]}</span>
         :<span dir="ltr" style={{width:26,fontWeight:800,fontSize:14,color:"var(--faint)",textAlign:"center",fontVariantNumeric:"tabular-nums"}}>{place}</span>}
       <Avatar p={{display_name:r.name,photo_url:r.photo}} size={pod?40:34}/>
-      <div style={{flex:1,minWidth:0}}><div style={{fontWeight:pod?800:700,fontSize:pod?15.5:14.5,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}{isMe&&<span style={{marginInlineStart:6,fontSize:11,fontWeight:800,color:"var(--brand-2)"}}>{t("you")}</span>}</div></div>
-      <span className="tnum disp" dir="ltr" style={{fontWeight:900,fontSize:pod?19:16,color:pod?"var(--gold)":"var(--text)"}}>{r.total}</span></div>;})}
-    {ranked.length===1&&ranked[0].id===me.id&&<div className="card" style={{textAlign:"center",padding:16,borderStyle:"dashed"}}><div style={{fontSize:26,marginBottom:6}}>👑</div><div style={{fontWeight:800,fontSize:14.5,marginBottom:4}}>{t("soloBoard")}</div><div style={{color:"var(--muted)",fontSize:12.5,lineHeight:1.5,marginBottom:12}}>{t("soloBoardHint")}</div><button className="btn btn-pri" style={{padding:11,fontSize:14}} onClick={()=>shareWa(t("inviteText",{name:group.name,code:group.invite_code,url:REDIRECT}))}>{t("inviteToCompete")}</button></div>}
+      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:4}}>
+        <div style={{fontWeight:pod?800:700,fontSize:pod?15.5:14.5,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}{isMe&&<span style={{marginInlineStart:6,fontSize:11,fontWeight:800,color:"var(--lg-accent,var(--brand-2))"}}>{t("youRow")}</span>}</div>
+        <PicksStatus r={r}/>
+      </div>
+      <span className="tnum disp" dir="ltr" style={{fontWeight:900,fontSize:pod?19:16,color:pod?"var(--gold)":"var(--text)"}}>{r.total}</span>
+    </div>;
+  })}</div>;
+}
+// FixturesFeed — the core loop. Themed by active league. Season banner + grouped fixtures.
+function FixturesFeed({group,me,onOpenSeason,onScored,onErr,bump}){
+  const league=getLeague(group.league);
+  const [now,setNow]=useState(Date.now());
+  const [saving,setSaving]=useState(null);
+  const [predVersion,setPredVersion]=useState(0);
+  // one shared 1s clock for the whole feed (countdowns)
+  useEffect(()=>{ const id=setInterval(()=>setNow(Date.now()),1000); return ()=>clearInterval(id); },[]);
+  if(!league) return <div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("noFixtures")}</div>;
+  const fixtures=fixturesOfLeague(league.key);
+  // stamp absolute kickoff once per fixture (offset→absolute, LOAD_NOW baseline)
+  const withK=fixtures.map(fx=>({fx:fx,k:kickoffMs(fx)}));
+  const upcoming=withK.filter(o=>o.k>now && !o.fx.result).sort((a,b)=>a.k-b.k);
+  const finished=withK.filter(o=>o.k<=now || o.fx.result).sort((a,b)=>b.k-a.k);
+  const savePred=async(fx,h,a)=>{
+    setSaving(fx.id);
+    // WIRE the RPC; on ANY error fall back to local demo store (the live schema is the old one).
+    try{ const{error}=await SB.rpc("predict_match",{p_group:group.id,p_fixture:fx.id,p_home:h,p_away:a}); if(error) throw error; }
+    catch(e){ /* demo fallback — persist locally */ }
+    DEMO.setPred(group.id,fx.id,h,a);
+    setSaving(null); setPredVersion(v=>v+1);
+    if(onScored) onScored(0);   // bump App so the topbar total / leaderboard recompute from the new prediction (0 = no celebration; honesty preserved)
+    onErr&&onErr({ok:true,msg:t("predictionSaved")});
+  };
+  const picks=DEMO.getPicks(group.id);
+  const hasPicks=!!(picks.champion||picks.topScorer);
+  const deadline=pickDeadlineMs(group);
+  const windowOpen=now<=deadline;
+  const Section=({title,items})=> items.length===0?null:<div style={{marginBottom:18}}>
+    <div style={{fontWeight:800,fontSize:13,color:"var(--lg-text)",opacity:.85,margin:"4px 2px 10px"}}>{title}</div>
+    {items.map(o=><FixtureCard key={o.fx.id} league={league} fx={o.fx} kickoff={o.k} now={now}
+      pred={DEMO.getPred(group.id,o.fx.id)} saving={saving===o.fx.id} onSave={(h,a)=>savePred(o.fx,h,a)} onScored={onScored}/>)}
+  </div>;
+  return <div>
+    {/* Season-picks banner (pinned) */}
+    <button onClick={()=>{SND.tap();onOpenSeason();}} className="card lgtile" style={{width:"100%",textAlign:"start",cursor:"pointer",border:"1px solid var(--lg-primary)",background:"var(--lg-grad)",color:"var(--lg-text)",margin:"0 0 12px",padding:"13px 14px"}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}>
+        <span style={{fontSize:22}} aria-hidden="true">⭐</span>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontWeight:800,fontSize:14.5}}>{t("seasonPicks")}</div>
+          <div style={{fontSize:11.5,opacity:.85}}>{windowOpen?(hasPicks?t("changePick"):t("pickWindowHint")):t("picksLocked")}</div>
+        </div>
+        <Chev color="var(--lg-text)"/>
+      </div>
+    </button>
+    <div style={{fontSize:11.5,color:"var(--faint)",margin:"0 2px 14px",lineHeight:1.5}}>{t("sampleDataNote")}</div>
+    {upcoming.length===0&&finished.length===0
+      ? <div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center",background:"var(--lg-bg)",color:"var(--lg-text)"}}>{t("noFixtures")}</div>
+      : <div>
+          <Section title={t("upcomingT")} items={upcoming}/>
+          <Section title={t("finishedT")} items={finished}/>
+        </div>}
+  </div>;
+}
+
+/* ---------- football: PickGroup (no active group yet) ---------- */
+function PickGroup({groups,onPick}){
+  if(!groups||groups.length===0) return null;
+  return <div>
+    <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:12}}>{t("groupsT")}</div>
+    {groups.map(g=>{ const l=getLeague(g.league); const th=leagueTheme(g.league);
+      return <button key={g.id} onClick={()=>{SND.tap();onPick(g);}} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,width:"100%",textAlign:"start",cursor:"pointer",border:"1px solid "+th.primary+"66",background:"var(--ink-2)",color:"var(--text)",marginBottom:8}}>
+        <div style={{width:38,height:38,borderRadius:11,background:th.primary+"26",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>{l?l.emoji:"⚽"}</div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{l?l.name:g.league}</div></div><Chev/></button>; })}
+  </div>;
+}
+/* ---------- football: LeagueBoardScreen (per group) ---------- */
+function LeagueBoardScreen({group,me,onErr,onChange,bump}){
+  const league=getLeague(group.league);
+  const [rows,setRows]=useState(null);
+  useEffect(()=>{ let alive=true; (async()=>{
+    // WIRE group_board RPC; on ANY error fall back to a local single-row board (just me + my computed points).
+    let result=null;
+    try{ const{data,error}=await SB.rpc("group_board",{p_group:group.id}); if(error) throw error; if(data&&data.length) result=data; }
+    catch(e){ /* demo fallback below */ }
+    if(!alive) return;
+    if(result){ setRows(result); return; }
+    const pts=computeGroupPoints(group);
+    setRows([{ profile_id:me.id, display_name:me.display_name||"—", photo_url:me.photo_url||null,
+      match_points:pts.match, champion_points:pts.champion, scorer_points:pts.scorer, total:pts.total, exact_count:pts.exact, is_me:true }]);
+  })(); return ()=>{alive=false;}; },[group.id,me.id,bump]);
+  return <div style={{color:"var(--lg-text)"}}>
+    <div className="card" style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",marginBottom:13,background:"var(--lg-grad)",border:"1px solid var(--lg-primary)",color:"var(--lg-text)"}}>
+      <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>{league?league.emoji:"🏆"}</div>
+      <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:14.5}}>{group.name}</div><div style={{fontSize:12,opacity:.85}}>{league?league.name:group.league}</div></div>
+      <button onClick={()=>shareWa(t("groupInviteWa",{name:group.name,league:league?league.name:group.league,url:REDIRECT+"?g="+encodeURIComponent(group.id)+"&lg="+encodeURIComponent(group.league)+"&n="+encodeURIComponent(group.name)}))} className="chip" style={{padding:8,background:"rgba(255,255,255,.14)",border:"none",color:"var(--lg-text)"}} aria-label={t("shareGroupWa")} title={t("shareGroupWa")}>📤</button>
+    </div>
+    {onChange&&<button onClick={onChange} style={{background:"none",border:"none",color:"var(--lg-text)",opacity:.8,fontWeight:700,cursor:"pointer",margin:"0 0 12px",fontFamily:"inherit",fontSize:13}}>↺ {t("backToLeagues")}</button>}
+    {rows===null?<Spinner/>:<LeagueBoard rows={rows} me={me}/>}
   </div>;
 }
 
@@ -1140,11 +1590,13 @@ function Profile({group,groups,me,total,scores,onSignOut,onUpdated,onLang,snd,on
       <div style={{fontSize:12.5,color:"var(--muted)",fontWeight:700}}>{t("totalPts")}</div>
       <div className="disp goldglow" style={{fontSize:44,fontWeight:900,color:"var(--gold)"}}>🏆 <CountUp value={total}/></div>
     </div>
-    <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("ptsBySub")}</div>
+    {(scores&&scores.length>0)&&<>
+    <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("leaguesT")}</div>
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
-      {SK.map(k=><div key={k} className="card" style={{margin:0,padding:13,display:"flex",alignItems:"center",gap:9}}>
-        <div style={{width:32,height:32,borderRadius:9,background:SC[k]+"1f",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>{SEMO[k]}</div><div><div className="disp tnum" style={{fontSize:18,fontWeight:800,color:SC[k]}}>{scores[k]||0}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600}}>{subName(k)}</div></div></div>)}
-    </div>
+      {scores.map(s=>{ const l=getLeague(s.league); const th=leagueTheme(s.league);
+        return <div key={s.league} className="card" style={{margin:0,padding:13,display:"flex",alignItems:"center",gap:9}}>
+        <div style={{width:32,height:32,borderRadius:9,background:th.primary+"26",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>{l?l.emoji:"⚽"}</div><div style={{minWidth:0}}><div className="disp tnum" style={{fontSize:18,fontWeight:800,color:th.primary}}>{s.points}</div><div style={{fontSize:11,color:"var(--muted)",fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{l?l.name:s.league}</div></div></div>; })}
+    </div></>}
     <div style={{fontSize:12.5,fontWeight:800,color:"var(--muted)",margin:"6px 0 10px"}}>{t("settings")}</div>
     <div className="card" style={{padding:4,marginBottom:14}}>
       <button onClick={onLang} style={srow}><span>🌐 {t("langRow")}</span><span style={{color:"var(--muted)",display:"inline-flex",alignItems:"center",gap:5}}><span className="bidi">{langName}</span><Chev/></span></button>
@@ -1193,75 +1645,110 @@ function EditProfile({me,onClose,onUpdated}){
   </div></div>;
 }
 
-/* ---------- rules ---------- */
+/* ---------- rules (football) ---------- */
 function Rules(){
-  const row=(k,v)=><div style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:"1px solid var(--line)"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{k}</span><span className="tnum" style={{fontWeight:800,color:"var(--gold)"}}>{v}</span></div>;
+  const row=(k,v)=><div style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:"1px solid var(--line)",gap:10}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{k}</span><span className="tnum" dir="ltr" style={{fontWeight:800,color:"var(--gold)",flexShrink:0}}>{v}</span></div>;
   return <div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>{t("howEarn")}</div>
-      {row(t("rCorrect"),"+5")}{row(t("rMin"),"+3")}{row(t("r3"),"+4")}{row(t("r5"),"+5")}{row(t("rWrong"),"0")}
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>{t("howPointsWork")}</div>
+      {row(t("correctDirection"),"3")}{row(t("oneScore"),"1")}{row(t("noPoints"),"0")}
+      <div style={{fontSize:12,color:"var(--faint)",lineHeight:1.7,paddingTop:8}}>
+        <div>· {t("hpDirection")}</div><div>· {t("hpOne")}</div><div>· {t("hpZero")}</div>
+      </div></div>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>{t("seasonPicks")}</div>
+      {row(t("champWorth"),"+12")}{row(t("scorerWorth"),"+12")}
       <div style={{display:"flex",justifyContent:"space-between",padding:"9px 0"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{t("seasonReset")}</span><span style={{color:"var(--brand-2)",fontWeight:800}}>∞</span></div></div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--no)"}}>{t("allowedT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("al1")}</li><li>{t("al2")}</li><li>{t("al3")}</li></ul></div>
-    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--yes)"}}>{t("forbidT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("fo1")}</li><li>{t("fo2")}</li><li>{t("fo3")}</li></ul></div>
-    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700}}>{t("footerNote")}</p>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--no)"}}>{t("allowedT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("al1")}</li><li>{t("al3")}</li></ul></div>
+    <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8,color:"var(--yes)"}}>{t("forbidT")}</div><ul style={{margin:0,paddingInlineStart:18,color:"var(--muted)",fontSize:13.5,lineHeight:1.9}}><li>{t("fo1")}</li><li>{t("fo3")}</li></ul></div>
+    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700,marginBottom:4}}>{t("sampleDataNote")}</p>
+    <p style={{textAlign:"center",color:"var(--faint)",fontSize:11.5,fontWeight:700}}>{t("apiReadyNote")} · {t("footerNote")}</p>
   </div>;
 }
 
-/* ---------- groups (subject -> groups) ---------- */
-function Groups({groups,me,active,onErr,reload,onEnter,initialJoin}){
-  const [sub,setSub]=useState(null),[mode,setMode]=useState("list"),[name,setName]=useState(""),[code,setCode]=useState(""),[busy,setBusy]=useState(false),[made,setMade]=useState(null);
-  useEffect(()=>{ if(initialJoin){ setMode("join"); setCode(initialJoin); try{localStorage.removeItem("eyevos_pending_join");}catch(e){} } },[]);   // invite deep-link: ?join=CODE opens the join screen with the code prefilled
-  const create=async()=>{const nm=name.trim();if(busy||nm.length<2)return;setBusy(true);
-    let res=await SB.rpc("create_group",{p_name:nm,p_subject:sub});
-    if(res.error&&/function|does not exist|p_subject|schema cache/i.test(res.error.message)) res=await SB.rpc("create_group",{p_name:name.trim()}); // works before the per-subject SQL is run
-    setBusy(false);if(res.error)return onErr(res.error.message);
-    const made=Array.isArray(res.data)?res.data[0]:res.data;   // RPC may return a row or a single-row array; never assume non-null
-    if(!made||!made.id){ return onErr(t("netErr")); }   // no row back -> transient failure, don't crash on .id
-    try{localStorage.setItem("eyevos_gsub_"+made.id,sub);}catch(e){}   // local bridge: remember this group's subject now; DB takes over after SQL
-    SND.win();setMade(made);reload();};
-  const join=async()=>{const c=code.trim().toUpperCase();if(busy||c.length!==6)return;setBusy(true);const{error}=await SB.rpc("join_group",{p_code:c});setBusy(false);if(error)return onErr(error.message);SND.tap();setCode("");reload();setMode("list");};
-  const wa=(g)=>shareWa(t("inviteText",{name:g.name,code:g.invite_code,url:REDIRECT+"?join="+g.invite_code}));
-  if(!sub)return <div>
-    <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:4}}>{t("chooseSubject")}</div>
-    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("chooseSubjectSub")}</p>
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-      {SK.map(k=><button key={k} onClick={()=>{SND.tap();setSub(k);setMode("list");setMade(null);}} className="card" style={{margin:0,padding:"18px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:8,cursor:"pointer",border:"1px solid "+SC[k]+"55",background:SC[k]+"14"}}>
-        <span style={{fontSize:30}}>{SEMO[k]}</span><span style={{fontWeight:800,fontSize:14.5,color:SC[k]}}>{subName(k)}</span></button>)}
-    </div>
+/* ---------- groups: League picker → Groups-in-league → create → WhatsApp share ---------- */
+function Groups({groups,me,active,onErr,reload,onEnter,startLeague}){
+  const [leagueKey,setLeagueKey]=useState(startLeague||null);
+  const [mode,setMode]=useState("list"),[name,setName]=useState(""),[busy,setBusy]=useState(false),[made,setMade]=useState(null);
+  useEffect(()=>{ if(startLeague){ setLeagueKey(startLeague); } },[startLeague]);
+  const create=async()=>{ const nm=name.trim(); if(busy||nm.length<2)return; setBusy(true);
+    // WIRE create_group with p_league; on ANY error fall back to a local demo group (same defensive pattern as the old create).
+    let row=null;
+    try{ const res=await SB.rpc("create_group",{p_name:nm,p_league:leagueKey,p_emoji:null});
+      if(res.error) throw res.error;
+      row=Array.isArray(res.data)?res.data[0]:res.data;
+    }catch(e){ /* demo fallback */ }
+    let g;
+    if(row&&row.id){ g={id:row.id,name:row.name||nm,league:(row.league_key||leagueKey),created_at:row.created_at||new Date().toISOString(),joined_at:new Date().toISOString()}; }
+    else { g={id:newGroupId(),name:nm,league:leagueKey,created_at:new Date().toISOString(),joined_at:new Date().toISOString()}; }
+    DEMO.addGroup(g);
+    setBusy(false); SND.win(); setMade(g); reload();
+  };
+  const wa=(g)=>{ const l=getLeague(g.league); shareWa(t("groupInviteWa",{name:g.name,league:l?l.name:g.league,url:REDIRECT+"?g="+encodeURIComponent(g.id)+"&lg="+encodeURIComponent(g.league)+"&n="+encodeURIComponent(g.name)})); };
+  // --- League picker (root) ---
+  if(!leagueKey) return <div>
+    <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:4}}>{t("pickLeague")}</div>
+    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("pickLeagueSub")}</p>
+    {LEAGUES.length===0?<div className="card" style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,padding:"22px 16px"}}>{t("netErr")} <button className="chip" style={{marginInlineStart:8,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>location.reload()}>{t("retry")}</button></div>:
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        {LEAGUES.map(l=>{ const th=leagueTheme(l.key); const n=(l.teams||[]).length;
+          return <button key={l.key} onClick={()=>{SND.tap();setLeagueKey(l.key);setMode("list");setMade(null);}} className="card lgtile"
+            style={{margin:0,padding:"16px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:6,cursor:"pointer",border:"1px solid "+th.primary+"66",background:th.grad,color:th.text,textAlign:"center"}}>
+            <span style={{fontSize:30,lineHeight:1}} aria-hidden="true">{l.emoji}</span>
+            <span style={{fontWeight:800,fontSize:14,lineHeight:1.2}}>{l.name}</span>
+            <span style={{fontSize:11,opacity:.8}} className="bidi-ltr">{t("nTeams",{n:n})} ⚽</span>
+          </button>; })}
+      </div>}
+    <p style={{color:"var(--faint)",fontSize:11.5,marginTop:16,lineHeight:1.5}}>{t("sampleDataNote")}</p>
   </div>;
-  const inSub=groups.filter(g=>grpSub(g)===sub);
+  // --- Groups-in-league ---
+  const lg=getLeague(leagueKey); const th=leagueTheme(leagueKey);
+  const inLeague=(groups||[]).filter(g=>g.league===leagueKey);
   return <div>
-    <button onClick={()=>{setSub(null);setMode("list");setMade(null);}} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>{t("back")}</button>
-    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14,flexWrap:"wrap"}}><span style={{fontSize:24}}>{SEMO[sub]}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:SC[sub]}}>{subName(sub)}</span><span style={{color:"var(--muted)",fontSize:13}}>· {t("yourGroupsIn")}</span></div>
-    {made?<div className="card" style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>{t("groupCreated")}</div><div className="disp tnum goldglow bidi-ltr" style={{fontSize:28,fontWeight:900,color:"var(--brand-2)",letterSpacing:"3px",margin:"4px 0 8px"}}>{made.invite_code}</div>
-      <div style={{color:"var(--muted)",fontSize:12.5,lineHeight:1.5,maxWidth:280,margin:"0 auto 14px"}} dir="auto">{t("groupCreatedSub")}</div>
-      <button className="btn" style={{background:"var(--wa)",color:"#06231a",marginBottom:10}} onClick={()=>wa(made)}>{t("inviteWa")}</button>
-      <button className="btn btn-pri" onClick={()=>onEnter(made,sub)}>{t("enterGroupGo")}</button></div>
+    <button onClick={()=>{setLeagueKey(null);setMode("list");setMade(null);}} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>‹ {t("backToLeagues")}</button>
+    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14,flexWrap:"wrap"}}><span style={{fontSize:24}}>{lg?lg.emoji:"⚽"}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:th.primary}}>{lg?lg.name:leagueKey}</span></div>
+    {made?<div className="card" style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>{t("groupCreated")}</div>
+      <div style={{color:"var(--muted)",fontSize:12.5,lineHeight:1.5,maxWidth:280,margin:"6px auto 14px"}} dir="auto">{t("inviteByLink")}</div>
+      <button className="btn" style={{background:"var(--wa)",color:"#06231a",marginBottom:10}} onClick={()=>wa(made)}>{t("shareGroupWa")}</button>
+      <button className="btn btn-pri" onClick={()=>onEnter(made)}>{t("enterGroupGo")}</button></div>
     :mode==="create"?<>
-      <input className="in" aria-label={t("groupNamePh")} placeholder={t("groupNamePh")} value={name} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
-      <button className="btn btn-pri" disabled={busy||name.trim().length<2} onClick={create} style={{marginBottom:10}}>{busy?t("creatingW"):t("createBtn")}</button>
-      <button className="btn btn-ghost" onClick={()=>setMode("list")}>{t("back")}</button></>
-    :mode==="join"?<>
-      <input className="in" aria-label={t("joinWithCode")} placeholder="K7M2QX" value={code} maxLength={6} inputMode="latin" autoCapitalize="characters" onChange={e=>setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6))} style={{marginBottom:14,textAlign:"center",letterSpacing:"2px",fontSize:18}}/>
-      <button className="btn btn-pri" disabled={busy||code.trim().length!==6} onClick={join} style={{marginBottom:10}}>{busy?t("joiningW"):t("joinBtn")}</button>
+      <input className="in" aria-label={t("groupNamePh")} placeholder={t("groupNamePh")} value={name} maxLength={24} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
+      <button className="btn btn-pri" disabled={busy||name.trim().length<2} onClick={create} style={{marginBottom:10,background:th.primary}}>{busy?t("creatingW"):t("createBtn")}</button>
+      <div style={{textAlign:"center",fontSize:12,color:"var(--faint)",marginBottom:10}}>{t("inviteByLink")}</div>
       <button className="btn btn-ghost" onClick={()=>setMode("list")}>{t("back")}</button></>
     :<>
-      {inSub.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("noGroupB")}</div>}
-      {inSub.map(g=><div key={g.id} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,borderColor:active&&active.id===g.id?"var(--brand)":"var(--line)"}}>
-        <button onClick={()=>onEnter(g,sub)} style={{flex:1,display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer",textAlign:"start",color:"var(--text)",padding:0}}>
-          <div style={{width:38,height:38,borderRadius:11,background:"var(--brand-soft)",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
-          <div><div style={{fontWeight:800,fontSize:15}}>{g.name}</div><div className="tnum bidi-ltr" style={{fontSize:12,color:"var(--muted)"}}>{g.invite_code}</div></div></button>
-        <button onClick={()=>wa(g)} className="chip" style={{padding:8}} aria-label={t("aShareWa")} title={t("aShareWa")}>📤</button></div>)}
-      <button className="btn btn-pri" style={{marginTop:8,marginBottom:10}} onClick={()=>setMode("create")}>{t("createGroup")}</button>
-      <button className="btn btn-ghost" onClick={()=>setMode("join")}>{t("joinWithCode")}</button></>}
+      {inLeague.length===0&&<div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center",lineHeight:1.6}}>{t("noGroupB")}</div>}
+      {inLeague.map(g=><div key={g.id} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,borderColor:active&&active.id===g.id?th.primary:"var(--line)"}}>
+        <button onClick={()=>onEnter(g)} style={{flex:1,display:"flex",alignItems:"center",gap:10,background:"none",border:"none",cursor:"pointer",textAlign:"start",color:"var(--text)",padding:0,minWidth:0}}>
+          <div style={{width:38,height:38,borderRadius:11,background:th.primary+"26",display:"flex",alignItems:"center",justifyContent:"center"}}>👥</div>
+          <div style={{minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div className="tnum bidi-ltr" style={{fontSize:12,color:"var(--muted)"}}>1/40</div></div></button>
+        <button onClick={()=>wa(g)} className="chip" style={{padding:8}} aria-label={t("shareGroupWa")} title={t("shareGroupWa")}>📤</button></div>)}
+      <button className="btn btn-pri" style={{marginTop:8,marginBottom:8,background:th.primary}} onClick={()=>setMode("create")}>{t("createGroupL")}</button>
+      <div style={{textAlign:"center",fontSize:12,color:"var(--faint)"}}>{t("inviteByLink")}</div></>}
   </div>;
+}
+
+/* ---------- football: Season screen (wraps SeasonPicks in a sheet, persists to DEMO) ---------- */
+function SeasonScreen({group,onClose}){
+  const league=getLeague(group.league);
+  const teams=(league&&league.teams)||[];
+  const players=(league&&league.players)||[];
+  const raw=DEMO.getPicks(group.id);
+  const deadline=pickDeadlineMs(group);
+  const picks={champion:raw.champion,topScorer:raw.topScorer,deadlineMs:deadline};
+  const windowOpen=Date.now()<=deadline;
+  const onChampion=(teamId)=>{ const cur=DEMO.getPicks(group.id); DEMO.setPicks(group.id,teamId,cur.topScorer||null); };
+  const onTopScorer=(playerId)=>{ const cur=DEMO.getPicks(group.id); DEMO.setPicks(group.id,cur.champion||null,playerId); };
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()} role="dialog" aria-modal="true" aria-label={t("seasonPicks")} style={{maxHeight:"88vh",overflowY:"auto"}}><div className="grab"/>
+    <SeasonPicks league={league} teams={teams} players={players} picks={picks} windowOpen={windowOpen} onChampion={onChampion} onTopScorer={onTopScorer}/>
+    <button className="btn btn-pri" style={{marginTop:14}} onClick={onClose}>{t("back")}</button>
+  </div></div>;
 }
 
 /* ---------- root ---------- */
 function App(){
   const [session,setSession]=useState(undefined),[me,setMe]=useState(null),[groups,setGroups]=useState(null),[group,setGroup]=useState(null);
-  const [joinCode]=useState(()=>{ try{ const u=new URLSearchParams(location.search).get("join"); const c=(u||localStorage.getItem("eyevos_pending_join")||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6); if(u&&c){try{localStorage.setItem("eyevos_pending_join",c);}catch(e){}} return c; }catch(e){return "";} });   // invite deep-link, survives the OAuth/magic-link round-trip via localStorage
-  const [tab,setTab]=useState(joinCode?"groups":"feed"),[err,setErr]=useState(null),[startCreate,setStartCreate]=useState(0),[celebrate,setCelebrate]=useState(false);
-  const [scores,setScores]=useState({}),[total,setTotal]=useState(0),[snd,setSnd]=useState(SND.on),[lang,setLang]=useState(CUR.lang),[langOpen,setLangOpen]=useState(false),[winPts,setWinPts]=useState(null);
+  const [deepJoin]=useState(()=>{ try{ const q=new URLSearchParams(location.search); let gid=q.get("g")||"", lg=q.get("lg")||"", nm=q.get("n")||""; if(gid){ try{ localStorage.setItem("eyevos_pending_g",JSON.stringify({id:gid,lg:lg,n:nm})); }catch(e){} } else { try{ const s=localStorage.getItem("eyevos_pending_g"); if(s){ const o=JSON.parse(s)||{}; gid=o.id||""; lg=o.lg||""; nm=o.n||""; } }catch(e){} } return gid?{id:gid,lg:lg,n:nm}:null; }catch(e){return null;} });   // ?g=<id>&lg=<league>&n=<name> invite deep-link, survives the OAuth/magic-link round-trip via localStorage
+  const [tab,setTab]=useState(deepJoin?"groups":"feed"),[err,setErr]=useState(null),[startCreate,setStartCreate]=useState(0),[celebrate,setCelebrate]=useState(false),[seasonGroup,setSeasonGroup]=useState(null),[bump,setBump]=useState(0);
+  const [scores,setScores]=useState([]),[total,setTotal]=useState(0),[snd,setSnd]=useState(SND.on),[lang,setLang]=useState(CUR.lang),[langOpen,setLangOpen]=useState(false),[winPts,setWinPts]=useState(null);
   useEffect(()=>{document.documentElement.lang=lang;document.documentElement.dir=dirOf(lang);},[lang]);
   const pickLang=(c)=>{CUR.lang=c;localStorage.setItem("eyevos_lang",c);setLang(c);setLangOpen(false);SND.tap();};
   useEffect(()=>{SB.auth.getSession().then(({data})=>setSession(data.session||null));const{data:s}=SB.auth.onAuthStateChange((_e,ss)=>setSession(ss||null));return()=>s.subscription.unsubscribe();},[]);
@@ -1273,14 +1760,31 @@ function App(){
     });
     pull(); return ()=>{live=false;};
   },[session]);
-  const loadGroups=async()=>{const{data,error}=await SB.from("groups").select("*").order("created_at");if(error){onErr(error.message);if(groups===null)setGroups([]);return;}const list=data||[];setGroups(list);setGroup(g=>(g&&list.some(x=>x.id===g.id))?g:null);};
-  useEffect(()=>{if(me)loadGroups();},[me]);
-  useEffect(()=>{ const back=()=>{ if(me){ loadGroups(); loadScores(); } }; window.addEventListener("online",back); return ()=>window.removeEventListener("online",back); },[me]);
-  const loadScores=async()=>{if(!me)return;const{data,error}=await SB.from("member_scores").select("subject,points").eq("profile_id",me.id);if(error){ return total; }   // transient failure: keep the last real total + scores, never flash a false 0
-    const s={};let x=0;(data||[]).forEach(r=>{s[r.subject]=(s[r.subject]||0)+r.points;x+=r.points;});setScores(s);setTotal(x);return x;};
-  useEffect(()=>{loadScores();},[me]);
+  const loadGroups=()=>{ try{ setGroups(DEMO.groups()); }catch(e){ setGroups([]); } };   // LOCAL-FIRST: groups live in DEMO (localStorage) until the football backend (FOOTBALL-schema.sql) is run
+  const recalcTotal=()=>{ try{ setTotal(userTotalPoints());
+      const byLeague={}; DEMO.groups().forEach(g=>{ const p=computeGroupPoints(g).total; byLeague[g.league]=(byLeague[g.league]||0)+p; });
+      setScores(Object.keys(byLeague).map(k=>({league:k,points:byLeague[k]})));   // per-league breakdown for the Profile grid
+    }catch(e){} };               // football total = points computed locally from predictions vs sample results
+  const loadScores=async()=>{ recalcTotal(); return total; };
+  useEffect(()=>{ if(me){ DEMO.setUser(me.id); loadGroups(); recalcTotal(); } },[me]);
+  // deep-link join (?g=<id>&lg=<league>&n=<name>): try join_group RPC; on error reconstruct locally (demo is per-device, link carries lg+n), then enter the group. Runs after [me] so DEMO is namespaced.
+  useEffect(()=>{ if(!me||!deepJoin||!deepJoin.id) return; let alive=true; (async()=>{
+    let row=null;
+    try{ const res=await SB.rpc("join_group",{p_group:deepJoin.id}); if(res.error) throw res.error; row=Array.isArray(res.data)?res.data[0]:res.data; }catch(e){}
+    let g=null;
+    if(row&&row.id){ g={id:row.id,name:row.name||deepJoin.n||t("groupsT"),league:(row.league_key||deepJoin.lg),created_at:row.created_at||new Date().toISOString(),joined_at:new Date().toISOString()}; }
+    else if(deepJoin.lg&&getLeague(deepJoin.lg)){ g={id:deepJoin.id,name:deepJoin.n||getLeague(deepJoin.lg).name,league:deepJoin.lg,created_at:new Date().toISOString(),joined_at:new Date().toISOString()}; }
+    if(!alive) return;
+    try{ localStorage.removeItem("eyevos_pending_g"); }catch(e){}
+    if(g){ DEMO.addGroup(g); loadGroups(); recalcTotal(); enterGroup(g); setTab("feed"); onErr({ok:true,msg:t("joinedGroup")}); }
+    else { setTab("groups"); onErr(t("joinLinkBad")); }
+  })(); return ()=>{alive=false;}; },[me]);
+  useEffect(()=>{ recalcTotal(); },[groups,bump]);
+  useEffect(()=>{ const back=()=>{ if(me){ loadGroups(); recalcTotal(); } }; window.addEventListener("online",back); return ()=>window.removeEventListener("online",back); },[me]);
   const onErr=(m)=>{setErr(m);setTimeout(()=>setErr(null),5000);};
   const signOut=async()=>{await SB.auth.signOut();setGroup(null);setGroups(null);};
+  const enterGroup=(g)=>{ setGroup(g); try{applyLeagueTheme(g.league);}catch(e){} };   // re-skin the device to the league theme on entry
+  const onScored=(pts)=>{ if(pts>0){ SND.win(); setCelebrate(true); setTimeout(()=>setCelebrate(false),3200); } setBump(b=>b+1); };   // confetti only on a real scoring event (honesty)
   const onResolved=async(won,poll)=>{
     const before=total; const after=await loadScores();
     if(!won)return;
@@ -1314,36 +1818,37 @@ function App(){
     {offline&&<div dir={dirOf(lang)} style={{position:"absolute",top:0,left:0,right:0,zIndex:60,background:"var(--no)",color:"#06231a",textAlign:"center",fontSize:12,fontWeight:800,padding:"6px 8px",boxShadow:"0 2px 10px rgba(0,0,0,.35)"}}>{t("offline")}</div>}
     {celebrate&&<Confetti/>}
     {winPts!=null&&<WinModal won={winPts} total={(winPts&&winPts.total!=null)?winPts.total:total} onClose={()=>setWinPts(null)}/>}
-    <div className="topbar"><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-      <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("live")}</span></div>
+    <div className={"topbar"+(group&&(tab==="feed"||tab==="board")?" lgband":"")}><div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}><span className="disp" style={{fontSize:20,fontWeight:900}}>Eyevos<span style={{color:"var(--yes)"}}>.</span></span><span className="livebadge"><span className="livedot"/> {t("demoBadge")}</span></div>
       <div style={{display:"flex",alignItems:"center",gap:8,minWidth:0,justifyContent:"flex-end",flex:1}}>
         {group&&tab!=="groups"&&tab!=="feed"&&<button className="chip" onClick={()=>setTab("groups")} style={{padding:"5px 10px",fontSize:12,minWidth:0,maxWidth:120,overflow:"hidden"}}>👥 <span className="bidi" style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{group.name}</span> <Chev/></button>}
         <button onClick={()=>{SND.tap();setTab("rules");}} className={"chip"+(tab==="rules"?" on":"")} style={{padding:"5px 9px",fontSize:12}}>📖 {t("navRules")}</button>
         <span className="pill" style={{fontSize:13}}>🏆 <CountUp value={total}/></span>
       </div></div>
-      {tab==="feed"&&<p className="disp" style={{fontSize:24,fontWeight:900,margin:"12px 0 0",lineHeight:1.12}}>{t("tbBet")} <span className="jackpot">{t("heroWin")}</span></p>}
-      {tab==="board"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span className="hl">{t("boardH")}</span></p>}
+      {tab==="feed"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}} dir="auto">{group&&getLeague(group.league)?<span><span aria-hidden="true">{getLeague(group.league).emoji}</span> <span className="hl">{getLeague(group.league).name}</span></span>:<span className="hl">{t("pickLeague")}</span>}</p>}
+      {tab==="board"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span className="hl">{t("leaderboard")}</span></p>}
       {tab==="rules"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span className="hl">{t("rulesH")}</span></p>}
       {tab==="profile"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span className="hl">{t("profileH")}</span></p>}
       {tab==="groups"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span aria-hidden="true">👥</span> <span className="hl">{t("groupsT")}</span></p>}
     </div>
     <div className="scroll">
       {tab==="groups"?
-        <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} initialJoin={joinCode} onEnter={(g)=>{setGroup(g);setTab("board");}}/>
+        <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{ enterGroup(g); setTab("feed"); }}/>
       :groups.length===0?
         <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎯</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:8}}>{t("noGroupB")}</p><div style={{display:"inline-flex",alignItems:"center",gap:6,fontSize:12,fontWeight:700,color:"var(--brand-2)",marginBottom:16}}><span aria-hidden="true">⏱️</span>{t("sixtySec")}</div><br/><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
-        :tab==="feed"?<Feed groups={groups} me={me} onErr={onErr} onResolved={onResolved} startCreate={startCreate}/>
-        :tab==="board"?(group?<Ranks group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)}/>:<PickGroup groups={groups} onPick={(g)=>setGroup(g)}/>)
+        :tab==="feed"?(group?<FixturesFeed group={group} me={me} onOpenSeason={()=>setSeasonGroup(group)} onScored={onScored} onErr={onErr} bump={bump}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
+        :tab==="board"?(group?<LeagueBoardScreen group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)} bump={bump}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
         :tab==="rules"?<Rules/>
         :<Profile group={group} groups={groups} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>}
     </div>
     <div className="nav">
-      <button className={"navb"+(tab==="feed"?" on":"")} aria-current={tab==="feed"?"page":undefined} onClick={()=>setTab("feed")}>🏠 {t("navFeed")}</button>
-      <button className={"navb"+(tab==="board"?" on":"")} aria-current={tab==="board"?"page":undefined} onClick={()=>setTab("board")}>🏆 {t("navBoard")}</button>
-      <button className="fab" aria-label={t("aFab")} title={t("aFab")} onClick={()=>{ if(groups&&groups.length){setTab("feed");setStartCreate(x=>x+1);} else setTab("groups"); }}>+</button>
+      <button className={"navb"+(tab==="feed"?" on":"")} aria-current={tab==="feed"?"page":undefined} onClick={()=>setTab("feed")}>⚽ {t("fixtures")}</button>
+      <button className={"navb"+(tab==="board"?" on":"")} aria-current={tab==="board"?"page":undefined} onClick={()=>setTab("board")}>🏆 {t("leaderboard")}</button>
+      <button className="fab" aria-label={t("aFab")} title={t("aFab")} onClick={()=>{ SND.tap(); setTab("groups"); }}>+</button>
       <button className={"navb"+(tab==="groups"?" on":"")} aria-current={tab==="groups"?"page":undefined} onClick={()=>setTab("groups")}>👥 {t("groupsT")}</button>
       <button className={"navb"+(tab==="profile"?" on":"")} aria-current={tab==="profile"?"page":undefined} onClick={()=>setTab("profile")}>👤 {t("navProfile")}</button>
     </div>
+    {seasonGroup&&<SeasonScreen group={seasonGroup} onClose={()=>{setSeasonGroup(null);setBump(b=>b+1);}}/>}
     {langSheet}
   </div></div>;
 }

@@ -205,6 +205,7 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px s
 .fab:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .bar .lab:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--brand-2),inset 0 0 0 4px rgba(12,10,20,.85);border-radius:11px}
 .btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.lgaura{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}.lgaura>i{position:absolute;border-radius:50%;will-change:transform,opacity;filter:blur(30px);animation:auraDrift 30s ease-in-out infinite}.lgaura .b1{width:64%;height:48%;top:-12%;inset-inline-start:-14%;background:radial-gradient(closest-side,var(--lg-primary),transparent 72%);opacity:.32}.lgaura .b2{width:56%;height:44%;bottom:-14%;inset-inline-end:-12%;background:radial-gradient(closest-side,var(--lg-accent),transparent 72%);opacity:.24;animation-direction:reverse}@keyframes auraDrift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(7%,7%,0) scale(1.13)}}@media (prefers-reduced-motion:reduce){.lgaura>i{animation:none!important;transform:none!important;opacity:.18}}
 /* ----- bottom-nav: keep every label on ONE line so the bar stays aligned in all 10 langs ----- */
 .nav .navb{flex:1 1 0;min-width:0;max-width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:4px;gap:3px;line-height:1.15;font-size:clamp(9.5px,2.4vw,11px)}
 /* ===== football layer ===== */
@@ -947,6 +948,45 @@ hi:{seasonPickLine:"जॉइन करने के 4 दिनों के �
 zh:{seasonPickLine:"加入后 4 天内选择——或在赛季过半之前",fairPlayCard:"公平竞赛 · 仅限好友 · 只有积分，永不涉及金钱 · 10 岁以上"},
 ar:{seasonPickLine:"اختر خلال 4 أيام من انضمامك — أو قبل منتصف الموسم",fairPlayCard:"لعب نظيف · بين الأصدقاء فقط · نقاط فقط، لا مال أبداً · من سن 10"}};
 for(const _c in _GX32){ if(STR[_c]) Object.assign(STR[_c],_GX32[_c]); }
+const _GX33={
+he:{champWorth:"אלופה נכונה = +10 נק׳",scorerWorth:"מלך שערים נכון = +10 נק׳",seasonPicksSub:"שתי בחירות לכל העונה — אלוף ומלך שערים. כל אחת שווה 10 נקודות.",screenErr:"משהו נתקע במסך הזה",groupCodeLbl:"קוד הצטרפות",copyCode:"העתק את הקוד",codeCopied:"הקוד הועתק ✓",joinByCodeT:"הצטרף לקבוצה לפי קוד",codePh:"קוד בן 6 תווים",codeNotFound:"לא נמצאה קבוצה עם הקוד הזה במכשיר הזה",shareCodeOrWa:"שתף את הקוד או שלח הזמנה ב‑WhatsApp",codeLocalNote:"בדמו המקומי הקוד עובד רק במכשיר הזה — בין מכשירים יעבוד כשה‑backend ירוץ"},
+en:{champWorth:"Correct champion = +10 pts",scorerWorth:"Correct top scorer = +10 pts",seasonPicksSub:"Two picks for the whole season — champion and top scorer. Each worth 10 points.",screenErr:"This screen hit a snag",groupCodeLbl:"Join code",copyCode:"Copy code",codeCopied:"Code copied ✓",joinByCodeT:"Join a group by code",codePh:"6-char code",codeNotFound:"No group with that code on this device",shareCodeOrWa:"Share the code, or send a WhatsApp invite",codeLocalNote:"In the local demo the code works on this device only — cross-device once the backend runs"},
+es:{champWorth:"Campeón correcto = +10 pts",scorerWorth:"Goleador correcto = +10 pts",seasonPicksSub:"Dos elecciones para toda la temporada — campeón y goleador. Cada una vale 10 puntos.",screenErr:"Esta pantalla tuvo un problema",groupCodeLbl:"Código",copyCode:"Copiar código",codeCopied:"Código copiado ✓",joinByCodeT:"Unirse por código",codePh:"Código de 6 caracteres",codeNotFound:"Ningún grupo con ese código en este dispositivo",shareCodeOrWa:"Comparte el código o envía una invitación por WhatsApp",codeLocalNote:"En la demo local el código solo funciona en este dispositivo — multidispositivo con el backend"},
+fr:{champWorth:"Champion correct = +10 pts",scorerWorth:"Meilleur buteur correct = +10 pts",seasonPicksSub:"Deux choix pour toute la saison — champion et meilleur buteur. Chacun vaut 10 points.",screenErr:"Cet écran a rencontré un souci",groupCodeLbl:"Code",copyCode:"Copier le code",codeCopied:"Code copié ✓",joinByCodeT:"Rejoindre par code",codePh:"Code à 6 caractères",codeNotFound:"Aucun groupe avec ce code sur cet appareil",shareCodeOrWa:"Partage le code ou envoie une invitation WhatsApp",codeLocalNote:"Dans la démo locale le code ne marche que sur cet appareil — multi-appareils avec le backend"},
+pt:{champWorth:"Campeão certo = +10 pts",scorerWorth:"Artilheiro certo = +10 pts",seasonPicksSub:"Duas escolhas para toda a temporada — campeão e artilheiro. Cada uma vale 10 pontos.",screenErr:"Esta tela teve um problema",groupCodeLbl:"Código",copyCode:"Copiar código",codeCopied:"Código copiado ✓",joinByCodeT:"Entrar por código",codePh:"Código de 6 caracteres",codeNotFound:"Nenhum grupo com esse código neste dispositivo",shareCodeOrWa:"Compartilhe o código ou envie um convite no WhatsApp",codeLocalNote:"Na demo local o código só funciona neste dispositivo — entre dispositivos quando o backend rodar"},
+ru:{champWorth:"Верный чемпион = +10 оч.",scorerWorth:"Верный бомбардир = +10 оч.",seasonPicksSub:"Два выбора на весь сезон — чемпион и бомбардир. Каждый стоит 10 очков.",screenErr:"На этом экране сбой",groupCodeLbl:"Код",copyCode:"Копировать код",codeCopied:"Код скопирован ✓",joinByCodeT:"Вступить по коду",codePh:"Код из 6 символов",codeNotFound:"На этом устройстве нет группы с таким кодом",shareCodeOrWa:"Поделись кодом или отправь приглашение в WhatsApp",codeLocalNote:"В локальном демо код работает только на этом устройстве — между устройствами после запуска backend"},
+de:{champWorth:"Richtiger Meister = +10 Pkt.",scorerWorth:"Richtiger Torschützenkönig = +10 Pkt.",seasonPicksSub:"Zwei Tipps für die ganze Saison — Meister und Torschützenkönig. Je 10 Punkte.",screenErr:"Dieser Bildschirm hatte ein Problem",groupCodeLbl:"Beitrittscode",copyCode:"Code kopieren",codeCopied:"Code kopiert ✓",joinByCodeT:"Per Code beitreten",codePh:"6-stelliger Code",codeNotFound:"Keine Gruppe mit diesem Code auf diesem Gerät",shareCodeOrWa:"Teil den Code oder schick eine WhatsApp-Einladung",codeLocalNote:"In der lokalen Demo gilt der Code nur auf diesem Gerät — geräteübergreifend mit dem Backend"},
+hi:{champWorth:"सही चैंपियन = +10 पॉइंट",scorerWorth:"सही टॉप स्कोरर = +10 पॉइंट",seasonPicksSub:"पूरे सीज़न के लिए दो पिक्स — चैंपियन और टॉप स्कोरर। हर एक 10 पॉइंट।",screenErr:"इस स्क्रीन में दिक्कत आई",groupCodeLbl:"जॉइन कोड",copyCode:"कोड कॉपी करो",codeCopied:"कोड कॉपी हो गया ✓",joinByCodeT:"कोड से ग्रुप जॉइन करो",codePh:"6 अक्षर का कोड",codeNotFound:"इस डिवाइस पर इस कोड का कोई ग्रुप नहीं",shareCodeOrWa:"कोड शेयर करो या WhatsApp पर इनवाइट भेजो",codeLocalNote:"लोकल डेमो में कोड सिर्फ इसी डिवाइस पर — backend चलने पर सभी डिवाइस पर"},
+zh:{champWorth:"冠军猜对 = +10 分",scorerWorth:"最佳射手猜对 = +10 分",seasonPicksSub:"整个赛季的两项预选——冠军和最佳射手，每项 10 分。",screenErr:"此页面出现问题",groupCodeLbl:"加入码",copyCode:"复制加入码",codeCopied:"加入码已复制 ✓",joinByCodeT:"用加入码加入",codePh:"6 位加入码",codeNotFound:"本设备上没有该加入码的群组",shareCodeOrWa:"分享加入码，或发送 WhatsApp 邀请",codeLocalNote:"本地演示中加入码仅在本设备有效 — 后端运行后可跨设备"},
+ar:{champWorth:"البطل الصحيح = +10 نقطة",scorerWorth:"الهدّاف الصحيح = +10 نقطة",seasonPicksSub:"اختياران للموسم — البطل والهدّاف. كل واحد بـ 10 نقاط.",screenErr:"حدثت مشكلة في هذه الشاشة",groupCodeLbl:"رمز الانضمام",copyCode:"انسخ الرمز",codeCopied:"تم نسخ الرمز ✓",joinByCodeT:"انضم برمز",codePh:"رمز من 6 خانات",codeNotFound:"لا توجد مجموعة بهذا الرمز على هذا الجهاز",shareCodeOrWa:"شارك الرمز أو أرسل دعوة عبر WhatsApp",codeLocalNote:"في العرض المحلي يعمل الرمز على هذا الجهاز فقط — بين الأجهزة عند تشغيل الـbackend"}};
+for(const _c in _GX33){ if(STR[_c]) Object.assign(STR[_c],_GX33[_c]); }
+// ===== _GX34 — league-picker search (§6.2), 10 languages =====
+const _GX34={
+he:{searchLeaguePh:"חפש ליגה או מדינה…",noLeagueMatch:"לא נמצאה ליגה ל“{q}” — נסה שם אחר"},
+en:{searchLeaguePh:"Search a league or country…",noLeagueMatch:"No league matches “{q}” — try another name"},
+es:{searchLeaguePh:"Busca una liga o país…",noLeagueMatch:"Ninguna liga coincide con “{q}” — prueba otro nombre"},
+fr:{searchLeaguePh:"Cherche un championnat ou un pays…",noLeagueMatch:"Aucun championnat ne correspond à “{q}” — essaie un autre nom"},
+pt:{searchLeaguePh:"Busque uma liga ou país…",noLeagueMatch:"Nenhuma liga corresponde a “{q}” — tente outro nome"},
+ru:{searchLeaguePh:"Поиск лиги или страны…",noLeagueMatch:"Нет лиги по запросу “{q}” — попробуй другое название"},
+de:{searchLeaguePh:"Liga oder Land suchen…",noLeagueMatch:"Keine Liga passt zu “{q}” — versuch einen anderen Namen"},
+hi:{searchLeaguePh:"लीग या देश खोजो…",noLeagueMatch:"“{q}” से कोई लीग नहीं मिली — दूसरा नाम आज़माओ"},
+zh:{searchLeaguePh:"搜索联赛或国家…",noLeagueMatch:"没有匹配“{q}”的联赛——换个名字试试"},
+ar:{searchLeaguePh:"ابحث عن دوري أو دولة…",noLeagueMatch:"لا يوجد دوري يطابق “{q}” — جرّب اسماً آخر"}};
+for(const _c in _GX34){ if(STR[_c]) Object.assign(STR[_c],_GX34[_c]); }
+// ===== _GX35 — SPEC §7 conform: scoring copy = exact-scoreline model (3 = exact, 1 = one team's goals right, 0 = else). Overrides the old W/D/L 'direction' wording. Merged last so it wins. =====
+const _GX35={
+  he:{correctDirection:"תוצאה מדויקת · 3 נק׳",exactScore:"בול! תוצאה מדויקת · 3 נק׳",oneScore:"מספר השערים של קבוצה אחת מדויק · 1 נק׳",noPoints:"0 נק׳ הפעם",hpDirection:"קלעת את התוצאה המדויקת — 3 נקודות",hpOne:"לא מדויק, אבל ניחשת נכון את מספר השערים של קבוצה אחת — נקודה",hpZero:"אחרת — 0"},
+  en:{correctDirection:"Exact score · 3 pts",exactScore:"Spot on! Exact score · 3 pts",oneScore:"One team's goals exact · 1 pt",noPoints:"0 pts this time",hpDirection:"You nailed the exact score — 3 points",hpOne:"Not exact, but you got one team's goal count right — 1 point",hpZero:"Otherwise — 0"},
+  es:{correctDirection:"Marcador exacto · 3 pts",exactScore:"¡Clavado! Marcador exacto · 3 pts",oneScore:"Goles exactos de un equipo · 1 pt",noPoints:"0 pts esta vez",hpDirection:"Acertaste el marcador exacto — 3 puntos",hpOne:"No exacto, pero acertaste los goles de un equipo — 1 punto",hpZero:"Si no — 0"},
+  fr:{correctDirection:"Score exact · 3 pts",exactScore:"Pile poil ! Score exact · 3 pts",oneScore:"Buts exacts d'une équipe · 1 pt",noPoints:"0 pt cette fois",hpDirection:"Tu as trouvé le score exact — 3 points",hpOne:"Pas exact, mais tu as trouvé les buts d'une équipe — 1 point",hpZero:"Sinon — 0"},
+  pt:{correctDirection:"Placar exato · 3 pts",exactScore:"Na mosca! Placar exato · 3 pts",oneScore:"Gols exatos de um time · 1 pt",noPoints:"0 pts desta vez",hpDirection:"Você acertou o placar exato — 3 pontos",hpOne:"Não exato, mas acertou os gols de um time — 1 ponto",hpZero:"Caso contrário — 0"},
+  ru:{correctDirection:"Точный счёт · 3 оч.",exactScore:"В точку! Точный счёт · 3 оч.",oneScore:"Голы одной команды угаданы · 1 оч.",noPoints:"0 оч. в этот раз",hpDirection:"Ты угадал точный счёт — 3 очка",hpOne:"Не точно, но ты угадал число голов одной команды — 1 очко",hpZero:"Иначе — 0"},
+  de:{correctDirection:"Exaktes Ergebnis · 3 Pkt.",exactScore:"Volltreffer! Exaktes Ergebnis · 3 Pkt.",oneScore:"Tore eines Teams exakt · 1 Pkt.",noPoints:"0 Pkt. diesmal",hpDirection:"Du hast das exakte Ergebnis getroffen — 3 Punkte",hpOne:"Nicht exakt, aber die Toranzahl eines Teams stimmt — 1 Punkt",hpZero:"Sonst — 0"},
+  hi:{correctDirection:"सटीक स्कोर · 3 पॉइंट",exactScore:"बिल्कुल सही! सटीक स्कोर · 3 पॉइंट",oneScore:"एक टीम के गोल सही · 1 पॉइंट",noPoints:"इस बार 0 पॉइंट",hpDirection:"तुमने सटीक स्कोर बताया — 3 पॉइंट",hpOne:"सटीक नहीं, पर एक टीम के गोल सही — 1 पॉइंट",hpZero:"वरना — 0"},
+  zh:{correctDirection:"精确比分 · 3 分",exactScore:"完全命中！精确比分 · 3 分",oneScore:"猜对一队进球数 · 1 分",noPoints:"这次 0 分",hpDirection:"你猜中了精确比分——3 分",hpOne:"不精确，但猜对了一队的进球数——1 分",hpZero:"否则——0"},
+  ar:{correctDirection:"النتيجة الدقيقة · 3 نقاط",exactScore:"إصابة مباشرة! النتيجة الدقيقة · 3 نقاط",oneScore:"أهداف فريق واحد صحيحة · نقطة واحدة",noPoints:"0 نقطة هذه المرة",hpDirection:"خمّنت النتيجة الدقيقة — 3 نقاط",hpOne:"ليست دقيقة، لكنك خمّنت عدد أهداف فريق واحد — نقطة",hpZero:"غير ذلك — 0"}
+};
+for(const _c in _GX35){ if(STR[_c]) Object.assign(STR[_c],_GX35[_c]); }
 // ===== LEAGUE THEMES (embedded from _build/themes.js) — IP-safe per-league palettes =====
 const LEAGUE_THEME={
   ucl:{primary:"#3b82f6",accent:"#c0c8d6",bg:"#0a1024",text:"#e8ecf5",grad:"linear-gradient(135deg, #0a1024 0%, #16224d 55%, #1e3a8a 100%)"},
@@ -965,7 +1005,8 @@ const LEAGUE_THEME={
 };
 const _DEFAULT_LG={primary:"#8A6BFF",accent:"#A78BFF",bg:"#15121E",text:"#F4F1FA",grad:"linear-gradient(135deg,#150a24 0%,#1E1A2C 55%,#8A6BFF 100%)"};
 function applyLeagueTheme(key){
-  const th=LEAGUE_THEME[key]||_DEFAULT_LG; const r=document.documentElement.style;
+  // 30 themed leagues: prefer the curated LEAGUE_THEME, else the per-league theme bundled in leagues.js, else the brand default.
+  const th=LEAGUE_THEME[key]||((getLeague(key)&&getLeague(key).theme)||_DEFAULT_LG); const r=document.documentElement.style;
   r.setProperty("--lg-primary",th.primary); r.setProperty("--lg-accent",th.accent);
   r.setProperty("--lg-bg",th.bg); r.setProperty("--lg-text",th.text); r.setProperty("--lg-grad",th.grad);
   return th;
@@ -991,6 +1032,19 @@ const prefersReduce=()=>!!(_RMQ&&_RMQ.matches);
 const _LGDATA=(typeof window!=="undefined"&&window.EYEVOS_LEAGUES)?window.EYEVOS_LEAGUES:{leagues:[]};
 const LEAGUES=Array.isArray(_LGDATA.leagues)?_LGDATA.leagues:[];
 const LEAGUE_BY_KEY={}; LEAGUES.forEach(l=>{ LEAGUE_BY_KEY[l.key]=l; });
+// DEMO ENABLER (SPEC §26): one genuine UPCOMING fixture per league (~2.5 min to kickoff) so the
+// predict->lock->resolve->score loop is visible in a 2-minute demo. Idempotent.
+(function injectDemoFixtures(){
+  LEAGUES.forEach(l=>{
+    const teams=(l.teams||[]); if(teams.length<2) return;
+    if(!Array.isArray(l.fixtures)) l.fixtures=[];
+    const id=l.key+"-fdemo1";
+    if(l.fixtures.some(fx=>fx.id===id)) return;
+    const hi=Math.min(2,teams.length-1); let ai=Math.min(3,teams.length-1); if(ai===hi) ai=Math.max(0,hi-1);
+    const round=(l.fixtures[0]&&l.fixtures[0].round)||"Matchday 1";
+    l.fixtures.unshift({ id:id, round:round, homeId:teams[hi].id, awayId:teams[ai].id, kickoffOffsetHours:0.04, result:null });
+  });
+})();
 function getLeague(key){ return LEAGUE_BY_KEY[key]||null; }
 function leagueTheme(key){ return LEAGUE_THEME[key]||(getLeague(key)&&getLeague(key).theme)||_DEFAULT_LG; }
 // runtime kickoff: offset(hours) → absolute epoch ms, stamped ONCE at app load (never trust a build-time date).
@@ -999,16 +1053,33 @@ function kickoffMs(fx){ return LOAD_NOW + (Number(fx.kickoffOffsetHours)||0)*360
 function teamsOf(key){ const l=getLeague(key); return (l&&l.teams)||[]; }
 function playersOf(key){ const l=getLeague(key); return (l&&l.players)||[]; }
 function fixturesOfLeague(key){ const l=getLeague(key); return (l&&l.fixtures)||[]; }
+// SPEC §18 — per-league DEFAULT champion + top scorer (editable pre-fills, NOT live data). Real names mapped to ids.
+const LEAGUE_DEFAULTS={
+  ucl:{champion:"ucl-rma",scorer:"ucl-rma-10"},uel:{champion:"uel-rom",scorer:"uel-rom-9"},epl:{champion:"epl-mci",scorer:"epl-mci-10"},es:{champion:"es-rma",scorer:"es-rma-10"},
+  it:{champion:"it-int",scorer:"it-int-9"},de:{champion:"de-bay",scorer:"de-bay-9"},fr:{champion:"fr-psg",scorer:"fr-psg-9"},pt:{champion:"pt-ben",scorer:"pt-spo-9"},
+  nl:{champion:"nl-psv",scorer:"nl-psv-10"},il:{champion:"il-mta",scorer:"il-mta-9"},tr:{champion:"tr-gal",scorer:"tr-gal-9"},be:{champion:"be-clb",scorer:"be-clb-9"},
+  sco:{champion:"sco-cel",scorer:"sco-cel-9"},gr:{champion:"gr-oly",scorer:"gr-oly-9"},ch:{champion:"ch-yb",scorer:"ch-yb-9"},at:{champion:"at-rbs",scorer:"at-rbs-10"},
+  se:{champion:"se-mff",scorer:"se-mff-9"},no:{champion:"no-bod",scorer:"no-bod-9"},dk:{champion:"dk-fck",scorer:"dk-fck-10"},ua:{champion:"ua-sha",scorer:"ua-sha-10"},
+  br:{champion:"br-fla",scorer:"br-fla-11"},ar:{champion:"ar-rip",scorer:"ar-rip-10"},mx:{champion:"mx-ame",scorer:"mx-ame-10"},us:{champion:"us-mia",scorer:"us-mia-10"},
+  sa:{champion:"sa-hil",scorer:"sa-nas-9"},jp:{champion:"jp-vys",scorer:"jp-vys-9"},kr:{champion:"kr-uhd",scorer:"kr-uhd-9"},cn:{champion:"cn-shp",scorer:"cn-shp-9"},
+  au:{champion:"au-mcy",scorer:"au-mcy-9"},eg:{champion:"eg-ahl",scorer:"eg-ahl-10"}};
+// Robust: use the §18-mapped id if it resolves in this league's data, else fall back to the first team / first FW so a pick is NEVER blank.
+function defaultPicks(leagueKey){
+  const d=LEAGUE_DEFAULTS[leagueKey]||{}; const teams=teamsOf(leagueKey); const players=((getLeague(leagueKey)||{}).players)||[];
+  const champ=(d.champion&&teams.some(t=>t.id===d.champion))?d.champion:((teams[0]&&teams[0].id)||null);
+  let sc=(d.scorer&&players.some(p=>p.id===d.scorer))?d.scorer:null;
+  if(!sc){ const fw=players.find(p=>p.pos==="FW")||players[0]; sc=fw?fw.id:null; }
+  return {champion:champ,topScorer:sc};
+}
 function teamById(key,id){ return teamsOf(key).find(t=>t.id===id)||null; }
 function playerById(key,id){ return playersOf(key).find(p=>p.id===id)||null; }
 
-/* ---- SCORING (authoritative — mirrors logic-spec §2) ---- */
-// dirP=sign(ph-pa); dirR=sign(rh-ra); dir match → 3; else one goal exact → 1; else 0.
+/* ---- SCORING (authoritative — MASTER-SPEC §7, LOCKED) ---- */
+// exact scoreline (both numbers) → 3; exactly one team's goals right → 1; else 0. NO W/D/L add-on.
 function scoreMatch(rh,ra,ph,pa){
   if(ph==null||pa==null||rh==null||ra==null) return 0;
-  const dP=Math.sign(ph-pa), dR=Math.sign(rh-ra);
-  if(dP===dR) return 3;
-  if(ph===rh||pa===ra) return 1;
+  if(ph===rh && pa===ra) return 3;        // exact scoreline
+  if(ph===rh || pa===ra) return 1;        // exactly one team's goals right
   return 0;
 }
 function isExact(rh,ra,ph,pa){ return ph===rh&&pa===ra; }
@@ -1028,6 +1099,7 @@ const DEMO={
   groups(){ const g=this._read("groups",[]); return Array.isArray(g)?g:[]; },
   saveGroups(list){ this._write("groups",list); },
   addGroup(g){ const list=this.groups(); if(!list.some(x=>x.id===g.id)) list.unshift(g); this.saveGroups(list); return g; },
+  findByCode(code){ const c=String(code||"").toUpperCase(); if(c.length<6) return null; return this.groups().find(g=>groupCode(g)===c)||null; },   // join-by-code demo fallback (per-device until backend)
   // predictions: { [groupId]: { [fixtureId]: {h,a,at} } }
   preds(){ return this._read("preds",{})||{}; },
   savePreds(p){ this._write("preds",p); },
@@ -1036,7 +1108,7 @@ const DEMO={
   // season picks: { [groupId]: {champion,topScorer} }
   picks(){ return this._read("picks",{})||{}; },
   savePicks(p){ this._write("picks",p); },
-  getPicks(gid){ const p=this.picks(); return p[gid]||{champion:null,topScorer:null}; },
+  getPicks(gid,leagueKey){ const p=this.picks(); if(p[gid]) return p[gid]; const d=(typeof leagueKey==="string")?defaultPicks(leagueKey):{champion:null,topScorer:null}; return {champion:d.champion,topScorer:d.topScorer,isDefault:true}; },
   setPicks(gid,champion,topScorer){ const p=this.picks(); p[gid]={champion:champion,topScorer:topScorer}; this.savePicks(p); },
   // celebrated wins ledger: { "<groupId>:<fixtureId>": true } so confetti/SND.win fire once per win, EVER (survives the feed remount + tab re-entry)
   _celeb(){ return this._read("celeb",{})||{}; },
@@ -1044,6 +1116,10 @@ const DEMO={
   markCelebrated(key){ const c=this._celeb(); if(!c[key]){ c[key]=true; this._write("celeb",c); } }
 };
 function newGroupId(){ return "g_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+const _CODE_ALPHABET="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 6-char join code; no O/0/I/1 (read-aloud safe over WhatsApp)
+function genCode(){ let s=""; for(let i=0;i<6;i++) s+=_CODE_ALPHABET.charAt(Math.floor(Math.random()*_CODE_ALPHABET.length)); return s; }
+function groupCode(g){ if(!g) return ""; if(g.code) return String(g.code).toUpperCase(); let h=0; const id=String(g.id||""); for(let i=0;i<id.length;i++){ h=((h<<5)-h+id.charCodeAt(i))|0; } h=Math.abs(h); let s=""; for(let i=0;i<6;i++){ s+=_CODE_ALPHABET.charAt(h%_CODE_ALPHABET.length); h=Math.floor(h/_CODE_ALPHABET.length)+(i+1)*97; } return s; }
+function normCode(c){ return String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6); }
 // SEASON-PICK WINDOW (demo): min(joined+4d, seasonStart+seasonDays/2). seasonStart=joined, seasonDays=120.
 const SEASON_DAYS=120;
 function pickDeadlineMs(group){
@@ -1055,8 +1131,8 @@ function pickDeadlineMs(group){
 // Returns {match, exact, champion, scorer, total}. Season picks pay only when the league
 // resolves (demo: sample data is never "resolved", so champion/scorer stay 0 — no fake +12).
 function computeGroupPoints(group){
-  let match=0, exact=0;
-  if(!group) return {match:0,exact:0,champion:0,scorer:0,total:0};
+  let match=0, exact=0, reachedAt=0;
+  if(!group) return {match:0,exact:0,champion:0,scorer:0,total:0,reachedAt:0};
   const fixtures=fixturesOfLeague(group.league);
   fixtures.forEach(fx=>{
     if(!fx.result) return;
@@ -1065,12 +1141,65 @@ function computeGroupPoints(group){
     const p=scoreMatch(fx.result.home,fx.result.away,pr.h,pr.a);
     match+=p;
     if(isExact(fx.result.home,fx.result.away,pr.h,pr.a)) exact++;
+    if(p>0 && pr.at && pr.at>reachedAt) reachedAt=pr.at;   // tie-break: latest scoring event that built the total — earliest such ts ranks higher
   });
-  return {match:match,exact:exact,champion:0,scorer:0,total:match};
+  return {match:match,exact:exact,champion:0,scorer:0,total:match,reachedAt:reachedAt};
 }
 function userTotalPoints(){
   let total=0; DEMO.groups().forEach(g=>{ total+=computeGroupPoints(g).total; }); return total;
 }
+/* MOCK SIM ENGINE (SPEC §11/§26) — honest: reproducible result seeded only by fixture id + hidden
+   strength; resolves ONLY after real kickoff (now>=kickoffMs); cached+namespaced in DEMO; points
+   come only from the user's own pre-kickoff prediction via computeGroupPoints. */
+const _SIM_STRENGTH={};
+function teamStrengthOf(leagueKey){
+  if(_SIM_STRENGTH[leagueKey]) return _SIM_STRENGTH[leagueKey];
+  const teams=teamsOf(leagueKey); const n=teams.length; const m={};
+  teams.forEach((tm,i)=>{ m[tm.id]= n>1 ? (1 - i/(n-1))*0.6 + 0.25 : 0.7; });
+  _SIM_STRENGTH[leagueKey]=m; return m;
+}
+function _simHash(str){ let h=2166136261>>>0; const s=String(str); for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619)>>>0; } return h>>>0; }
+function _mulberry32(seed){ let a=seed>>>0; return function(){ a|=0; a=a+0x6D2B79F5|0; let tt=Math.imul(a^a>>>15,1|a); tt=tt+Math.imul(tt^tt>>>7,61|tt)^tt; return ((tt^tt>>>14)>>>0)/4294967296; }; }
+function _poisson(rng,lambda){ const L=Math.exp(-Math.max(0.05,lambda)); let k=0,p=1; do{ k++; p*=rng(); }while(p>L); return Math.min(7,k-1); }
+function simResult(fx,teamsByStrength){
+  if(!fx) return {home:0,away:0};
+  const str=teamsByStrength||{};
+  const sh=(typeof str[fx.homeId]==="number")?str[fx.homeId]:0.5;
+  const sa=(typeof str[fx.awayId]==="number")?str[fx.awayId]:0.5;
+  const rng=_mulberry32(_simHash(fx.id));
+  const upset=rng()<0.25;
+  let favBoost=(sh-sa)+0.35;
+  if(upset) favBoost=-favBoost*0.85;
+  const lamH=Math.max(0.2, 1.25 + favBoost);
+  const lamA=Math.max(0.2, 1.25 - favBoost);
+  return {home:_poisson(rng,lamH),away:_poisson(rng,lamA)};
+}
+Object.assign(DEMO,{
+  results(){ return this._read("results",{})||{}; },
+  getResult(fid){ const r=this.results(); return r[fid]||null; },
+  setResult(fid,res){ const r=this.results(); if(!r[fid]){ r[fid]={home:res.home,away:res.away}; this._write("results",r); } }
+});
+function rehydrateResults(){
+  const cache=DEMO.results();
+  LEAGUES.forEach(l=>{ (l.fixtures||[]).forEach(fx=>{ if(!fx.result && cache[fx.id]) fx.result=cache[fx.id]; }); });
+}
+function resolveDueFixtures(group){
+  if(!group) return 0;
+  const now=Date.now();
+  const strengths=teamStrengthOf(group.league);
+  let resolved=0;
+  fixturesOfLeague(group.league).forEach(fx=>{
+    if(fx.result) return;
+    if(now < kickoffMs(fx)) return;
+    const cached=DEMO.getResult(fx.id);
+    const res=cached||simResult(fx,strengths);
+    if(!cached) DEMO.setResult(fx.id,res);
+    fx.result=res;
+    resolved++;
+  });
+  return resolved;
+}
+rehydrateResults();
 const AVATARS=["😎","🦊","🐯","🦁","🐼","🦄","🐲","🦅","🐺","🐙","🎯","🔥","👑","⚡","🎮","🏆","🌟","💎","🚀","🍀"];
 function Avatar({p,size}){
   const s=size||58, st={width:s,height:s,borderRadius:Math.round(s*.26),display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden",flexShrink:0};
@@ -1277,7 +1406,7 @@ function ScoreStepper({value,onChange,label,disabled,color}){
 
 /* ---------- football: FixtureCard ---------- */
 // per ui-spec §5b — three states: A upcoming-unpredicted, B upcoming-predicted, C locked/finished.
-function FixtureCard({league,fx,kickoff,now,pred,onSave,saving,onScored}){
+function FixtureCard({group,league,fx,kickoff,now,pred,onSave,saving,onScored}){
   const home=teamById(league.key,fx.homeId)||{name:"?",short:"?",emoji:"⚽",color:"#888"};
   const away=teamById(league.key,fx.awayId)||{name:"?",short:"?",emoji:"⚽",color:"#888"};
   const locked=now>=kickoff;
@@ -1292,7 +1421,7 @@ function FixtureCard({league,fx,kickoff,now,pred,onSave,saving,onScored}){
   // confetti/SND.win only when this match's result first shows AND points>0 (honesty)
   const firedRef=useRef(false);
   const celebKey=(group&&group.id?group.id:"_")+":"+fx.id;
-  useEffect(()=>{ if(result&&pred&&pts>0&&!firedRef.current&&!DEMO.wasCelebrated(celebKey)){ firedRef.current=true; DEMO.markCelebrated(celebKey); if(onScored)onScored(pts); } },[result,pred&&pred.h,pred&&pred.a,pts,celebKey]);
+  useEffect(()=>{ if(result&&pred&&pts>=3&&!firedRef.current&&!DEMO.wasCelebrated(celebKey)){ firedRef.current=true; DEMO.markCelebrated(celebKey); if(onScored)onScored(pts); } },[result,pred&&pred.h,pred&&pred.a,pts,celebKey]);
   const [showHow,setShowHow]=useState(false);
   const teamRow=(
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,margin:"2px 0 12px"}}>
@@ -1339,7 +1468,7 @@ function FixtureCard({league,fx,kickoff,now,pred,onSave,saving,onScored}){
           🏆 {t("youScoredPts",{pts:pts})}
         </div>
         <div style={{fontSize:12,opacity:.85,marginTop:8}}>
-          {exact?t("exactScore"):pts===3?t("correctDirection"):pts===1?t("oneScore"):t("noPoints")}
+          {pts===3?t("exactScore"):pts===1?t("oneScore"):t("noPoints")}
         </div>
         <button type="button" onClick={()=>{SND.tap();setShowHow(s=>!s);}} style={{background:"none",border:"none",color:"var(--lg-accent)",fontWeight:700,fontSize:12,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>{t("howPointsWork")} {showHow?"▲":"▼"}</button>
         {showHow && <div style={{fontSize:11.5,opacity:.85,lineHeight:1.7,marginTop:6,textAlign:"start",background:"rgba(0,0,0,.2)",borderRadius:10,padding:"8px 12px"}}>
@@ -1474,16 +1603,17 @@ function LeagueBoard({rows,me}){
     const name=(r.display_name!=null?r.display_name:r.name)||"—";
     const photo=r.photo_url!=null?r.photo_url:(r.photo!=null?r.photo:null);
     const total=Number(r.total)||0;
-    return {id,name,photo,total,exact:Number(r.exact_count)||0,champPts:Number(r.champion_points)||0,scorerPts:Number(r.scorer_points)||0,isMe:r.is_me===true||(myId!=null&&id===myId)};
+    const reachedAt=Number(r.last_scored_at!=null?r.last_scored_at:(r.reached_at!=null?r.reached_at:0))||0;   // tie-break: earliest to reach the total ranks higher
+    return {id,name,photo,total,reachedAt,exact:Number(r.exact_count)||0,champPts:Number(r.champion_points)||0,scorerPts:Number(r.scorer_points)||0,isMe:r.is_me===true||(myId!=null&&id===myId)};
   });
   if(norm.length===0) return <div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center",lineHeight:1.6}}>{t("emptyLeaderboard")}</div>;
-  const ranked=[...norm].sort((a,b)=>b.total-a.total||b.exact-a.exact||(a.name||"").localeCompare(b.name||"")||(a.id<b.id?-1:a.id>b.id?1:0));
+  const ranked=[...norm].sort((a,b)=>b.total-a.total||(((a.reachedAt||Infinity)-(b.reachedAt||Infinity)))||b.exact-a.exact||(a.name||"").localeCompare(b.name||"")||(a.id<b.id?-1:a.id>b.id?1:0));
   const medal=["🥇","🥈","🥉"];
   const medalBg=["linear-gradient(150deg,#FFE08A,#F5A623)","linear-gradient(150deg,#E8EDF7,#AEB6CC)","linear-gradient(150deg,#E5B07E,#B97A43)"];
   const medalFg=["#5a3b00","#2a2f3d","#3a2208"];
   const ring=["rgba(255,194,60,.55)","rgba(208,214,232,.5)","rgba(214,150,92,.5)"];
   const PicksStatus=({r})=>{
-    const dot=(won,emoji,label,worthKey)=><span title={t(worthKey)} aria-label={t(label)+(won?" +12":"")} style={{display:"inline-flex",alignItems:"center",gap:3,fontSize:11,fontWeight:800,lineHeight:1,padding:"3px 6px",borderRadius:999,background:won?"var(--lg-primary,var(--brand))":"var(--ink-3)",color:won?"#fff":"var(--faint)",opacity:won?1:.8}}><span aria-hidden="true">{emoji}</span><span className="tnum" dir="ltr">{won?"+12":"—"}</span></span>;
+    const dot=(won,emoji,label,worthKey)=><span title={t(worthKey)} aria-label={t(label)+(won?" +10":"")} style={{display:"inline-flex",alignItems:"center",gap:3,fontSize:11,fontWeight:800,lineHeight:1,padding:"3px 6px",borderRadius:999,background:won?"var(--lg-primary,var(--brand))":"var(--ink-3)",color:won?"#fff":"var(--faint)",opacity:won?1:.8}}><span aria-hidden="true">{emoji}</span><span className="tnum" dir="ltr">{won?"+10":"—"}</span></span>;
     return <span style={{display:"inline-flex",gap:5,flexShrink:0}}>{dot(r.champPts>0,"🏆","championLabel","champWorth")}{dot(r.scorerPts>0,"⚽","topScorerLabel","scorerWorth")}</span>;
   };
   return <div>{ranked.map((r,i)=>{
@@ -1508,7 +1638,12 @@ function FixturesFeed({group,me,onOpenSeason,onScored,onErr,bump}){
   const [saving,setSaving]=useState(null);
   const [predVersion,setPredVersion]=useState(0);
   // one shared 1s clock for the whole feed (countdowns)
-  useEffect(()=>{ const id=setInterval(()=>setNow(Date.now()),1000); return ()=>clearInterval(id); },[]);
+  // shared 1s clock (countdowns) + live resolver: resolve any fixture whose kickoff just passed, then re-bucket
+  useEffect(()=>{ const id=setInterval(()=>{
+    setNow(Date.now());
+    try{ if(resolveDueFixtures(group)>0) setPredVersion(v=>v+1); }catch(e){}
+  },1000); return ()=>clearInterval(id); },[group&&group.id]);
+  useEffect(()=>{ try{ if(resolveDueFixtures(group)>0) setPredVersion(v=>v+1); }catch(e){} },[group&&group.id]);
   if(!league) return <div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center"}}>{t("noFixtures")}</div>;
   const fixtures=fixturesOfLeague(league.key);
   // stamp absolute kickoff once per fixture (offset→absolute, LOAD_NOW baseline)
@@ -1531,7 +1666,7 @@ function FixturesFeed({group,me,onOpenSeason,onScored,onErr,bump}){
   const windowOpen=now<=deadline;
   const Section=({title,items})=> items.length===0?null:<div style={{marginBottom:18}}>
     <div style={{fontWeight:800,fontSize:13,color:"var(--lg-text)",opacity:.85,margin:"4px 2px 10px"}}>{title}</div>
-    {items.map(o=><FixtureCard key={o.fx.id} league={league} fx={o.fx} kickoff={o.k} now={now}
+    {items.map(o=><FixtureCard key={o.fx.id} group={group} league={league} fx={o.fx} kickoff={o.k} now={now}
       pred={DEMO.getPred(group.id,o.fx.id)} saving={saving===o.fx.id} onSave={(h,a)=>savePred(o.fx,h,a)} onScored={onScored}/>)}
   </div>;
   return <div>
@@ -1567,6 +1702,7 @@ function PickGroup({groups,onPick}){
         <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{l?l.name:g.league}</div></div><Chev/></button>; })}
   </div>;
 }
+function LeagueAura(){return <div className="lgaura" aria-hidden="true"><i className="b1"/><i className="b2"/></div>;}
 /* ---------- football: LeagueBoardScreen (per group) ---------- */
 function LeagueBoardScreen({group,me,onErr,onChange,bump}){
   const league=getLeague(group.league);
@@ -1580,13 +1716,13 @@ function LeagueBoardScreen({group,me,onErr,onChange,bump}){
     if(result){ setRows(result); return; }
     const pts=computeGroupPoints(group);
     setRows([{ profile_id:me.id, display_name:me.display_name||"—", photo_url:me.photo_url||null,
-      match_points:pts.match, champion_points:pts.champion, scorer_points:pts.scorer, total:pts.total, exact_count:pts.exact, is_me:true }]);
+      match_points:pts.match, champion_points:pts.champion, scorer_points:pts.scorer, total:pts.total, exact_count:pts.exact, last_scored_at:pts.reachedAt, is_me:true }]);
   })(); return ()=>{alive=false;}; },[group.id,me.id,bump]);
   return <div style={{color:"var(--lg-text)"}}>
     <div className="card" style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",marginBottom:13,background:"var(--lg-grad)",border:"1px solid var(--lg-primary)",color:"var(--lg-text)"}}>
       <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>{league?league.emoji:"🏆"}</div>
       <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:14.5}}>{group.name}</div><div style={{fontSize:12,opacity:.85}}>{league?league.name:group.league}</div></div>
-      <button onClick={()=>shareWa(t("groupInviteWa",{name:group.name,league:league?league.name:group.league,url:REDIRECT+"?g="+encodeURIComponent(group.id)+"&lg="+encodeURIComponent(group.league)+"&n="+encodeURIComponent(group.name)}))} className="chip" style={{padding:8,background:"rgba(255,255,255,.14)",border:"none",color:"var(--lg-text)"}} aria-label={t("shareGroupWa")} title={t("shareGroupWa")}>📤</button>
+      <button onClick={()=>shareWa(t("groupInviteWa",{name:group.name,league:league?league.name:group.league,code:groupCode(group),url:REDIRECT+"?g="+encodeURIComponent(group.id)+"&lg="+encodeURIComponent(group.league)+"&n="+encodeURIComponent(group.name)}))} className="chip" style={{padding:8,background:"rgba(255,255,255,.14)",border:"none",color:"var(--lg-text)"}} aria-label={t("shareGroupWa")} title={t("shareGroupWa")}>📤</button>
     </div>
     {onChange&&<button onClick={onChange} style={{background:"none",border:"none",color:"var(--lg-text)",opacity:.8,fontWeight:700,cursor:"pointer",margin:"0 0 12px",fontFamily:"inherit",fontSize:13}}>↺ {t("backToLeagues")}</button>}
     {rows===null?<Spinner/>:<LeagueBoard rows={rows} me={me}/>}
@@ -1672,7 +1808,7 @@ function Rules(){
         <div>· {t("hpDirection")}</div><div>· {t("hpOne")}</div><div>· {t("hpZero")}</div>
       </div></div>
     <div className="card"><div style={{fontWeight:800,fontSize:16,marginBottom:8}}>{t("seasonPicks")}</div>
-      {row(t("champWorth"),"+12")}{row(t("scorerWorth"),"+12")}
+      {row(t("champWorth"),"+10")}{row(t("scorerWorth"),"+10")}
       <div style={{display:"flex",justifyContent:"space-between",padding:"9px 0"}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{t("seasonReset")}</span><span style={{color:"var(--brand-2)",fontWeight:800}}>∞</span></div>
       <div style={{fontSize:12,color:"var(--faint)",lineHeight:1.7,paddingTop:6}}>· {t("seasonPickLine")}</div></div>
     <div className="card" style={{textAlign:"center"}}><div style={{fontSize:12.5,color:"var(--muted)",fontWeight:700,lineHeight:1.6}}>{t("fairPlayCard")}</div></div>
@@ -1685,6 +1821,7 @@ function Rules(){
 function Groups({groups,me,active,onErr,reload,onEnter,startLeague}){
   const [leagueKey,setLeagueKey]=useState(startLeague||null);
   const [mode,setMode]=useState("list"),[name,setName]=useState(""),[busy,setBusy]=useState(false),[made,setMade]=useState(null);
+  const [q,setQ]=useState("");   // §6.2 league-picker search/filter query
   useEffect(()=>{ if(startLeague){ setLeagueKey(startLeague); } },[startLeague]);
   const create=async()=>{ const nm=name.trim(); if(busy||nm.length<2)return; setBusy(true);
     // WIRE create_group with p_league; on ANY error fall back to a local demo group (same defensive pattern as the old create).
@@ -1694,28 +1831,54 @@ function Groups({groups,me,active,onErr,reload,onEnter,startLeague}){
       row=Array.isArray(res.data)?res.data[0]:res.data;
     }catch(e){ /* demo fallback */ }
     let g;
-    if(row&&row.id){ g={id:row.id,name:row.name||nm,league:(row.league_key||leagueKey),created_at:row.created_at||new Date().toISOString(),joined_at:new Date().toISOString()}; }
-    else { g={id:newGroupId(),name:nm,league:leagueKey,created_at:new Date().toISOString(),joined_at:new Date().toISOString()}; }
+    if(row&&row.id){ g={id:row.id,name:row.name||nm,league:(row.league_key||leagueKey),code:(row.code?String(row.code).toUpperCase():genCode()),created_at:row.created_at||new Date().toISOString(),joined_at:new Date().toISOString()}; }
+    else { g={id:newGroupId(),name:nm,league:leagueKey,code:genCode(),created_at:new Date().toISOString(),joined_at:new Date().toISOString()}; }
     DEMO.addGroup(g);
     setBusy(false); SND.win(); setMade(g); reload();
   };
-  const wa=(g)=>{ const l=getLeague(g.league); shareWa(t("groupInviteWa",{name:g.name,league:l?l.name:g.league,url:REDIRECT+"?g="+encodeURIComponent(g.id)+"&lg="+encodeURIComponent(g.league)+"&n="+encodeURIComponent(g.name)})); };
-  // --- League picker (root) ---
-  if(!leagueKey) return <div>
+  const wa=(g)=>{ const l=getLeague(g.league); shareWa(t("groupInviteWa",{name:g.name,league:l?l.name:g.league,code:groupCode(g),url:REDIRECT+"?g="+encodeURIComponent(g.id)+"&lg="+encodeURIComponent(g.league)+"&n="+encodeURIComponent(g.name)})); };
+  const [joinCode,setJoinCode]=useState(""),[joining,setJoining]=useState(false);
+  const joinByCode=async()=>{ const c=normCode(joinCode); if(joining||c.length<6) return; setJoining(true);
+    let row=null;
+    try{ const res=await SB.rpc("join_group",{p_code:c}); if(res.error) throw res.error; row=Array.isArray(res.data)?res.data[0]:res.data; }catch(e){}
+    let g=null;
+    if(row&&row.id){ g={id:row.id,name:row.name||t("groupsT"),league:(row.league_key||leagueKey),code:(row.code?String(row.code).toUpperCase():c),created_at:row.created_at||new Date().toISOString(),joined_at:new Date().toISOString()}; }
+    else { g=DEMO.findByCode(c); }
+    setJoining(false);
+    if(g){ DEMO.addGroup(g); SND.win(); setJoinCode(""); reload(); onErr({ok:true,msg:t("joinedGroup")}); onEnter(g); }
+    else { onErr(t("codeNotFound")); }
+  };
+  // --- League picker (root) — with §6.2 search/filter (name OR country, case-insensitive, RTL-safe) ---
+  if(!leagueKey){
+    const nq=(q||"").trim().toLowerCase();
+    const filtered=nq?LEAGUES.filter(l=>((l.name||"")+" "+(l.country||"")).toLowerCase().indexOf(nq)>-1):LEAGUES;
+    return <div>
     <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:4}}>{t("pickLeague")}</div>
-    <p style={{color:"var(--muted)",fontSize:13,marginBottom:16}}>{t("pickLeagueSub")}</p>
-    {LEAGUES.length===0?<div className="card" style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,padding:"22px 16px"}}>{t("netErr")} <button className="chip" style={{marginInlineStart:8,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>location.reload()}>{t("retry")}</button></div>:
+    <p style={{color:"var(--muted)",fontSize:13,marginBottom:14}}>{t("pickLeagueSub")}</p>
+    {LEAGUES.length===0?<div className="card" style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,padding:"22px 16px"}}>{t("netErr")} <button className="chip" style={{marginInlineStart:8,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>location.reload()}>{t("retry")}</button></div>:<>
+      <div className="lgsearch-wrap" style={{position:"relative",marginBottom:14}}>
+        <span className="lgsearch-ico" aria-hidden="true" style={{position:"absolute",insetInlineStart:12,top:"50%",transform:"translateY(-50%)",opacity:.6,pointerEvents:"none"}}>🔎</span>
+        <input className="in" type="search" inputMode="search" autoComplete="off" autoCorrect="off" spellCheck={false} dir="auto"
+          aria-label={t("searchLeaguePh")} placeholder={t("searchLeaguePh")} value={q}
+          onChange={e=>setQ(e.target.value)} onKeyDown={e=>{ if(e.key==="Escape"){ setQ(""); } }}
+          style={{paddingInlineStart:38,paddingInlineEnd:q?34:14}}/>
+        {q?<button type="button" aria-label={t("back")} title={t("back")} onClick={()=>{SND.tap();setQ("");}} style={{position:"absolute",insetInlineEnd:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:"var(--muted)",fontSize:20,lineHeight:1,cursor:"pointer",fontFamily:"inherit",padding:4}}>×</button>:null}
+      </div>
+      {filtered.length===0?<div className="card" style={{textAlign:"center",color:"var(--muted)",fontSize:13.5,padding:"22px 16px",lineHeight:1.6}} dir="auto">{t("noLeagueMatch",{q:(q||"").trim()})}</div>:
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        {LEAGUES.map(l=>{ const th=leagueTheme(l.key); const n=(l.teams||[]).length;
+        {filtered.map(l=>{ const th=leagueTheme(l.key); const n=(l.teams||[]).length;
           return <button key={l.key} onClick={()=>{SND.tap();setLeagueKey(l.key);setMode("list");setMade(null);}} className="card lgtile"
-            style={{margin:0,padding:"16px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:6,cursor:"pointer",border:"1px solid "+th.primary+"66",background:th.grad,color:th.text,textAlign:"center"}}>
+            style={{margin:0,padding:"16px 12px 18px",display:"flex",flexDirection:"column",alignItems:"center",gap:5,cursor:"pointer",border:"1px solid "+th.primary+"66",background:th.grad,color:th.text,textAlign:"center"}}>
             <span style={{fontSize:30,lineHeight:1}} aria-hidden="true">{l.emoji}</span>
-            <span style={{fontWeight:800,fontSize:14,lineHeight:1.2}}>{l.name}</span>
-            <span style={{fontSize:11,opacity:.8}} className="bidi-ltr">{t("nTeams",{n:n})} ⚽</span>
+            <span style={{fontWeight:800,fontSize:14,lineHeight:1.2}} dir="auto">{l.name}</span>
+            {l.country?<span style={{fontSize:10.5,opacity:.72,fontWeight:600,letterSpacing:".02em"}} dir="auto">{l.country}</span>:null}
+            <span style={{fontSize:11,opacity:.8,marginTop:1}} className="bidi-ltr">{t("nTeams",{n:n})} ⚽</span>
           </button>; })}
       </div>}
+    </>}
     <p style={{color:"var(--faint)",fontSize:11.5,marginTop:16,lineHeight:1.5}}>{t("sampleDataNote")}</p>
   </div>;
+  }
   // --- Groups-in-league ---
   const lg=getLeague(leagueKey); const th=leagueTheme(leagueKey);
   const inLeague=(groups||[]).filter(g=>g.league===leagueKey);
@@ -1723,9 +1886,12 @@ function Groups({groups,me,active,onErr,reload,onEnter,startLeague}){
     <button onClick={()=>{setLeagueKey(null);setMode("list");setMade(null);}} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>‹ {t("backToLeagues")}</button>
     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14,flexWrap:"wrap"}}><span style={{fontSize:24}}>{lg?lg.emoji:"⚽"}</span><span className="disp" style={{fontSize:20,fontWeight:800,color:th.primary}}>{lg?lg.name:leagueKey}</span></div>
     {made?<div className="card" style={{textAlign:"center"}}><div style={{fontSize:42}}>🎉</div><div style={{fontWeight:800,fontSize:18,margin:"4px 0"}}>{t("groupCreated")}</div>
-      <div style={{color:"var(--muted)",fontSize:12.5,lineHeight:1.5,maxWidth:280,margin:"6px auto 14px"}} dir="auto">{t("inviteByLink")}</div>
+      <div style={{color:"var(--muted)",fontSize:12.5,lineHeight:1.5,maxWidth:280,margin:"6px auto 10px"}} dir="auto">{t("shareCodeOrWa")}</div>
+      <div style={{fontSize:11,fontWeight:700,color:"var(--faint)",textTransform:"uppercase",letterSpacing:".08em",marginBottom:4}} dir="auto">{t("groupCodeLbl")}</div>
+      <button onClick={()=>{ try{ navigator.clipboard&&navigator.clipboard.writeText(groupCode(made)); }catch(e){} SND.tap(); onErr({ok:true,msg:t("codeCopied")}); }} className="tnum" aria-label={t("copyCode")} title={t("copyCode")} style={{display:"inline-block",fontFamily:"inherit",cursor:"pointer",fontSize:30,fontWeight:900,letterSpacing:".22em",padding:"8px 14px",margin:"0 0 12px",border:"1px dashed "+th.primary,borderRadius:12,background:th.primary+"14",color:"var(--text)"}} dir="ltr">{groupCode(made)}</button>
       <button className="btn" style={{background:"var(--wa)",color:"#06231a",marginBottom:10}} onClick={()=>wa(made)}>{t("shareGroupWa")}</button>
-      <button className="btn btn-pri" onClick={()=>onEnter(made)}>{t("enterGroupGo")}</button></div>
+      <button className="btn btn-pri" onClick={()=>onEnter(made)}>{t("enterGroupGo")}</button>
+      <div style={{color:"var(--faint)",fontSize:11,lineHeight:1.5,marginTop:10}} dir="auto">{t("codeLocalNote")}</div></div>
     :mode==="create"?<>
       <input className="in" aria-label={t("groupNamePh")} placeholder={t("groupNamePh")} value={name} maxLength={24} onChange={e=>setName(e.target.value)} style={{marginBottom:14}}/>
       <button className="btn btn-pri" disabled={busy||name.trim().length<2} onClick={create} style={{marginBottom:10,background:th.primary}}>{busy?t("creatingW"):t("createBtn")}</button>
@@ -1739,7 +1905,14 @@ function Groups({groups,me,active,onErr,reload,onEnter,startLeague}){
           <div style={{minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div className="tnum bidi-ltr" style={{fontSize:12,color:"var(--muted)"}}>1/40</div></div></button>
         <button onClick={()=>wa(g)} className="chip" style={{padding:8}} aria-label={t("shareGroupWa")} title={t("shareGroupWa")}>📤</button></div>)}
       <button className="btn btn-pri" style={{marginTop:8,marginBottom:8,background:th.primary}} onClick={()=>setMode("create")}>{t("createGroupL")}</button>
-      <div style={{textAlign:"center",fontSize:12,color:"var(--faint)"}}>{t("inviteByLink")}</div></>}
+      <div style={{margin:"14px 0 6px",borderTop:"1px solid var(--line)",paddingTop:14}}>
+        <div style={{fontWeight:800,fontSize:13.5,marginBottom:8}} dir="auto">{t("joinByCodeT")}</div>
+        <div style={{display:"flex",gap:8}}>
+          <input className="in tnum" aria-label={t("codePh")} placeholder={t("codePh")} value={joinCode} maxLength={6} autoCapitalize="characters" autoCorrect="off" spellCheck={false} onChange={e=>setJoinCode(normCode(e.target.value))} style={{flex:1,letterSpacing:".18em",textTransform:"uppercase"}} dir="ltr"/>
+          <button className="btn btn-pri" style={{width:"auto",padding:"0 16px",background:th.primary}} disabled={joining||joinCode.length<6} onClick={joinByCode}>{joining?t("joiningW"):t("joinBtn")}</button>
+        </div>
+        <div style={{textAlign:"center",fontSize:11,color:"var(--faint)",marginTop:8,lineHeight:1.5}} dir="auto">{t("codeLocalNote")}</div>
+      </div></>}
   </div>;
 }
 
@@ -1748,12 +1921,13 @@ function SeasonScreen({group,onClose}){
   const league=getLeague(group.league);
   const teams=(league&&league.teams)||[];
   const players=(league&&league.players)||[];
-  const raw=DEMO.getPicks(group.id);
+  const raw=DEMO.getPicks(group.id,group.league);
   const deadline=pickDeadlineMs(group);
-  const picks={champion:raw.champion,topScorer:raw.topScorer,deadlineMs:deadline};
+  const picks={champion:raw.champion,topScorer:raw.topScorer,isDefault:!!raw.isDefault,deadlineMs:deadline};
   const windowOpen=Date.now()<=deadline;
-  const onChampion=(teamId)=>{ const cur=DEMO.getPicks(group.id); DEMO.setPicks(group.id,teamId,cur.topScorer||null); };
-  const onTopScorer=(playerId)=>{ const cur=DEMO.getPicks(group.id); DEMO.setPicks(group.id,cur.champion||null,playerId); };
+  // persisting one field keeps the still-defaulted other field (spec §10: unchanged defaults stand)
+  const onChampion=(teamId)=>{ const cur=DEMO.getPicks(group.id,group.league); DEMO.setPicks(group.id,teamId,cur.topScorer||null); };
+  const onTopScorer=(playerId)=>{ const cur=DEMO.getPicks(group.id,group.league); DEMO.setPicks(group.id,cur.champion||null,playerId); };
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()} role="dialog" aria-modal="true" aria-label={t("seasonPicks")} style={{maxHeight:"88vh",overflowY:"auto"}}><div className="grab"/>
     <SeasonPicks league={league} teams={teams} players={players} picks={picks} windowOpen={windowOpen} onChampion={onChampion} onTopScorer={onTopScorer}/>
     <button className="btn btn-pri" style={{marginTop:14}} onClick={onClose}>{t("back")}</button>
@@ -1801,7 +1975,7 @@ function App(){
   const onErr=(m)=>{setErr(m);setTimeout(()=>setErr(null),5000);};
   const signOut=async()=>{await SB.auth.signOut();setGroup(null);setGroups(null);};
   const enterGroup=(g)=>{ setGroup(g); try{applyLeagueTheme(g.league);}catch(e){} };   // re-skin the device to the league theme on entry
-  const onScored=(pts)=>{ if(pts>0){ SND.win(); setCelebrate(true); setTimeout(()=>setCelebrate(false),3200); } setBump(b=>b+1); };   // confetti only on a real scoring event (honesty)
+  const onScored=(pts)=>{ if(pts>=3){ SND.win(); setCelebrate(true); setTimeout(()=>setCelebrate(false),3200); } setBump(b=>b+1); };   // confetti + win sound ONLY on a full +3 (spec); +1 = no confetti. Always bump so total/board recompute.
   const onResolved=async(won,poll)=>{
     const before=total; const after=await loadScores();
     if(!won)return;
@@ -1831,6 +2005,7 @@ function App(){
   const errRaw = err==null ? null : (isOk ? err.msg : String(err));
   const errMsg = errRaw==null ? null : ((!isOk && /fetch|network|failed to fetch|load failed|timeout|offline/i.test(errRaw)) ? t("netErr") : errRaw);
   return <div className="stage"><div className="device">
+    {group&&(tab==="feed"||tab==="board")&&<LeagueAura/>}
     {errMsg&&<div className="toastwrap" dir={dirOf(lang)}><div className={"toast"+(isOk?" toast-ok":"")} role="status" aria-live="polite"><span style={{flexShrink:0}}>{isOk?"✅":"⚠️"}</span><span className="tmsg">{errMsg}</span>{!isOk&&errMsg===t("netErr")&&<button className="chip" style={{flexShrink:0,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>{setErr(null);location.reload();}}>{t("retry")}</button>}<button className="tx" aria-label={t("dismiss")} title={t("dismiss")} onClick={()=>setErr(null)}>×</button></div></div>}
     {offline&&<div dir={dirOf(lang)} style={{position:"absolute",top:0,left:0,right:0,zIndex:60,background:"var(--no)",color:"#06231a",textAlign:"center",fontSize:12,fontWeight:800,padding:"6px 8px",boxShadow:"0 2px 10px rgba(0,0,0,.35)"}}>{t("offline")}</div>}
     {celebrate&&<Confetti/>}
@@ -1849,6 +2024,7 @@ function App(){
       {tab==="groups"&&<p className="disp" style={{fontSize:22,fontWeight:800,margin:"12px 0 0"}}><span aria-hidden="true">👥</span> <span className="hl">{t("groupsT")}</span></p>}
     </div>
     <div className="scroll">
+      <ScreenBoundary key={tab}>
       {tab==="groups"?
         <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{ enterGroup(g); setTab("feed"); }}/>
       :groups.length===0?
@@ -1857,6 +2033,7 @@ function App(){
         :tab==="board"?(group?<LeagueBoardScreen group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)} bump={bump}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
         :tab==="rules"?<Rules/>
         :<Profile group={group} groups={groups} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>}
+      </ScreenBoundary>
     </div>
     <div className="nav">
       <button className={"navb"+(tab==="feed"?" on":"")} aria-current={tab==="feed"?"page":undefined} onClick={()=>setTab("feed")}>⚽ {t("fixtures")}</button>
@@ -1868,6 +2045,20 @@ function App(){
     {seasonGroup&&<SeasonScreen group={seasonGroup} onClose={()=>{setSeasonGroup(null);setBump(b=>b+1);}}/>}
     {langSheet}
   </div></div>;
+}
+// per-SCREEN boundary: a throw in one tab shows an inline retry instead of blanking the whole shell; resets on tab change via key={tab}
+class ScreenBoundary extends React.Component{
+  constructor(p){ super(p); this.state={err:false}; }
+  static getDerivedStateFromError(){ return {err:true}; }
+  componentDidCatch(e,info){ try{ console.error("Eyevos screen crashed:",e,info); }catch(_){ } }
+  render(){
+    if(this.state.err) return <div className="card" role="alert" style={{textAlign:"center",padding:"26px 18px"}}>
+      <div style={{fontSize:34,marginBottom:8}} aria-hidden="true">🎯</div>
+      <p style={{color:"var(--muted)",fontSize:13.5,margin:"0 0 14px"}}>{t("screenErr")}</p>
+      <button className="btn btn-pri" style={{maxWidth:220,margin:"0 auto"}} onClick={()=>this.setState({err:false})}>↻ {t("retry")}</button>
+    </div>;
+    return this.props.children;
+  }
 }
 // Error boundary — never show a blank screen; offer a one-tap reload
 class ErrorBoundary extends React.Component{

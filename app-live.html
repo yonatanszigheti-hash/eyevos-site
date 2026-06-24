@@ -987,6 +987,12 @@ const _GX35={
   ar:{correctDirection:"النتيجة الدقيقة · 3 نقاط",exactScore:"إصابة مباشرة! النتيجة الدقيقة · 3 نقاط",oneScore:"أهداف فريق واحد صحيحة · نقطة واحدة",noPoints:"0 نقطة هذه المرة",hpDirection:"خمّنت النتيجة الدقيقة — 3 نقاط",hpOne:"ليست دقيقة، لكنك خمّنت عدد أهداف فريق واحد — نقطة",hpZero:"غير ذلك — 0"}
 };
 for(const _c in _GX35){ if(STR[_c]) Object.assign(STR[_c],_GX35[_c]); }
+// ===== _GX36 — fix "Kickoff in in" double preposition: kickoffIn becomes the NOUN only; the kickoffInDHM/HM/M templates already carry the preposition (used only at the fixture countdown chip). =====
+const _GX36={
+  he:{kickoffIn:"בעיטת פתיחה"}, en:{kickoffIn:"Kickoff"}, es:{kickoffIn:"Comienza"}, fr:{kickoffIn:"Coup d'envoi"},
+  pt:{kickoffIn:"Começa"}, ru:{kickoffIn:"Начало"}, de:{kickoffIn:"Anpfiff"}, hi:{kickoffIn:"किकऑफ़"},
+  zh:{kickoffIn:"开球"}, ar:{kickoffIn:"البداية"}};
+for(const _c in _GX36){ if(STR[_c]) Object.assign(STR[_c],_GX36[_c]); }
 // ===== LEAGUE THEMES (embedded from _build/themes.js) — IP-safe per-league palettes =====
 const LEAGUE_THEME={
   ucl:{primary:"#3b82f6",accent:"#c0c8d6",bg:"#0a1024",text:"#e8ecf5",grad:"linear-gradient(135deg, #0a1024 0%, #16224d 55%, #1e3a8a 100%)"},
@@ -2027,6 +2033,8 @@ function App(){
       <ScreenBoundary key={tab}>
       {tab==="groups"?
         <Groups groups={groups} me={me} active={group} onErr={onErr} reload={loadGroups} onEnter={(g)=>{ enterGroup(g); setTab("feed"); }}/>
+      :tab==="rules"?<Rules/>
+      :tab==="profile"?<Profile group={group} groups={groups} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>
       :groups.length===0?
         <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎯</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:8}}>{t("noGroupB")}</p><div style={{display:"inline-flex",alignItems:"center",gap:6,fontSize:12,fontWeight:700,color:"var(--brand-2)",marginBottom:16}}><span aria-hidden="true">⏱️</span>{t("sixtySec")}</div><br/><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
         :tab==="feed"?(group?<FixturesFeed group={group} me={me} onOpenSeason={()=>setSeasonGroup(group)} onScored={onScored} onErr={onErr} bump={bump}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)

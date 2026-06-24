@@ -993,6 +993,19 @@ const _GX36={
   pt:{kickoffIn:"Começa"}, ru:{kickoffIn:"Начало"}, de:{kickoffIn:"Anpfiff"}, hi:{kickoffIn:"किकऑफ़"},
   zh:{kickoffIn:"开球"}, ar:{kickoffIn:"البداية"}};
 for(const _c in _GX36){ if(STR[_c]) Object.assign(STR[_c],_GX36[_c]); }
+// ===== _GX37 — score ENTRY (tap a team box, then tap a 0–9 digit — replaces the +/- steppers, §20.4-style) =====
+const _GX37={
+he:{tapBoxThenDigit:"בחר קבוצה ואז הקש מספר",pickGoals:"בחר מספר שערים",goalsLbl:"שערים"},
+en:{tapBoxThenDigit:"Tap a team, then tap a number",pickGoals:"Pick goals",goalsLbl:"goals"},
+es:{tapBoxThenDigit:"Toca un equipo y luego un número",pickGoals:"Elige goles",goalsLbl:"goles"},
+fr:{tapBoxThenDigit:"Touche une équipe puis un chiffre",pickGoals:"Choisis les buts",goalsLbl:"buts"},
+pt:{tapBoxThenDigit:"Toque num time e depois num número",pickGoals:"Escolha os gols",goalsLbl:"gols"},
+ru:{tapBoxThenDigit:"Выбери команду, затем число",pickGoals:"Выбери голы",goalsLbl:"голы"},
+de:{tapBoxThenDigit:"Team antippen, dann eine Zahl",pickGoals:"Tore wählen",goalsLbl:"Tore"},
+hi:{tapBoxThenDigit:"टीम चुनो, फिर नंबर दबाओ",pickGoals:"गोल चुनो",goalsLbl:"गोल"},
+zh:{tapBoxThenDigit:"先点球队，再点数字",pickGoals:"选择进球数",goalsLbl:"球"},
+ar:{tapBoxThenDigit:"اختر فريقاً ثم اضغط رقماً",pickGoals:"اختر الأهداف",goalsLbl:"أهداف"}};
+for(const _c in _GX37){ if(STR[_c]) Object.assign(STR[_c],_GX37[_c]); }
 // ===== LEAGUE THEMES (embedded from _build/themes.js) — IP-safe per-league palettes =====
 const LEAGUE_THEME={
   ucl:{primary:"#3b82f6",accent:"#c0c8d6",bg:"#0a1024",text:"#e8ecf5",grad:"linear-gradient(135deg, #0a1024 0%, #16224d 55%, #1e3a8a 100%)"},
@@ -1409,6 +1422,34 @@ function ScoreStepper({value,onChange,label,disabled,color}){
     </div>
   </div>;
 }
+// ScoreEntry — tap a team's box (it highlights), then tap a 0–9 digit to set its goals. Replaces +/- steppers (Yonatan's
+// request, Domino's-style). Tapping the home digit auto-advances selection to away. 0–9 covers football scorelines.
+function ScoreEntry({h,a,setH,setA,home,away,disabled}){
+  const [sel,setSel]=useState("h");
+  const box=(val,who,team)=>{ const on=sel===who; const col=(team&&team.color)||"var(--lg-primary)";
+    return <button type="button" disabled={disabled} onClick={()=>{ if(disabled)return; SND.tap(); setSel(who); }}
+      aria-label={(team?team.short:"")+" "+t("goalsLbl")+": "+val} aria-pressed={on}
+      style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:6,background:"none",border:"none",cursor:disabled?"default":"pointer",fontFamily:"inherit"}}>
+      <span style={{fontSize:11.5,fontWeight:800,color:"var(--lg-text)",opacity:.85,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}} dir="auto">{team?team.short:"?"}</span>
+      <span className="tnum bidi-ltr" style={{width:62,height:62,borderRadius:16,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:900,
+        color:on?"#fff":"var(--lg-text)",background:on?col:"rgba(255,255,255,.06)",border:"2px solid "+(on?col:"var(--line-2)"),boxShadow:on?"0 6px 18px rgba(0,0,0,.28)":"none",transition:"background .15s,border-color .15s,color .15s"}}>{val}</span>
+    </button>; };
+  const tap=(d)=>{ if(disabled)return; SND.tap(); if(sel==="h"){ setH(d); setSel("a"); } else { setA(d); } };
+  return <div style={{marginBottom:12}}>
+    <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+      {box(h,"h",home)}
+      <span aria-hidden="true" style={{fontWeight:900,fontSize:22,opacity:.5,paddingTop:18}}>–</span>
+      {box(a,"a",away)}
+    </div>
+    <div role="group" aria-label={t("pickGoals")} style={{display:"grid",gridTemplateColumns:"repeat(10,1fr)",gap:4}}>
+      {[0,1,2,3,4,5,6,7,8,9].map(d=>{ const active=(sel==="h"?h:a)===d;
+        return <button key={d} type="button" disabled={disabled} onClick={()=>tap(d)} className="tnum" aria-label={String(d)}
+          style={{height:40,minWidth:0,borderRadius:9,fontWeight:800,fontSize:15,cursor:disabled?"default":"pointer",fontFamily:"inherit",
+          background:active?"var(--lg-primary)":"rgba(255,255,255,.06)",color:active?"#fff":"var(--lg-text)",border:"1px solid "+(active?"var(--lg-primary)":"var(--line-2)")}}>{d}</button>; })}
+    </div>
+    <div style={{textAlign:"center",fontSize:11,opacity:.6,marginTop:7}}>{t("tapBoxThenDigit")}</div>
+  </div>;
+}
 
 /* ---------- football: FixtureCard ---------- */
 // per ui-spec §5b — three states: A upcoming-unpredicted, B upcoming-predicted, C locked/finished.
@@ -1486,11 +1527,7 @@ function FixtureCard({group,league,fx,kickoff,now,pred,onSave,saving,onScored}){
     /* ===== STATE A/B: upcoming ===== */
     : <div>
       {showStepper ? <div>
-        <div style={{display:"flex",alignItems:"flex-end",gap:8,marginBottom:12}}>
-          <ScoreStepper value={h} onChange={setH} label={home.short} color={home.color}/>
-          <span style={{paddingBottom:14,fontWeight:900,fontSize:20,opacity:.5}}>–</span>
-          <ScoreStepper value={a} onChange={setA} label={away.short} color={away.color}/>
-        </div>
+        <ScoreEntry h={h} a={a} setH={setH} setA={setA} home={home} away={away} disabled={saving}/>
         <button className="btn btn-pri" disabled={saving} onClick={()=>{ onSave(h,a); setEditing(false); }} style={{background:"var(--lg-primary)"}}>
           {saving?t("savingPrediction"):t("savePrediction")}
         </button>
@@ -1670,7 +1707,10 @@ function FixturesFeed({group,me,onOpenSeason,onScored,onErr,bump}){
   const hasPicks=!!(picks.champion||picks.topScorer);
   const deadline=pickDeadlineMs(group);
   const windowOpen=now<=deadline;
-  const Section=({title,items})=> items.length===0?null:<div style={{marginBottom:18}}>
+  // NOTE: this MUST be a plain function called inline (renderSection(...)), NOT a <Section/> component.
+  // Defining a component inside the render body gives it a NEW identity every render, so the 1s clock tick
+  // (setNow) would unmount+remount every FixtureCard each second → the score steppers reset to 0. (root-cause fix)
+  const renderSection=(title,items)=> items.length===0?null:<div style={{marginBottom:18}}>
     <div style={{fontWeight:800,fontSize:13,color:"var(--lg-text)",opacity:.85,margin:"4px 2px 10px"}}>{title}</div>
     {items.map(o=><FixtureCard key={o.fx.id} group={group} league={league} fx={o.fx} kickoff={o.k} now={now}
       pred={DEMO.getPred(group.id,o.fx.id)} saving={saving===o.fx.id} onSave={(h,a)=>savePred(o.fx,h,a)} onScored={onScored}/>)}
@@ -1691,8 +1731,8 @@ function FixturesFeed({group,me,onOpenSeason,onScored,onErr,bump}){
     {upcoming.length===0&&finished.length===0
       ? <div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center",background:"var(--lg-bg)",color:"var(--lg-text)"}}>{t("noFixtures")}</div>
       : <div>
-          <Section title={t("upcomingT")} items={upcoming}/>
-          <Section title={t("finishedT")} items={finished}/>
+          {renderSection(t("upcomingT"),upcoming)}
+          {renderSection(t("finishedT"),finished)}
         </div>}
   </div>;
 }

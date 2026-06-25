@@ -206,6 +206,20 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px s
 .bar .lab:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--brand-2),inset 0 0 0 4px rgba(12,10,20,.85);border-radius:11px}
 .btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .lgaura{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}.lgaura>i{position:absolute;border-radius:50%;will-change:transform,opacity;filter:blur(34px);animation:auraDrift 32s ease-in-out infinite}.lgaura .b1{width:66%;height:50%;top:-13%;inset-inline-start:-15%;background:radial-gradient(closest-side,var(--lg-primary),transparent 72%);opacity:.40}.lgaura .b2{width:58%;height:46%;bottom:-15%;inset-inline-end:-13%;background:radial-gradient(closest-side,var(--lg-accent),transparent 72%);opacity:.30;animation-direction:reverse;animation-duration:38s}.lgaura .b3{width:48%;height:40%;top:32%;inset-inline-start:26%;background:radial-gradient(closest-side,var(--lg-primary),transparent 70%);opacity:.16;animation-duration:46s}.lgaura .lgpitch{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1.5px,transparent 1.5px 52px);mix-blend-mode:soft-light;opacity:.6}@keyframes auraDrift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(7%,7%,0) scale(1.14)}}@media (prefers-reduced-motion:reduce){.lgaura>i{animation:none!important;transform:none!important;opacity:.18}.lgaura .lgpitch{opacity:.4}}
+/* ===== per-league animated MOTIFS — each league moves differently (Champions=stars, England=particles, etc). All GPU transform/opacity; reduced-motion safe ===== */
+.lgmotif{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:0}
+.mot-stars::before,.mot-stars::after{content:"";position:absolute;inset:-25%;background-image:radial-gradient(1.6px 1.6px at 20% 30%,rgba(255,255,255,.9),transparent),radial-gradient(1.5px 1.5px at 70% 62%,rgba(255,255,255,.7),transparent),radial-gradient(1.1px 1.1px at 40% 80%,rgba(255,255,255,.8),transparent),radial-gradient(1.6px 1.6px at 85% 22%,rgba(255,255,255,.7),transparent),radial-gradient(1.1px 1.1px at 55% 45%,rgba(255,255,255,.6),transparent),radial-gradient(1.6px 1.6px at 12% 68%,rgba(255,255,255,.7),transparent);background-repeat:repeat;background-size:58% 58%;animation:starTwinkle 4.5s ease-in-out infinite}
+.mot-stars::after{background-size:43% 43%;opacity:.5;animation:starTwinkle 6.5s ease-in-out infinite reverse,starDrift 46s linear infinite}
+@keyframes starTwinkle{0%,100%{opacity:.32}50%{opacity:.82}}@keyframes starDrift{to{transform:translate3d(6%,4%,0)}}
+.mot-particles>i{position:absolute;bottom:-8%;border-radius:50%;background:var(--lg-accent);opacity:.5;filter:blur(1px);will-change:transform,opacity;animation:floatUp linear infinite}
+@keyframes floatUp{0%{transform:translateY(0) scale(.6);opacity:0}14%{opacity:.55}100%{transform:translateY(-118vh) scale(1.12);opacity:0}}
+.mot-rays::before{content:"";position:absolute;inset:-55%;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.055) 0deg 5deg,transparent 5deg 17deg);animation:raySpin 64s linear infinite;mix-blend-mode:overlay}
+@keyframes raySpin{to{transform:rotate(360deg)}}
+.mot-waves::before{content:"";position:absolute;inset:-12%;background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 9px,transparent 9px 38px);animation:waveSlide 13s linear infinite;mix-blend-mode:soft-light}
+@keyframes waveSlide{to{transform:translateX(-38px)}}
+.mot-grid::before{content:"";position:absolute;left:-25%;right:-25%;bottom:-12%;height:82%;background-image:linear-gradient(rgba(255,255,255,.085) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.085) 1px,transparent 1px);background-size:42px 42px;transform:perspective(320px) rotateX(62deg);transform-origin:bottom center;animation:gridMove 3.2s linear infinite}
+@keyframes gridMove{to{background-position:0 42px}}
+@media (prefers-reduced-motion:reduce){.lgmotif,.lgmotif::before,.lgmotif::after,.lgmotif>i{animation:none!important}}
 /* ----- bottom-nav: keep every label on ONE line so the bar stays aligned in all 10 langs ----- */
 .nav .navb{flex:1 1 0;min-width:0;max-width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:4px;gap:3px;line-height:1.15;font-size:clamp(9.5px,2.4vw,11px)}
 /* ===== football layer ===== */
@@ -1055,6 +1069,9 @@ const LEAGUE_THEME={
   us:{primary:"#1d4ed8",accent:"#e23744",bg:"#070d20",text:"#e7ecfb",grad:"linear-gradient(135deg, #070d20 0%, #11205c 50%, #1d4ed8 100%)"}
 };
 const _DEFAULT_LG={primary:"#8A6BFF",accent:"#A78BFF",bg:"#15121E",text:"#F4F1FA",grad:"linear-gradient(135deg,#150a24 0%,#1E1A2C 55%,#8A6BFF 100%)"};
+// per-league background MOTIF (different "things moving" per league). Curated for the headline ones; deterministic hash for the rest so every league is consistent.
+const LEAGUE_MOTIF={ucl:"stars",uel:"rays",epl:"particles",es:"rays",it:"waves",de:"grid",fr:"particles",pt:"rays",nl:"particles",tr:"particles",il:"stars",sa:"rays",us:"grid",br:"waves",ar:"particles",mx:"particles",sco:"particles",be:"grid",gr:"waves",ch:"stars",at:"particles",se:"stars",no:"stars",dk:"stars",ua:"rays",jp:"stars",kr:"grid",cn:"particles",au:"waves",eg:"rays"};
+function motifFor(key){ if(LEAGUE_MOTIF[key]) return LEAGUE_MOTIF[key]; const M=["particles","stars","rays","waves","grid"]; let h=0; const s=String(key||""); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return M[h%M.length]; }
 function applyLeagueTheme(key){
   // 30 themed leagues: prefer the curated LEAGUE_THEME, else the per-league theme bundled in leagues.js, else the brand default.
   const th=LEAGUE_THEME[key]||((getLeague(key)&&getLeague(key).theme)||_DEFAULT_LG); const r=document.documentElement.style;
@@ -1841,7 +1858,16 @@ function PickGroup({groups,onPick}){
         <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{l?l.name:g.league}</div></div><Chev/></button>; })}
   </div>;
 }
-function LeagueAura(){return <div className="lgaura" aria-hidden="true"><i className="b1"/><i className="b2"/><i className="b3"/><span className="lgpitch"/></div>;}
+function LeagueAura({motif}){
+  const m=motif||"default";
+  let mot=null;
+  if(m==="particles") mot=<div className="lgmotif mot-particles">{[0,1,2,3,4,5,6].map(i=><i key={i} style={{insetInlineStart:(6+i*13)+"%",width:(5+(i%3))+"px",height:(5+(i%3))+"px",animationDuration:(10+i*1.6)+"s",animationDelay:(i*1.5)+"s"}}/>)}</div>;
+  else if(m==="stars") mot=<div className="lgmotif mot-stars"/>;
+  else if(m==="rays") mot=<div className="lgmotif mot-rays"/>;
+  else if(m==="waves") mot=<div className="lgmotif mot-waves"/>;
+  else if(m==="grid") mot=<div className="lgmotif mot-grid"/>;
+  return <div className="lgaura" aria-hidden="true"><i className="b1"/><i className="b2"/><i className="b3"/><span className="lgpitch"/>{mot}</div>;
+}
 /* ---------- football: LeagueBoardScreen (per group) ---------- */
 // EditGroup — change a group's NAME + IMAGE (URL). Local-first (DEMO.updateGroup) with an update_group RPC wired for when the backend is live.
 function EditGroup({group,onClose,onSaved}){
@@ -2188,7 +2214,7 @@ function App(){
   const errRaw = err==null ? null : (isOk ? err.msg : String(err));
   const errMsg = errRaw==null ? null : ((!isOk && /fetch|network|failed to fetch|load failed|timeout|offline/i.test(errRaw)) ? t("netErr") : errRaw);
   return <div className="stage"><div className="device">
-    {group&&(tab==="feed"||tab==="board")&&<LeagueAura/>}
+    {group&&(tab==="feed"||tab==="board")&&<LeagueAura motif={motifFor(group.league)}/>}
     {errMsg&&<div className="toastwrap" dir={dirOf(lang)}><div className={"toast"+(isOk?" toast-ok":"")} role="status" aria-live="polite"><span style={{flexShrink:0}}>{isOk?"✅":"⚠️"}</span><span className="tmsg">{errMsg}</span>{!isOk&&errMsg===t("netErr")&&<button className="chip" style={{flexShrink:0,padding:"4px 10px",fontSize:12.5,fontWeight:800,minHeight:0}} onClick={()=>{setErr(null);location.reload();}}>{t("retry")}</button>}<button className="tx" aria-label={t("dismiss")} title={t("dismiss")} onClick={()=>setErr(null)}>×</button></div></div>}
     {offline&&<div dir={dirOf(lang)} style={{position:"absolute",top:0,left:0,right:0,zIndex:60,background:"var(--no)",color:"#06231a",textAlign:"center",fontSize:12,fontWeight:800,padding:"6px 8px",boxShadow:"0 2px 10px rgba(0,0,0,.35)"}}>{t("offline")}</div>}
     {celebrate&&<Confetti/>}

@@ -1052,6 +1052,19 @@ he:{todayD:"היום",tomorrowD:"מחר"}, en:{todayD:"Today",tomorrowD:"Tomorro
 fr:{todayD:"Aujourd'hui",tomorrowD:"Demain"}, pt:{todayD:"Hoje",tomorrowD:"Amanhã"}, ru:{todayD:"Сегодня",tomorrowD:"Завтра"},
 de:{todayD:"Heute",tomorrowD:"Morgen"}, hi:{todayD:"आज",tomorrowD:"कल"}, zh:{todayD:"今天",tomorrowD:"明天"}, ar:{todayD:"اليوم",tomorrowD:"غداً"}};
 for(const _c in _GX40){ if(STR[_c]) Object.assign(STR[_c],_GX40[_c]); }
+// ===== _GX41 — leaderboard flow: pick a league → your groups in it → ranking (§15) =====
+const _GX41={
+he:{rankPickLeagueSub:"בחרו ליגה כדי לראות את הקבוצות שלכם בה",nGroups:"{n} קבוצות"},
+en:{rankPickLeagueSub:"Pick a league to see your groups in it",nGroups:"{n} groups"},
+es:{rankPickLeagueSub:"Elige una liga para ver tus grupos",nGroups:"{n} grupos"},
+fr:{rankPickLeagueSub:"Choisis un championnat pour voir tes groupes",nGroups:"{n} groupes"},
+pt:{rankPickLeagueSub:"Escolha uma liga para ver seus grupos",nGroups:"{n} grupos"},
+ru:{rankPickLeagueSub:"Выбери лигу, чтобы увидеть свои группы",nGroups:"групп: {n}"},
+de:{rankPickLeagueSub:"Wähle eine Liga, um deine Gruppen zu sehen",nGroups:"{n} Gruppen"},
+hi:{rankPickLeagueSub:"अपने ग्रुप देखने के लिए लीग चुनो",nGroups:"{n} ग्रुप"},
+zh:{rankPickLeagueSub:"选择一个联赛查看你的群组",nGroups:"{n} 个群组"},
+ar:{rankPickLeagueSub:"اختر دوريًا لرؤية مجموعاتك فيه",nGroups:"{n} مجموعات"}};
+for(const _c in _GX41){ if(STR[_c]) Object.assign(STR[_c],_GX41[_c]); }
 // ===== LEAGUE THEMES (embedded from _build/themes.js) — IP-safe per-league palettes =====
 const LEAGUE_THEME={
   ucl:{primary:"#3b82f6",accent:"#c0c8d6",bg:"#0a1024",text:"#e8ecf5",grad:"linear-gradient(135deg, #0a1024 0%, #16224d 55%, #1e3a8a 100%)"},
@@ -1102,15 +1115,24 @@ const LEAGUES=Array.isArray(_LGDATA.leagues)?_LGDATA.leagues:[];
 const LEAGUE_BY_KEY={}; LEAGUES.forEach(l=>{ LEAGUE_BY_KEY[l.key]=l; });
 // DEMO ENABLER (SPEC §26): one genuine UPCOMING fixture per league (~2.5 min to kickoff) so the
 // predict->lock->resolve->score loop is visible in a 2-minute demo. Idempotent.
-(function injectDemoFixtures(){
+// Build a FULL WEEK of fixtures per league (Yonatan: "always show all the past matches + their real result AND the upcoming ones — a week of matches").
+// Round-robin (circle method) over the league's teams across 6 matchdays spread ~±5 days: the 3 PAST matchdays resolve on entry (real results), the 3 UPCOMING are predictable. Plus one ~2.4-min demo match so the predict→resolve loop is visible fast. Idempotent.
+(function injectWeekFixtures(){
+  function rr(teams){ const list=teams.slice(); if(list.length%2) list.push(null); const m=list.length, rounds=[];
+    for(let r=0;r<m-1;r++){ const pairs=[];
+      for(let i=0;i<m/2;i++){ const a=list[i], b=list[m-1-i]; if(a&&b) pairs.push(r%2?[b,a]:[a,b]); }
+      rounds.push(pairs); list.splice(1,0,list.splice(m-1,1)[0]); }   // rotate, keep first fixed
+    return rounds; }
+  const MD=[-120,-72,-24,24,72,120];   // hours-from-now per matchday (3 past, 3 upcoming)
   LEAGUES.forEach(l=>{
     const teams=(l.teams||[]); if(teams.length<2) return;
-    if(!Array.isArray(l.fixtures)) l.fixtures=[];
-    const id=l.key+"-fdemo1";
-    if(l.fixtures.some(fx=>fx.id===id)) return;
+    if(Array.isArray(l.fixtures) && l.fixtures.some(f=>/-w\d/.test(f.id))) return;   // idempotent
+    const rounds=rr(teams); const out=[];
     const hi=Math.min(2,teams.length-1); let ai=Math.min(3,teams.length-1); if(ai===hi) ai=Math.max(0,hi-1);
-    const round=(l.fixtures[0]&&l.fixtures[0].round)||"Matchday 1";
-    l.fixtures.unshift({ id:id, round:round, homeId:teams[hi].id, awayId:teams[ai].id, kickoffOffsetHours:0.04, result:null });
+    out.push({ id:l.key+"-fdemo1", round:"Matchweek 4", homeId:teams[hi].id, awayId:teams[ai].id, kickoffOffsetHours:0.04, result:null });   // near-term demo match
+    MD.forEach((off,mi)=>{ const round=rounds[mi%rounds.length]||[];
+      round.forEach((p,pi)=>{ out.push({ id:l.key+"-w"+(mi+1)+"-"+(pi+1), round:"Matchweek "+(mi+1), homeId:p[0].id, awayId:p[1].id, kickoffOffsetHours: off + pi*0.6, result:null }); }); });
+    l.fixtures=out;
   });
 })();
 function getLeague(key){ return LEAGUE_BY_KEY[key]||null; }
@@ -1119,7 +1141,13 @@ const LEAGUE_I18N={
   he:{ n:{ucl:"ליגת האלופות",uel:"הליגה האירופית",epl:"ליגת העל האנגלית",es:"לה ליגה",it:"סריה א׳",de:"בונדסליגה",fr:"ליג 1",pt:"פרימיירה ליגה",nl:"ארדיוויזיה",il:"ליגת העל הישראלית",tr:"סופר ליג",be:"הליגה הבלגית",sco:"הליגה הסקוטית",gr:"הליגה היוונית",ch:"הליגה השווייצרית",at:"הבונדסליגה האוסטרית",se:"אלסבנסקאן",no:"אליטסריאן",dk:"סופרליגה הדנית",ua:"הליגה האוקראינית",br:"הליגה הברזילאית",ar:"הליגה הארגנטינאית",mx:"ליגה MX",us:"MLS",sa:"הליגה הסעודית",jp:"הליגה היפנית",kr:"הליגה הקוריאנית",cn:"הליגה הסינית",au:"הליגה האוסטרלית",eg:"הליגה המצרית"},
        c:{Europe:"אירופה",England:"אנגליה",Spain:"ספרד",Italy:"איטליה",Germany:"גרמניה",France:"צרפת",Portugal:"פורטוגל",Netherlands:"הולנד",Israel:"ישראל",Turkey:"טורקיה",Belgium:"בלגיה",Scotland:"סקוטלנד",Greece:"יוון",Switzerland:"שווייץ",Austria:"אוסטריה",Sweden:"שוודיה",Norway:"נורבגיה",Denmark:"דנמרק",Ukraine:"אוקראינה",Brazil:"ברזיל",Argentina:"ארגנטינה",Mexico:"מקסיקו",USA:"ארה״ב","Saudi Arabia":"ערב הסעודית",Japan:"יפן","South Korea":"דרום קוריאה",China:"סין",Australia:"אוסטרליה",Egypt:"מצרים"} },
   ar:{ n:{ucl:"دوري أبطال أوروبا",uel:"الدوري الأوروبي",epl:"الدوري الإنجليزي الممتاز",es:"الدوري الإسباني",it:"الدوري الإيطالي",de:"الدوري الألماني",fr:"الدوري الفرنسي",pt:"الدوري البرتغالي",nl:"الدوري الهولندي",il:"الدوري الإسرائيلي",tr:"الدوري التركي",be:"الدوري البلجيكي",sco:"الدوري الاسكتلندي",gr:"الدوري اليوناني",ch:"الدوري السويسري",at:"الدوري النمساوي",se:"الدوري السويدي",no:"الدوري النرويجي",dk:"الدوري الدنماركي",ua:"الدوري الأوكراني",br:"الدوري البرازيلي",ar:"الدوري الأرجنتيني",mx:"الدوري المكسيكي",us:"الدوري الأمريكي",sa:"الدوري السعودي",jp:"الدوري الياباني",kr:"الدوري الكوري",cn:"الدوري الصيني",au:"الدوري الأسترالي",eg:"الدوري المصري"},
-       c:{Europe:"أوروبا",England:"إنجلترا",Spain:"إسبانيا",Italy:"إيطاليا",Germany:"ألمانيا",France:"فرنسا",Portugal:"البرتغال",Netherlands:"هولندا",Israel:"إسرائيل",Turkey:"تركيا",Belgium:"بلجيكا",Scotland:"اسكتلندا",Greece:"اليونان",Switzerland:"سويسرا",Austria:"النمسا",Sweden:"السويد",Norway:"النرويج",Denmark:"الدنمارك",Ukraine:"أوكرانيا",Brazil:"البرازيل",Argentina:"الأرجنتين",Mexico:"المكسيك",USA:"أمريكا","Saudi Arabia":"السعودية",Japan:"اليابان","South Korea":"كوريا الجنوبية",China:"الصين",Australia:"أستراليا",Egypt:"مصر"} }
+       c:{Europe:"أوروبا",England:"إنجلترا",Spain:"إسبانيا",Italy:"إيطاليا",Germany:"ألمانيا",France:"فرنسا",Portugal:"البرتغال",Netherlands:"هولندا",Israel:"إسرائيل",Turkey:"تركيا",Belgium:"بلجيكا",Scotland:"اسكتلندا",Greece:"اليونان",Switzerland:"سويسرا",Austria:"النمسا",Sweden:"السويد",Norway:"النرويج",Denmark:"الدنمارك",Ukraine:"أوكرانيا",Brazil:"البرازيل",Argentina:"الأرجنتين",Mexico:"المكسيك",USA:"أمريكا","Saudi Arabia":"السعودية",Japan:"اليابان","South Korea":"كوريا الجنوبية",China:"الصين",Australia:"أستراليا",Egypt:"مصر"} },
+  ru:{ n:{ucl:"Лига чемпионов",uel:"Лига Европы",epl:"Английская Премьер-лига",es:"Ла Лига",it:"Серия А",de:"Бундеслига",fr:"Лига 1",pt:"Примейра-лига",nl:"Эредивизи",il:"Чемпионат Израиля",tr:"Турецкая Суперлига",be:"Чемпионат Бельгии",sco:"Чемпионат Шотландии",gr:"Греческая Суперлига",ch:"Чемпионат Швейцарии",at:"Австрийская Бундеслига",se:"Аллсвенскан",no:"Элитсериен",dk:"Датская Суперлига",ua:"Украинская Премьер-лига",br:"Бразилейрао",ar:"Аргентинская Примера",mx:"Лига MX",us:"МЛС",sa:"Саудовская Про-лига",jp:"J1 Лига",kr:"К-лига 1",cn:"Суперлига Китая",au:"А-Лига",eg:"Египетская Премьер-лига"},
+       c:{Europe:"Европа",England:"Англия",Spain:"Испания",Italy:"Италия",Germany:"Германия",France:"Франция",Portugal:"Португалия",Netherlands:"Нидерланды",Israel:"Израиль",Turkey:"Турция",Belgium:"Бельгия",Scotland:"Шотландия",Greece:"Греция",Switzerland:"Швейцария",Austria:"Австрия",Sweden:"Швеция",Norway:"Норвегия",Denmark:"Дания",Ukraine:"Украина",Brazil:"Бразилия",Argentina:"Аргентина",Mexico:"Мексика",USA:"США","Saudi Arabia":"Саудовская Аравия",Japan:"Япония","South Korea":"Южная Корея",China:"Китай",Australia:"Австралия",Egypt:"Египет"} },
+  zh:{ n:{ucl:"欧洲冠军联赛",uel:"欧罗巴联赛",epl:"英格兰超级联赛",es:"西班牙甲级联赛",it:"意大利甲级联赛",de:"德国甲级联赛",fr:"法国甲级联赛",pt:"葡萄牙超级联赛",nl:"荷兰甲级联赛",il:"以色列超级联赛",tr:"土耳其超级联赛",be:"比利时甲级联赛",sco:"苏格兰超级联赛",gr:"希腊超级联赛",ch:"瑞士超级联赛",at:"奥地利甲级联赛",se:"瑞典超级联赛",no:"挪威超级联赛",dk:"丹麦超级联赛",ua:"乌克兰超级联赛",br:"巴西甲级联赛",ar:"阿根廷甲级联赛",mx:"墨西哥联赛",us:"美国职业大联盟",sa:"沙特职业联赛",jp:"日本职业联赛",kr:"韩国K联赛",cn:"中国超级联赛",au:"澳大利亚甲级联赛",eg:"埃及超级联赛"},
+       c:{Europe:"欧洲",England:"英格兰",Spain:"西班牙",Italy:"意大利",Germany:"德国",France:"法国",Portugal:"葡萄牙",Netherlands:"荷兰",Israel:"以色列",Turkey:"土耳其",Belgium:"比利时",Scotland:"苏格兰",Greece:"希腊",Switzerland:"瑞士",Austria:"奥地利",Sweden:"瑞典",Norway:"挪威",Denmark:"丹麦",Ukraine:"乌克兰",Brazil:"巴西",Argentina:"阿根廷",Mexico:"墨西哥",USA:"美国","Saudi Arabia":"沙特阿拉伯",Japan:"日本","South Korea":"韩国",China:"中国",Australia:"澳大利亚",Egypt:"埃及"} },
+  hi:{ n:{ucl:"चैंपियंस लीग",uel:"यूरोपा लीग",epl:"प्रीमियर लीग",es:"ला लीगा",it:"सीरी ए",de:"बुंडेसलिगा",fr:"लीग 1",pt:"प्रिमेरा लीगा",nl:"एरेडिविसी",il:"इज़राइली प्रीमियर लीग",tr:"सुपर लिग",be:"बेल्जियन प्रो लीग",sco:"स्कॉटिश प्रीमियरशिप",gr:"ग्रीक सुपर लीग",ch:"स्विस सुपर लीग",at:"ऑस्ट्रियन बुंडेसलिगा",se:"ऑलस्वेन्स्कन",no:"एलीट्सेरियन",dk:"डेनिश सुपरलिगा",ua:"यूक्रेनी प्रीमियर लीग",br:"ब्राज़ीली सीरी ए",ar:"अर्जेंटीना प्रिमेरा",mx:"लीगा एमएक्स",us:"एमएलएस",sa:"सऊदी प्रो लीग",jp:"जे1 लीग",kr:"के लीग 1",cn:"चाइनीज़ सुपर लीग",au:"ए-लीग",eg:"इजिप्टियन प्रीमियर लीग"},
+       c:{Europe:"यूरोप",England:"इंग्लैंड",Spain:"स्पेन",Italy:"इटली",Germany:"जर्मनी",France:"फ़्रांस",Portugal:"पुर्तगाल",Netherlands:"नीदरलैंड",Israel:"इज़राइल",Turkey:"तुर्की",Belgium:"बेल्जियम",Scotland:"स्कॉटलैंड",Greece:"ग्रीस",Switzerland:"स्विट्ज़रलैंड",Austria:"ऑस्ट्रिया",Sweden:"स्वीडन",Norway:"नॉर्वे",Denmark:"डेनमार्क",Ukraine:"यूक्रेन",Brazil:"ब्राज़ील",Argentina:"अर्जेंटीना",Mexico:"मेक्सिको",USA:"अमेरिका","Saudi Arabia":"सऊदी अरब",Japan:"जापान","South Korea":"दक्षिण कोरिया",China:"चीन",Australia:"ऑस्ट्रेलिया",Egypt:"मिस्र"} }
 };
 function lgName(l){ if(!l) return ""; const key=(typeof l==="string")?l:l.key; const lg=(typeof l==="string")?getLeague(l):l; const m=LEAGUE_I18N[CUR.lang]; return (m&&m.n&&m.n[key]) || (lg&&lg.name) || key; }
 function lgCountry(l){ if(!l) return ""; const lg=(typeof l==="string")?getLeague(l):l; const c=lg&&lg.country; const m=LEAGUE_I18N[CUR.lang]; return (m&&m.c&&c&&m.c[c]) || c || ""; }
@@ -1867,6 +1895,36 @@ function PickGroup({groups,onPick}){
         <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{l?lgName(l):g.league}</div></div><Chev/></button>; })}
   </div>;
 }
+// BoardPicker (§15): leaderboard entry = pick a LEAGUE you have groups in → your groups in it → tap one → ranking.
+// Auto-skips the league step when the user only has groups in one league.
+function BoardPicker({groups,onPick}){
+  const leagues=[...new Set((groups||[]).map(g=>g.league))];
+  const [lg,setLg]=useState(leagues.length===1?leagues[0]:null);
+  if(!groups||groups.length===0) return null;
+  if(!lg){
+    return <div>
+      <div className="disp" style={{fontSize:20,fontWeight:800,marginBottom:4}}>{t("pickLeague")}</div>
+      <p style={{color:"var(--muted)",fontSize:13,marginBottom:14}}>{t("rankPickLeagueSub")}</p>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        {leagues.map(key=>{ const l=getLeague(key); const th=leagueTheme(key); const cnt=groups.filter(g=>g.league===key).length;
+          return <button key={key} onClick={()=>{SND.tap();setLg(key);}} className="card lgtile" style={{margin:0,padding:"16px 12px",display:"flex",flexDirection:"column",alignItems:"center",gap:5,cursor:"pointer",border:"1px solid "+th.primary+"66",background:th.grad,color:th.text,textAlign:"center"}}>
+            <span style={{fontSize:28,lineHeight:1}} aria-hidden="true">{l?l.emoji:"⚽"}</span>
+            <span style={{fontWeight:800,fontSize:14,lineHeight:1.2}} dir="auto">{lgName(key)}</span>
+            <span style={{fontSize:11,opacity:.82}}>{t("nGroups",{n:cnt})}</span>
+          </button>; })}
+      </div>
+    </div>;
+  }
+  const inLeague=groups.filter(g=>g.league===lg); const l=getLeague(lg); const th=leagueTheme(lg);
+  return <div>
+    {leagues.length>1&&<button onClick={()=>{SND.tap();setLg(null);}} style={{background:"none",border:"none",color:"var(--muted)",fontWeight:700,cursor:"pointer",marginBottom:12,fontFamily:"inherit",fontSize:14}}>‹ {t("back")}</button>}
+    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}><span style={{fontSize:22}} aria-hidden="true">{l?l.emoji:"⚽"}</span><span className="disp" style={{fontSize:19,fontWeight:800,color:th.primary}} dir="auto">{lgName(lg)}</span></div>
+    {inLeague.map(g=>{ const gimg=(g.image&&/^https?:\/\//.test(g.image))?g.image:"";
+      return <button key={g.id} onClick={()=>{SND.tap();onPick(g);}} className="card" style={{display:"flex",alignItems:"center",gap:10,padding:12,width:"100%",textAlign:"start",cursor:"pointer",border:"1px solid "+th.primary+"66",background:"var(--ink-2)",color:"var(--text)",marginBottom:8}}>
+        <div style={{width:38,height:38,borderRadius:11,overflow:"hidden",background:th.primary+"26",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{gimg?<img src={gimg} alt="" onError={e=>{e.target.style.display="none";}} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:(l?l.emoji:"⚽")}</div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div style={{fontSize:12,color:"var(--muted)"}} dir="auto">{lgName(lg)}</div></div><Chev/></button>; })}
+  </div>;
+}
 function LeagueAura({motif}){
   const m=motif||"default";
   let mot=null;
@@ -2255,8 +2313,8 @@ function App(){
       :tab==="profile"?<Profile group={group} groups={groups} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>
       :groups.length===0?
         <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎯</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:8}}>{t("noGroupB")}</p><div style={{display:"inline-flex",alignItems:"center",gap:6,fontSize:12,fontWeight:700,color:"var(--brand-2)",marginBottom:16}}><span aria-hidden="true">⏱️</span>{t("sixtySec")}</div><br/><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
-        :tab==="feed"?(group?<FixturesFeed group={group} me={me} onOpenSeason={()=>setSeasonGroup(group)} onScored={onScored} onErr={onErr} bump={bump}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
-        :tab==="board"?(group?<LeagueBoardScreen group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)} bump={bump} onGroupSaved={(g)=>{ setGroup(g); loadGroups(); setBump(b=>b+1); }}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
+        :tab==="feed"?(group?<FixturesFeed group={group} me={me} onOpenSeason={()=>setSeasonGroup(group)} onScored={onScored} onErr={onErr} bump={bump}/>:<BoardPicker groups={groups} onPick={(g)=>enterGroup(g)}/>)
+        :tab==="board"?(group?<LeagueBoardScreen group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)} bump={bump} onGroupSaved={(g)=>{ setGroup(g); loadGroups(); setBump(b=>b+1); }}/>:<BoardPicker groups={groups} onPick={(g)=>enterGroup(g)}/>)
         :tab==="rules"?<Rules/>
         :<Profile group={group} groups={groups} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>}
       </ScreenBoundary>

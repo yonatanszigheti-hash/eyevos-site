@@ -205,7 +205,7 @@ button:focus-visible,a:focus-visible,[role="button"]:focus-visible{outline:2px s
 .fab:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .bar .lab:focus-visible{outline:none;box-shadow:inset 0 0 0 2px var(--brand-2),inset 0 0 0 4px rgba(12,10,20,.85);border-radius:11px}
 .btn:focus-visible{outline:2px solid #fff;outline-offset:2px}
-.lgaura{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}.lgaura>i{position:absolute;border-radius:50%;will-change:transform,opacity;filter:blur(30px);animation:auraDrift 30s ease-in-out infinite}.lgaura .b1{width:64%;height:48%;top:-12%;inset-inline-start:-14%;background:radial-gradient(closest-side,var(--lg-primary),transparent 72%);opacity:.32}.lgaura .b2{width:56%;height:44%;bottom:-14%;inset-inline-end:-12%;background:radial-gradient(closest-side,var(--lg-accent),transparent 72%);opacity:.24;animation-direction:reverse}@keyframes auraDrift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(7%,7%,0) scale(1.13)}}@media (prefers-reduced-motion:reduce){.lgaura>i{animation:none!important;transform:none!important;opacity:.18}}
+.lgaura{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}.lgaura>i{position:absolute;border-radius:50%;will-change:transform,opacity;filter:blur(34px);animation:auraDrift 32s ease-in-out infinite}.lgaura .b1{width:66%;height:50%;top:-13%;inset-inline-start:-15%;background:radial-gradient(closest-side,var(--lg-primary),transparent 72%);opacity:.40}.lgaura .b2{width:58%;height:46%;bottom:-15%;inset-inline-end:-13%;background:radial-gradient(closest-side,var(--lg-accent),transparent 72%);opacity:.30;animation-direction:reverse;animation-duration:38s}.lgaura .b3{width:48%;height:40%;top:32%;inset-inline-start:26%;background:radial-gradient(closest-side,var(--lg-primary),transparent 70%);opacity:.16;animation-duration:46s}.lgaura .lgpitch{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1.5px,transparent 1.5px 52px);mix-blend-mode:soft-light;opacity:.6}@keyframes auraDrift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(7%,7%,0) scale(1.14)}}@media (prefers-reduced-motion:reduce){.lgaura>i{animation:none!important;transform:none!important;opacity:.18}.lgaura .lgpitch{opacity:.4}}
 /* ----- bottom-nav: keep every label on ONE line so the bar stays aligned in all 10 langs ----- */
 .nav .navb{flex:1 1 0;min-width:0;max-width:25%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-inline:4px;gap:3px;line-height:1.15;font-size:clamp(9.5px,2.4vw,11px)}
 /* ===== football layer ===== */
@@ -1006,6 +1006,38 @@ hi:{tapBoxThenDigit:"टीम चुनो, फिर नंबर दबाओ
 zh:{tapBoxThenDigit:"先点球队，再点数字",pickGoals:"选择进球数",goalsLbl:"球"},
 ar:{tapBoxThenDigit:"اختر فريقاً ثم اضغط رقماً",pickGoals:"اختر الأهداف",goalsLbl:"أهداف"}};
 for(const _c in _GX37){ if(STR[_c]) Object.assign(STR[_c],_GX37[_c]); }
+// ===== _GX38 — leaderboard column headers (Domino's-style table: member | result | round-pick pts | total) =====
+const _GX38={
+he:{membersCol:"חברי הקבוצה",resultCol:"תוצאה",predCol:"ניחוש",pointsCol:"נקודות",lastMatchTip:"המשחק האחרון שהוכרע"},
+en:{membersCol:"Members",resultCol:"Result",predCol:"Pick",pointsCol:"Points",lastMatchTip:"Last resolved match"},
+es:{membersCol:"Miembros",resultCol:"Resultado",predCol:"Pronóstico",pointsCol:"Puntos",lastMatchTip:"Último partido resuelto"},
+fr:{membersCol:"Membres",resultCol:"Score",predCol:"Pronostic",pointsCol:"Points",lastMatchTip:"Dernier match résolu"},
+pt:{membersCol:"Membros",resultCol:"Resultado",predCol:"Palpite",pointsCol:"Pontos",lastMatchTip:"Último jogo resolvido"},
+ru:{membersCol:"Участники",resultCol:"Счёт",predCol:"Прогноз",pointsCol:"Очки",lastMatchTip:"Последний сыгранный матч"},
+de:{membersCol:"Mitglieder",resultCol:"Ergebnis",predCol:"Tipp",pointsCol:"Punkte",lastMatchTip:"Letztes gewertetes Spiel"},
+hi:{membersCol:"सदस्य",resultCol:"नतीजा",predCol:"अनुमान",pointsCol:"पॉइंट",lastMatchTip:"आख़िरी सुलझा मैच"},
+zh:{membersCol:"成员",resultCol:"比分",predCol:"预测",pointsCol:"积分",lastMatchTip:"最近结算的比赛"},
+ar:{membersCol:"الأعضاء",resultCol:"النتيجة",predCol:"التوقع",pointsCol:"النقاط",lastMatchTip:"آخر مباراة محسومة"}};
+for(const _c in _GX38){ if(STR[_c]) Object.assign(STR[_c],_GX38[_c]); }
+// ===== _GX39 — edit GROUP (name + image URL), up to 30 members =====
+const _GX39={
+he:{editGroup:"עריכת קבוצה",groupNameL:"שם הקבוצה",groupImageL:"תמונת קבוצה (קישור)",membersCap:"עד 30 חברים בקבוצה",editGroupA:"ערוך קבוצה"},
+en:{editGroup:"Edit group",groupNameL:"Group name",groupImageL:"Group image (URL)",membersCap:"Up to 30 members per group",editGroupA:"Edit group"},
+es:{editGroup:"Editar grupo",groupNameL:"Nombre del grupo",groupImageL:"Imagen del grupo (URL)",membersCap:"Hasta 30 miembros por grupo",editGroupA:"Editar grupo"},
+fr:{editGroup:"Modifier le groupe",groupNameL:"Nom du groupe",groupImageL:"Image du groupe (URL)",membersCap:"Jusqu'à 30 membres par groupe",editGroupA:"Modifier le groupe"},
+pt:{editGroup:"Editar grupo",groupNameL:"Nome do grupo",groupImageL:"Imagem do grupo (URL)",membersCap:"Até 30 membros por grupo",editGroupA:"Editar grupo"},
+ru:{editGroup:"Изменить группу",groupNameL:"Название группы",groupImageL:"Изображение группы (URL)",membersCap:"До 30 участников в группе",editGroupA:"Изменить группу"},
+de:{editGroup:"Gruppe bearbeiten",groupNameL:"Gruppenname",groupImageL:"Gruppenbild (URL)",membersCap:"Bis zu 30 Mitglieder pro Gruppe",editGroupA:"Gruppe bearbeiten"},
+hi:{editGroup:"ग्रुप एडिट करें",groupNameL:"ग्रुप का नाम",groupImageL:"ग्रुप इमेज (URL)",membersCap:"हर ग्रुप में 30 तक सदस्य",editGroupA:"ग्रुप एडिट करें"},
+zh:{editGroup:"编辑群组",groupNameL:"群组名称",groupImageL:"群组图片（链接）",membersCap:"每个群组最多 30 名成员",editGroupA:"编辑群组"},
+ar:{editGroup:"تعديل المجموعة",groupNameL:"اسم المجموعة",groupImageL:"صورة المجموعة (رابط)",membersCap:"حتى 30 عضواً في المجموعة",editGroupA:"تعديل المجموعة"}};
+for(const _c in _GX39){ if(STR[_c]) Object.assign(STR[_c],_GX39[_c]); }
+// ===== _GX40 — relative day labels for the date-grouped fixtures (Domino's "Mon, Jun 22" style) =====
+const _GX40={
+he:{todayD:"היום",tomorrowD:"מחר"}, en:{todayD:"Today",tomorrowD:"Tomorrow"}, es:{todayD:"Hoy",tomorrowD:"Mañana"},
+fr:{todayD:"Aujourd'hui",tomorrowD:"Demain"}, pt:{todayD:"Hoje",tomorrowD:"Amanhã"}, ru:{todayD:"Сегодня",tomorrowD:"Завтра"},
+de:{todayD:"Heute",tomorrowD:"Morgen"}, hi:{todayD:"आज",tomorrowD:"कल"}, zh:{todayD:"今天",tomorrowD:"明天"}, ar:{todayD:"اليوم",tomorrowD:"غداً"}};
+for(const _c in _GX40){ if(STR[_c]) Object.assign(STR[_c],_GX40[_c]); }
 // ===== LEAGUE THEMES (embedded from _build/themes.js) — IP-safe per-league palettes =====
 const LEAGUE_THEME={
   ucl:{primary:"#3b82f6",accent:"#c0c8d6",bg:"#0a1024",text:"#e8ecf5",grad:"linear-gradient(135deg, #0a1024 0%, #16224d 55%, #1e3a8a 100%)"},
@@ -1069,6 +1101,16 @@ function leagueTheme(key){ return LEAGUE_THEME[key]||(getLeague(key)&&getLeague(
 // runtime kickoff: offset(hours) → absolute epoch ms, stamped ONCE at app load (never trust a build-time date).
 const LOAD_NOW=Date.now();
 function kickoffMs(fx){ return LOAD_NOW + (Number(fx.kickoffOffsetHours)||0)*3600000; }
+// date grouping for the fixtures feed (Domino's-style "Today / Tomorrow / Mon, 22 Jun" headers)
+function dayKey(ms){ const d=new Date(ms); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+function fmtMatchDate(ms,now){
+  const a=new Date(ms), b=new Date(now);
+  const dayMs=86400000, ad=Math.floor((a-new Date(b.getFullYear(),b.getMonth(),b.getDate()))/dayMs);
+  if(ad===0) return t("todayD"); if(ad===1) return t("tomorrowD");
+  try{ const loc=(CUR.lang==="he"?"he-IL":CUR.lang==="ar"?"ar":CUR.lang); return a.toLocaleDateString(loc,{weekday:"short",day:"numeric",month:"short"}); }
+  catch(e){ return a.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"}); }
+}
+function groupByDate(items){ const out=[]; const idx={}; (items||[]).forEach(o=>{ const k=dayKey(o.k); if(idx[k]==null){ idx[k]=out.length; out.push({key:k,k:o.k,items:[]}); } out[idx[k]].items.push(o); }); return out; }
 function teamsOf(key){ const l=getLeague(key); return (l&&l.teams)||[]; }
 function playersOf(key){ const l=getLeague(key); return (l&&l.players)||[]; }
 function fixturesOfLeague(key){ const l=getLeague(key); return (l&&l.fixtures)||[]; }
@@ -1118,6 +1160,7 @@ const DEMO={
   groups(){ const g=this._read("groups",[]); return Array.isArray(g)?g:[]; },
   saveGroups(list){ this._write("groups",list); },
   addGroup(g){ const list=this.groups(); if(!list.some(x=>x.id===g.id)) list.unshift(g); this.saveGroups(list); return g; },
+  updateGroup(id,patch){ const list=this.groups().map(x=>x.id===id?Object.assign({},x,patch):x); this.saveGroups(list); return list.find(x=>x.id===id)||null; },
   findByCode(code){ const c=String(code||"").toUpperCase(); if(c.length<6) return null; return this.groups().find(g=>groupCode(g)===c)||null; },   // join-by-code demo fallback (per-device until backend)
   // predictions: { [groupId]: { [fixtureId]: {h,a,at} } }
   preds(){ return this._read("preds",{})||{}; },
@@ -1132,7 +1175,10 @@ const DEMO={
   // celebrated wins ledger: { "<groupId>:<fixtureId>": true } so confetti/SND.win fire once per win, EVER (survives the feed remount + tab re-entry)
   _celeb(){ return this._read("celeb",{})||{}; },
   wasCelebrated(key){ return !!this._celeb()[key]; },
-  markCelebrated(key){ const c=this._celeb(); if(!c[key]){ c[key]=true; this._write("celeb",c); } }
+  markCelebrated(key){ const c=this._celeb(); if(!c[key]){ c[key]=true; this._write("celeb",c); } },
+  // local profile override (display name + photo) so profile editing works with ZERO backend; the update_profile RPC stays primary when the backend is live
+  getProfile(){ return this._read("profile",null); },
+  setProfile(name,photo){ this._write("profile",{display_name:name,photo_url:(photo||null)}); }
 };
 function newGroupId(){ return "g_"+Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
 const _CODE_ALPHABET="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 6-char join code; no O/0/I/1 (read-aloud safe over WhatsApp)
@@ -1166,6 +1212,19 @@ function computeGroupPoints(group){
 }
 function userTotalPoints(){
   let total=0; DEMO.groups().forEach(g=>{ total+=computeGroupPoints(g).total; }); return total;
+}
+// most-recently-resolved fixture the member predicted → feeds the leaderboard "result" + "round pick" columns (Domino's-style).
+function lastScored(group){
+  if(!group) return null;
+  const fixtures=fixturesOfLeague(group.league);
+  let best=null, bestK=-Infinity;
+  fixtures.forEach(fx=>{
+    if(!fx.result) return;
+    const pr=DEMO.getPred(group.id,fx.id); if(!pr) return;
+    const k=kickoffMs(fx);
+    if(k>bestK){ bestK=k; best={ result:fx.result.home+"–"+fx.result.away, pred:pr.h+"–"+pr.a, pts:scoreMatch(fx.result.home,fx.result.away,pr.h,pr.a) }; }
+  });
+  return best;
 }
 /* MOCK SIM ENGINE (SPEC §11/§26) — honest: reproducible result seeded only by fixture id + hidden
    strength; resolves ONLY after real kickoff (now>=kickoffMs); cached+namespaced in DEMO; points
@@ -1426,15 +1485,18 @@ function ScoreStepper({value,onChange,label,disabled,color}){
 // request, Domino's-style). Tapping the home digit auto-advances selection to away. 0–9 covers football scorelines.
 function ScoreEntry({h,a,setH,setA,home,away,disabled}){
   const [sel,setSel]=useState("h");
+  const [fresh,setFresh]=useState(true);   // next digit REPLACES the box (true) or APPENDS to it (false) → tap "9" then "9" = 99 (capped 99). Re-tap a box to start fresh; to set 0, select the box then tap 0.
   const box=(val,who,team)=>{ const on=sel===who; const col=(team&&team.color)||"var(--lg-primary)";
-    return <button type="button" disabled={disabled} onClick={()=>{ if(disabled)return; SND.tap(); setSel(who); }}
+    return <button type="button" disabled={disabled} onClick={()=>{ if(disabled)return; SND.tap(); setSel(who); setFresh(true); }}
       aria-label={(team?team.short:"")+" "+t("goalsLbl")+": "+val} aria-pressed={on}
       style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:6,background:"none",border:"none",cursor:disabled?"default":"pointer",fontFamily:"inherit"}}>
       <span style={{fontSize:11.5,fontWeight:800,color:"var(--lg-text)",opacity:.85,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}} dir="auto">{team?team.short:"?"}</span>
       <span className="tnum bidi-ltr" style={{width:62,height:62,borderRadius:16,display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:900,
         color:on?"#fff":"var(--lg-text)",background:on?col:"rgba(255,255,255,.06)",border:"2px solid "+(on?col:"var(--line-2)"),boxShadow:on?"0 6px 18px rgba(0,0,0,.28)":"none",transition:"background .15s,border-color .15s,color .15s"}}>{val}</span>
     </button>; };
-  const tap=(d)=>{ if(disabled)return; SND.tap(); if(sel==="h"){ setH(d); setSel("a"); } else { setA(d); } };
+  const tap=(d)=>{ if(disabled)return; SND.tap();
+    const cur=sel==="h"?h:a; const setCur=sel==="h"?setH:setA;
+    setCur(fresh?d:Math.min(99,cur*10+d)); setFresh(false); };
   return <div style={{marginBottom:12}}>
     <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
       {box(h,"h",home)}
@@ -1442,10 +1504,10 @@ function ScoreEntry({h,a,setH,setA,home,away,disabled}){
       {box(a,"a",away)}
     </div>
     <div role="group" aria-label={t("pickGoals")} style={{display:"grid",gridTemplateColumns:"repeat(10,1fr)",gap:4}}>
-      {[0,1,2,3,4,5,6,7,8,9].map(d=>{ const active=(sel==="h"?h:a)===d;
-        return <button key={d} type="button" disabled={disabled} onClick={()=>tap(d)} className="tnum" aria-label={String(d)}
-          style={{height:40,minWidth:0,borderRadius:9,fontWeight:800,fontSize:15,cursor:disabled?"default":"pointer",fontFamily:"inherit",
-          background:active?"var(--lg-primary)":"rgba(255,255,255,.06)",color:active?"#fff":"var(--lg-text)",border:"1px solid "+(active?"var(--lg-primary)":"var(--line-2)")}}>{d}</button>; })}
+      {[0,1,2,3,4,5,6,7,8,9].map(d=>(
+        <button key={d} type="button" disabled={disabled} onClick={()=>tap(d)} className="tnum" aria-label={String(d)}
+          style={{height:42,minWidth:0,borderRadius:9,fontWeight:800,fontSize:15,cursor:disabled?"default":"pointer",fontFamily:"inherit",
+          background:"rgba(255,255,255,.06)",color:"var(--lg-text)",border:"1px solid var(--line-2)"}}>{d}</button>))}
     </div>
     <div style={{textAlign:"center",fontSize:11,opacity:.6,marginTop:7}}>{t("tapBoxThenDigit")}</div>
   </div>;
@@ -1470,77 +1532,90 @@ function FixtureCard({group,league,fx,kickoff,now,pred,onSave,saving,onScored}){
   const celebKey=(group&&group.id?group.id:"_")+":"+fx.id;
   useEffect(()=>{ if(result&&pred&&pts>=3&&!firedRef.current&&!DEMO.wasCelebrated(celebKey)){ firedRef.current=true; DEMO.markCelebrated(celebKey); if(onScored)onScored(pts); } },[result,pred&&pred.h,pred&&pred.a,pts,celebKey]);
   const [showHow,setShowHow]=useState(false);
-  const teamRow=(
-    <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,margin:"2px 0 12px"}}>
-      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-        <CrestBadge team={home} size={40}/>
-        <span style={{fontWeight:800,fontSize:13.5,color:"var(--lg-text)"}} dir="auto">{home.short}</span>
-        <div style={{fontSize:10.5,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}} dir="auto">{home.name}</div>
-      </div>
-      <span style={{flexShrink:0,fontSize:12,fontWeight:800,opacity:.7,color:"var(--lg-text)"}}>{t("vsWord")}</span>
-      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
-        <CrestBadge team={away} size={40}/>
-        <span style={{fontWeight:800,fontSize:13.5,color:"var(--lg-text)"}} dir="auto">{away.short}</span>
-        <div style={{fontSize:10.5,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}} dir="auto">{away.name}</div>
-      </div>
+  // one team's column (badge + short code + full name) — sits on each edge of the horizontal match row (365scores / Domino's style)
+  const teamCol=(team)=>(
+    <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+      <CrestBadge team={team} size={38}/>
+      <span style={{fontWeight:800,fontSize:13,color:"var(--lg-text)"}} dir="auto">{team.short}</span>
+      <div style={{fontSize:10,opacity:.7,color:"var(--lg-text)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:"100%"}} dir="auto">{team.name}</div>
     </div>
   );
+  // center POINTS circle (Domino's-style): green +3, gold +1, grey 0
+  const ptsCircle=(p)=>{ const c=p>=3?{bg:"#16a34a",fg:"#fff"}:p>=1?{bg:"var(--gold)",fg:"#3a2400"}:{bg:"rgba(255,255,255,.10)",fg:"var(--lg-text)"};
+    return <div aria-label={(p>0?"+"+p:"0")+" "+t("pointsCol")} style={{flexShrink:0,width:46,height:46,borderRadius:999,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:c.bg,color:c.fg,boxShadow:"0 4px 14px rgba(0,0,0,.3)"}}>
+      <span className="tnum" dir="ltr" style={{fontWeight:900,fontSize:16,lineHeight:1}}>{p>0?"+"+p:"0"}</span>
+      <span style={{fontSize:7.5,fontWeight:700,opacity:.85,marginTop:1,textTransform:"uppercase",letterSpacing:".02em"}}>{t("pointsCol")}</span></div>; };
+  const chip=(bg,brd,col,txt)=><span className="chip" style={{padding:"3px 9px",fontSize:11.5,fontWeight:800,background:bg,border:brd,color:col,minHeight:0}}>{txt}</span>;
   return <div className="card" style={{background:"var(--lg-bg)",border:"1px solid var(--line-2)",color:"var(--lg-text)"}}>
-    {/* status chip row */}
-    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8,gap:8}}>
+    {/* status chip row: round + clock/final/pending */}
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10,gap:8}}>
       <span style={{fontSize:11,fontWeight:800,opacity:.7}}>{fx.round}</span>
       {!locked
-        ? <span className="chip" style={{padding:"3px 9px",fontSize:11.5,fontWeight:800,background:"rgba(255,255,255,.08)",border:"1px solid var(--line-2)",color:"var(--lg-text)",minHeight:0}}>
-            <span aria-hidden="true">⏱</span> <span className="bidi-ltr">{t("kickoffIn")} {kickoffText(kickoff,now)||""}</span>
-          </span>
-        : result
-          ? <span className="chip" style={{padding:"3px 9px",fontSize:11.5,fontWeight:800,background:"var(--lg-primary)",border:"none",color:"#fff",minHeight:0}}>{t("finalScore")}</span>
-          : <span className="chip" style={{padding:"3px 9px",fontSize:11.5,fontWeight:800,background:"rgba(255,255,255,.08)",border:"1px solid var(--line-2)",color:"var(--lg-text)",minHeight:0}}>⏳ {t("resultPending")}</span>}
+        ? chip("rgba(255,255,255,.08)","1px solid var(--line-2)","var(--lg-text)",<span><span aria-hidden="true">⏱</span> <span className="bidi-ltr">{t("kickoffIn")} {kickoffText(kickoff,now)||""}</span></span>)
+        : result ? chip("var(--lg-primary)","none","#fff",t("finalScore"))
+                 : chip("rgba(255,77,109,.16)","1px solid rgba(255,77,109,.4)","#ff8aa0",<span><span className="livedot" style={{display:"inline-block",width:7,height:7,borderRadius:"50%",background:"#ff4d6d",marginInlineEnd:5}}/>{t("resultPending")}</span>)}
     </div>
-    {teamRow}
-    {/* ===== STATE C: locked/finished ===== */}
-    {locked ? <div>
-      {result && <div style={{textAlign:"center",margin:"4px 0 10px"}}>
-        <div style={{fontSize:11,fontWeight:700,opacity:.7}}>{t("finalScore")}</div>
-        <div className="disp bidi-ltr" style={{fontSize:34,fontWeight:900,color:"var(--lg-text)"}}>{result.home}<span style={{opacity:.5,margin:"0 8px"}}>–</span>{result.away}</div>
-      </div>}
-      <div style={{textAlign:"center",fontSize:13,marginBottom:result?10:0}}>
-        {pred
-          ? <span><span style={{opacity:.75}}>{t("yourPrediction")}: </span><span className="bidi-ltr" style={{fontWeight:800}}>{pred.h}–{pred.a}</span></span>
-          : <span style={{opacity:.7}}>🔒 {t("noPredictionYet")}</span>}
-      </div>
-      {result && pred && <div style={{textAlign:"center"}}>
-        <div style={{display:"inline-flex",alignItems:"center",gap:8,padding:"7px 14px",borderRadius:999,fontWeight:900,fontSize:14,
-          background:pts>0?"var(--gold-soft)":"rgba(255,255,255,.06)",color:pts>0?"var(--gold)":"var(--lg-text)",border:"1px solid "+(pts>0?"rgba(255,194,60,.4)":"var(--line)")}}>
-          🏆 {t("youScoredPts",{pts:pts})}
+    {locked ? (
+      result ? (
+        /* ===== FINISHED — horizontal Domino's row: home | actual ⊕ points ⊕ actual | away ===== */
+        <div>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            {teamCol(home)}
+            <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:5,minWidth:104}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <span className="disp bidi-ltr" style={{fontSize:30,fontWeight:900,color:"var(--lg-text)"}}>{result.home}</span>
+                {pred?ptsCircle(pts):<span aria-hidden="true" style={{opacity:.4,fontSize:24,fontWeight:900}}>–</span>}
+                <span className="disp bidi-ltr" style={{fontSize:30,fontWeight:900,color:"var(--lg-text)"}}>{result.away}</span>
+              </div>
+              {pred
+                ? <div style={{fontSize:10.5,opacity:.82}} dir="auto">{t("yourPrediction")}: <b className="bidi-ltr" style={{fontWeight:800}}>{pred.h}–{pred.a}</b></div>
+                : <div style={{fontSize:10.5,opacity:.7}}>🔒 {t("noPredictionYet")}</div>}
+            </div>
+            {teamCol(away)}
+          </div>
+          {pred && <div style={{textAlign:"center",marginTop:9}}>
+            <span style={{fontSize:11.5,fontWeight:800,color:pts>0?"var(--gold)":"var(--lg-text)",opacity:pts>0?1:.7}}>{pts===3?t("exactScore"):pts===1?t("oneScore"):t("noPoints")}</span>
+            <button type="button" onClick={()=>{SND.tap();setShowHow(s=>!s);}} style={{background:"none",border:"none",color:"var(--lg-accent)",fontWeight:700,fontSize:11.5,cursor:"pointer",fontFamily:"inherit",marginInlineStart:8}}>{t("howPointsWork")} {showHow?"▲":"▼"}</button>
+            {showHow && <div style={{fontSize:11.5,opacity:.85,lineHeight:1.7,marginTop:7,textAlign:"start",background:"rgba(0,0,0,.2)",borderRadius:10,padding:"8px 12px"}}>
+              <div>· {t("hpDirection")}</div><div>· {t("hpOne")}</div><div>· {t("hpZero")}</div>
+            </div>}
+          </div>}
         </div>
-        <div style={{fontSize:12,opacity:.85,marginTop:8}}>
-          {pts===3?t("exactScore"):pts===1?t("oneScore"):t("noPoints")}
+      ) : (
+        /* ===== LOCKED, result pending (kickoff passed, awaiting final whistle) ===== */
+        <div style={{display:"flex",alignItems:"center",gap:6}}>
+          {teamCol(home)}
+          <div style={{flexShrink:0,textAlign:"center",minWidth:104}}>
+            <div style={{fontSize:22,fontWeight:900,opacity:.5,letterSpacing:".06em"}} className="bidi-ltr">– : –</div>
+            {pred?<div style={{fontSize:11,marginTop:3}} dir="auto">{t("yourPrediction")}: <b className="bidi-ltr">{pred.h}–{pred.a}</b></div>:<div style={{fontSize:10.5,opacity:.6,marginTop:3}}>🔒 {t("predictionLocked")}</div>}
+          </div>
+          {teamCol(away)}
         </div>
-        <button type="button" onClick={()=>{SND.tap();setShowHow(s=>!s);}} style={{background:"none",border:"none",color:"var(--lg-accent)",fontWeight:700,fontSize:12,cursor:"pointer",fontFamily:"inherit",marginTop:8}}>{t("howPointsWork")} {showHow?"▲":"▼"}</button>
-        {showHow && <div style={{fontSize:11.5,opacity:.85,lineHeight:1.7,marginTop:6,textAlign:"start",background:"rgba(0,0,0,.2)",borderRadius:10,padding:"8px 12px"}}>
-          <div>· {t("hpDirection")}</div><div>· {t("hpOne")}</div><div>· {t("hpZero")}</div>
+      )
+    ) : (
+      /* ===== UPCOMING — teams row + tap-0-9 ScoreEntry (or your-pick + edit) ===== */
+      <div>
+        <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:12}}>
+          {teamCol(home)}
+          <span style={{flexShrink:0,fontSize:12,fontWeight:800,opacity:.55,color:"var(--lg-text)"}}>{t("vsWord")}</span>
+          {teamCol(away)}
+        </div>
+        {showStepper ? <div>
+          <ScoreEntry h={h} a={a} setH={setH} setA={setA} home={home} away={away} disabled={saving}/>
+          <button className="btn btn-pri" disabled={saving} onClick={()=>{ onSave(h,a); setEditing(false); }} style={{background:"var(--lg-primary)"}}>
+            {saving?t("savingPrediction"):t("savePrediction")}
+          </button>
+          <div style={{textAlign:"center",fontSize:11.5,opacity:.7,marginTop:8}}>{t("beforeKickoff")} · {t("lockedAtKickoff")}</div>
+        </div> : <div>
+          <div style={{textAlign:"center",margin:"2px 0 6px"}}>
+            <span style={{opacity:.75,fontSize:13}}>{t("yourPrediction")}: </span>
+            <span className="bidi-ltr disp" style={{fontWeight:900,fontSize:22,color:"var(--lg-text)"}}>{pred.h}–{pred.a}</span>
+          </div>
+          <button className="btn btn-ghost" onClick={()=>{SND.tap();setEditing(true);}}>{t("editPrediction")}</button>
+          <div style={{textAlign:"center",fontSize:11.5,opacity:.7,marginTop:8}}>{t("lockedAtKickoff")}</div>
         </div>}
-      </div>}
-      {result && !pred && <div style={{textAlign:"center",fontSize:12,opacity:.7,marginTop:4}}>{t("predictionLocked")}</div>}
-    </div>
-    /* ===== STATE A/B: upcoming ===== */
-    : <div>
-      {showStepper ? <div>
-        <ScoreEntry h={h} a={a} setH={setH} setA={setA} home={home} away={away} disabled={saving}/>
-        <button className="btn btn-pri" disabled={saving} onClick={()=>{ onSave(h,a); setEditing(false); }} style={{background:"var(--lg-primary)"}}>
-          {saving?t("savingPrediction"):t("savePrediction")}
-        </button>
-        <div style={{textAlign:"center",fontSize:11.5,opacity:.7,marginTop:8}}>{t("beforeKickoff")} · {t("lockedAtKickoff")}</div>
-      </div> : <div>
-        <div style={{textAlign:"center",margin:"2px 0 6px"}}>
-          <span style={{opacity:.75,fontSize:13}}>{t("yourPrediction")}: </span>
-          <span className="bidi-ltr disp" style={{fontWeight:900,fontSize:22,color:"var(--lg-text)"}}>{pred.h}–{pred.a}</span>
-        </div>
-        <button className="btn btn-ghost" onClick={()=>{SND.tap();setEditing(true);}}>{t("editPrediction")}</button>
-        <div style={{textAlign:"center",fontSize:11.5,opacity:.7,marginTop:8}}>{t("lockedAtKickoff")}</div>
-      </div>}
-    </div>}
+      </div>
+    )}
   </div>;
 }
 
@@ -1647,7 +1722,10 @@ function LeagueBoard({rows,me}){
     const photo=r.photo_url!=null?r.photo_url:(r.photo!=null?r.photo:null);
     const total=Number(r.total)||0;
     const reachedAt=Number(r.last_scored_at!=null?r.last_scored_at:(r.reached_at!=null?r.reached_at:0))||0;   // tie-break: earliest to reach the total ranks higher
-    return {id,name,photo,total,reachedAt,exact:Number(r.exact_count)||0,champPts:Number(r.champion_points)||0,scorerPts:Number(r.scorer_points)||0,isMe:r.is_me===true||(myId!=null&&id===myId)};
+    const lastResult=r.last_result!=null?r.last_result:null;
+    const lastPred=r.last_pred!=null?r.last_pred:null;
+    const lastPoints=r.last_points!=null?Number(r.last_points):null;
+    return {id,name,photo,total,reachedAt,lastResult,lastPred,lastPoints,exact:Number(r.exact_count)||0,isMe:r.is_me===true||(myId!=null&&id===myId)};
   });
   if(norm.length===0) return <div className="card" style={{color:"var(--muted)",fontSize:13.5,textAlign:"center",lineHeight:1.6}}>{t("emptyLeaderboard")}</div>;
   const ranked=[...norm].sort((a,b)=>b.total-a.total||(((a.reachedAt||Infinity)-(b.reachedAt||Infinity)))||b.exact-a.exact||(a.name||"").localeCompare(b.name||"")||(a.id<b.id?-1:a.id>b.id?1:0));
@@ -1655,24 +1733,34 @@ function LeagueBoard({rows,me}){
   const medalBg=["linear-gradient(150deg,#FFE08A,#F5A623)","linear-gradient(150deg,#E8EDF7,#AEB6CC)","linear-gradient(150deg,#E5B07E,#B97A43)"];
   const medalFg=["#5a3b00","#2a2f3d","#3a2208"];
   const ring=["rgba(255,194,60,.55)","rgba(208,214,232,.5)","rgba(214,150,92,.5)"];
-  const PicksStatus=({r})=>{
-    const dot=(won,emoji,label,worthKey)=><span title={t(worthKey)} aria-label={t(label)+(won?" +10":"")} style={{display:"inline-flex",alignItems:"center",gap:3,fontSize:11,fontWeight:800,lineHeight:1,padding:"3px 6px",borderRadius:999,background:won?"var(--lg-primary,var(--brand))":"var(--ink-3)",color:won?"#fff":"var(--faint)",opacity:won?1:.8}}><span aria-hidden="true">{emoji}</span><span className="tnum" dir="ltr">{won?"+10":"—"}</span></span>;
-    return <span style={{display:"inline-flex",gap:5,flexShrink:0}}>{dot(r.champPts>0,"🏆","championLabel","champWorth")}{dot(r.scorerPts>0,"⚽","topScorerLabel","scorerWorth")}</span>;
-  };
-  return <div>{ranked.map((r,i)=>{
-    if(i===0||r.total!==ranked[i-1].total) r._rank=i+1; else r._rank=ranked[i-1]._rank;
-    const place=r._rank, pod=place<=3&&r.total>0, mi=place-1, isMe=r.isMe;
-    return <div key={r.id} className={"card lbrow"+(pod?" lbpod":"")} style={{display:"flex",alignItems:"center",gap:11,padding:pod?"13px 12px":11,marginBottom:pod?10:8,borderColor:isMe?"var(--lg-primary,var(--brand))":(pod?ring[mi]:"var(--line)"),background:isMe?"var(--brand-soft)":undefined,"--lbglow":pod?ring[mi]:"transparent"}}>
-      {pod?<span className="lbmed" dir="ltr" style={{background:medalBg[mi],color:medalFg[mi]}}>{medal[mi]}</span>
-        :<span dir="ltr" style={{width:26,fontWeight:800,fontSize:14,color:"var(--faint)",textAlign:"center",fontVariantNumeric:"tabular-nums"}}>{place}</span>}
-      <Avatar p={{display_name:r.name,photo_url:r.photo}} size={pod?40:34}/>
-      <div style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:4}}>
-        <div style={{fontWeight:pod?800:700,fontSize:pod?15.5:14.5,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}{isMe&&<span style={{marginInlineStart:6,fontSize:11,fontWeight:800,color:"var(--lg-accent,var(--brand-2))"}}>{t("youRow")}</span>}</div>
-        <PicksStatus r={r}/>
-      </div>
-      <span className="tnum disp" dir="ltr" style={{fontWeight:900,fontSize:pod?19:16,color:pod?"var(--gold)":"var(--text)"}}>{r.total}</span>
-    </div>;
-  })}</div>;
+  // round-pick badge — green +3 (exact), gold +1, grey 0, dash = no resolved pick yet (mirrors the Domino's yellow circle)
+  const pickBadge=(p,pred)=>{ const c=(p==null||p===0)?{bg:"var(--ink-3)",fg:"var(--faint)"}:p>=3?{bg:"#16a34a",fg:"#fff"}:{bg:"var(--gold)",fg:"#3a2400"};
+    return <span className="tnum" dir="ltr" title={pred?t("yourPrediction")+": "+pred:t("lastMatchTip")} aria-label={p==null?"—":("+"+p)} style={{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:30,height:30,borderRadius:999,fontWeight:900,fontSize:13,background:c.bg,color:c.fg}}>{p==null?"–":(p>0?"+"+p:"0")}</span>; };
+  const Th=({children,w})=><span style={{width:w,flexShrink:0,textAlign:"center",fontSize:10,fontWeight:800,color:"var(--faint)",textTransform:"uppercase",letterSpacing:".02em"}}>{children}</span>;
+  return <div>
+    <div style={{display:"flex",alignItems:"center",gap:8,padding:"0 12px 7px"}}>
+      <span style={{width:24,flexShrink:0,fontSize:10,fontWeight:800,color:"var(--faint)",textAlign:"center"}} dir="ltr">#</span>
+      <span style={{flex:1,minWidth:0,fontSize:10,fontWeight:800,color:"var(--faint)",textTransform:"uppercase",letterSpacing:".02em"}}>{t("membersCol")}</span>
+      <Th w={46}>{t("resultCol")}</Th>
+      <Th w={40}>{t("predCol")}</Th>
+      <Th w={42}>{t("pointsCol")}</Th>
+    </div>
+    {ranked.map((r,i)=>{
+      if(i===0||r.total!==ranked[i-1].total) r._rank=i+1; else r._rank=ranked[i-1]._rank;
+      const place=r._rank, pod=place<=3&&r.total>0, mi=place-1, isMe=r.isMe;
+      return <div key={r.id} className={"card lbrow"+(pod?" lbpod":"")} style={{display:"flex",alignItems:"center",gap:8,padding:"11px 12px",marginBottom:8,borderColor:isMe?"var(--lg-primary,var(--brand))":(pod?ring[mi]:"var(--line)"),background:isMe?"var(--brand-soft)":undefined,"--lbglow":pod?ring[mi]:"transparent"}}>
+        {pod?<span className="lbmed" dir="ltr" style={{width:24,height:24,flexShrink:0,background:medalBg[mi],color:medalFg[mi]}}>{medal[mi]}</span>
+          :<span dir="ltr" style={{width:24,flexShrink:0,fontWeight:800,fontSize:14,color:"var(--faint)",textAlign:"center",fontVariantNumeric:"tabular-nums"}}>{place}</span>}
+        <Avatar p={{display_name:r.name,photo_url:r.photo}} size={32}/>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontWeight:isMe?800:700,fontSize:14,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{r.name}{isMe&&<span style={{marginInlineStart:6,fontSize:10.5,fontWeight:800,color:"var(--lg-accent,var(--brand-2))"}}>{t("youRow")}</span>}</div>
+        </div>
+        <span className="tnum bidi-ltr" style={{width:46,flexShrink:0,textAlign:"center",fontSize:13,fontWeight:800,color:r.lastResult?"var(--text)":"var(--faint)"}}>{r.lastResult||"–"}</span>
+        <span style={{width:40,flexShrink:0,display:"flex",justifyContent:"center"}}>{pickBadge(r.lastPoints,r.lastPred)}</span>
+        <span className="tnum disp" dir="ltr" style={{width:42,flexShrink:0,textAlign:"center",fontWeight:900,fontSize:17,color:"var(--gold)"}}>{r.total}</span>
+      </div>;
+    })}
+  </div>;
 }
 // FixturesFeed — the core loop. Themed by active league. Season banner + grouped fixtures.
 function FixturesFeed({group,me,onOpenSeason,onScored,onErr,bump}){
@@ -1710,10 +1798,15 @@ function FixturesFeed({group,me,onOpenSeason,onScored,onErr,bump}){
   // NOTE: this MUST be a plain function called inline (renderSection(...)), NOT a <Section/> component.
   // Defining a component inside the render body gives it a NEW identity every render, so the 1s clock tick
   // (setNow) would unmount+remount every FixtureCard each second → the score steppers reset to 0. (root-cause fix)
+  const fxCard=(o)=><FixtureCard key={o.fx.id} group={group} league={league} fx={o.fx} kickoff={o.k} now={now}
+      pred={DEMO.getPred(group.id,o.fx.id)} saving={saving===o.fx.id} onSave={(h,a)=>savePred(o.fx,h,a)} onScored={onScored}/>;
+  // section = a state bucket (Upcoming/Finished) with the cards grouped under Domino's-style DATE headers ("Today / Tomorrow / Mon, 22 Jun")
   const renderSection=(title,items)=> items.length===0?null:<div style={{marginBottom:18}}>
     <div style={{fontWeight:800,fontSize:13,color:"var(--lg-text)",opacity:.85,margin:"4px 2px 10px"}}>{title}</div>
-    {items.map(o=><FixtureCard key={o.fx.id} group={group} league={league} fx={o.fx} kickoff={o.k} now={now}
-      pred={DEMO.getPred(group.id,o.fx.id)} saving={saving===o.fx.id} onSave={(h,a)=>savePred(o.fx,h,a)} onScored={onScored}/>)}
+    {groupByDate(items).map(grp=><div key={grp.key} style={{marginBottom:6}}>
+      <div className="bidi-ltr" dir="auto" style={{display:"inline-block",fontWeight:800,fontSize:11.5,letterSpacing:".02em",color:"var(--lg-text)",background:"rgba(255,255,255,.10)",border:"1px solid var(--line-2)",borderRadius:999,padding:"3px 11px",margin:"2px 2px 9px"}}>📅 {fmtMatchDate(grp.k,now)}</div>
+      {grp.items.map(fxCard)}
+    </div>)}
   </div>;
   return <div>
     {/* Season-picks banner (pinned) */}
@@ -1748,11 +1841,46 @@ function PickGroup({groups,onPick}){
         <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:15,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{g.name}</div><div style={{fontSize:12,color:"var(--muted)"}}>{l?l.name:g.league}</div></div><Chev/></button>; })}
   </div>;
 }
-function LeagueAura(){return <div className="lgaura" aria-hidden="true"><i className="b1"/><i className="b2"/></div>;}
+function LeagueAura(){return <div className="lgaura" aria-hidden="true"><i className="b1"/><i className="b2"/><i className="b3"/><span className="lgpitch"/></div>;}
 /* ---------- football: LeagueBoardScreen (per group) ---------- */
-function LeagueBoardScreen({group,me,onErr,onChange,bump}){
+// EditGroup — change a group's NAME + IMAGE (URL). Local-first (DEMO.updateGroup) with an update_group RPC wired for when the backend is live.
+function EditGroup({group,onClose,onSaved}){
+  const [name,setName]=useState(group.name||"");
+  const [url,setUrl]=useState((group.image&&/^https?:/.test(group.image))?group.image:"");
+  const [busy,setBusy]=useState(false),[lerr,setLerr]=useState(null);
+  const validUrl=/^https?:\/\//.test(url.trim())?url.trim():"";
+  const league=getLeague(group.league);
+  const save=async()=>{
+    const nm=name.trim();
+    if(nm.length<2){ setLerr(t("nameMin")); return; }
+    if(/\b(admin|eyevos|moderator|support|official|staff|system)\b/i.test(nm)){ setLerr(t("nameBlocked")); return; }
+    setBusy(true); setLerr(null);
+    const image=validUrl||null;
+    try{ await SB.rpc("update_group",{p_group:group.id,p_name:nm,p_image:image}); }catch(e){ /* no backend yet → local-first */ }
+    const updated=DEMO.updateGroup(group.id,{name:nm,image:image})||Object.assign({},group,{name:nm,image:image});
+    setBusy(false); SND.win(); onSaved(updated);
+  };
+  return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()} role="dialog" aria-modal="true" aria-label={t("editGroup")}><div className="grab"/>
+    <h3 className="disp" style={{textAlign:"center",fontSize:20,fontWeight:800,margin:"0 0 14px"}}>{t("editGroup")}</h3>
+    <div style={{display:"flex",justifyContent:"center",marginBottom:16}}>
+      <div style={{width:72,height:72,borderRadius:18,overflow:"hidden",background:"var(--ink-3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:32,border:"1px solid var(--line)"}}>{validUrl?<img src={validUrl} alt="" onError={e=>{e.target.style.display="none";}} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:(league?league.emoji:"⚽")}</div>
+    </div>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>{t("groupNameL")}</div>
+    <input className="in" aria-label={t("groupNameL")} value={name} onChange={e=>setName(e.target.value)} maxLength={24} style={{marginBottom:16}}/>
+    <div style={{fontSize:12.5,fontWeight:700,color:"var(--muted)",marginBottom:6}}>{t("groupImageL")}</div>
+    <input className="in" dir="ltr" aria-label={t("groupImageL")} placeholder="https://…" value={url} onChange={e=>setUrl(e.target.value)} style={{marginBottom:url.trim()&&!validUrl?6:8}}/>
+    {url.trim()&&!validUrl&&<div style={{fontSize:11.5,color:"var(--gold)",fontWeight:600,marginBottom:10}}>{t("urlHint")}</div>}
+    <div style={{fontSize:11.5,color:"var(--faint)",marginBottom:14}}>{t("membersCap")}</div>
+    {lerr&&<div className="err">{lerr}</div>}
+    <button className="btn btn-pri" disabled={busy} onClick={save}>{busy?t("savingW"):t("saveBtn")}</button>
+    <button className="btn btn-ghost" style={{marginTop:10}} onClick={onClose}>{t("back")}</button>
+  </div></div>;
+}
+function LeagueBoardScreen({group,me,onErr,onChange,bump,onGroupSaved}){
   const league=getLeague(group.league);
   const [rows,setRows]=useState(null);
+  const [editing,setEditing]=useState(false);
+  const gimg=(group.image&&/^https?:\/\//.test(group.image))?group.image:"";
   useEffect(()=>{ let alive=true; (async()=>{
     // WIRE group_board RPC; on ANY error fall back to a local single-row board (just me + my computed points).
     let result=null;
@@ -1760,18 +1888,21 @@ function LeagueBoardScreen({group,me,onErr,onChange,bump}){
     catch(e){ /* demo fallback below */ }
     if(!alive) return;
     if(result){ setRows(result); return; }
-    const pts=computeGroupPoints(group);
+    const pts=computeGroupPoints(group); const ls=lastScored(group);
     setRows([{ profile_id:me.id, display_name:me.display_name||"—", photo_url:me.photo_url||null,
-      match_points:pts.match, champion_points:pts.champion, scorer_points:pts.scorer, total:pts.total, exact_count:pts.exact, last_scored_at:pts.reachedAt, is_me:true }]);
+      match_points:pts.match, champion_points:pts.champion, scorer_points:pts.scorer, total:pts.total, exact_count:pts.exact, last_scored_at:pts.reachedAt,
+      last_result:ls?ls.result:null, last_pred:ls?ls.pred:null, last_points:ls?ls.pts:null, is_me:true }]);
   })(); return ()=>{alive=false;}; },[group.id,me.id,bump]);
   return <div style={{color:"var(--lg-text)"}}>
     <div className="card" style={{display:"flex",alignItems:"center",gap:10,padding:"10px 13px",marginBottom:13,background:"var(--lg-grad)",border:"1px solid var(--lg-primary)",color:"var(--lg-text)"}}>
-      <div style={{width:36,height:36,borderRadius:10,background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>{league?league.emoji:"🏆"}</div>
-      <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:14.5}}>{group.name}</div><div style={{fontSize:12,opacity:.85}}>{league?league.name:group.league}</div></div>
+      <div style={{width:36,height:36,borderRadius:10,overflow:"hidden",background:"rgba(255,255,255,.14)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{gimg?<img src={gimg} alt="" onError={e=>{e.target.style.display="none";}} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:(league?league.emoji:"🏆")}</div>
+      <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:14.5,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{group.name}</div><div style={{fontSize:12,opacity:.85}}>{league?league.name:group.league}</div></div>
+      <button onClick={()=>{SND.tap();setEditing(true);}} className="chip" style={{padding:8,background:"rgba(255,255,255,.14)",border:"none",color:"var(--lg-text)"}} aria-label={t("editGroupA")} title={t("editGroupA")}>✏️</button>
       <button onClick={()=>shareWa(t("groupInviteWa",{name:group.name,league:league?league.name:group.league,code:groupCode(group),url:REDIRECT+"?g="+encodeURIComponent(group.id)+"&lg="+encodeURIComponent(group.league)+"&n="+encodeURIComponent(group.name)}))} className="chip" style={{padding:8,background:"rgba(255,255,255,.14)",border:"none",color:"var(--lg-text)"}} aria-label={t("shareGroupWa")} title={t("shareGroupWa")}>📤</button>
     </div>
     {onChange&&<button onClick={onChange} style={{background:"none",border:"none",color:"var(--lg-text)",opacity:.8,fontWeight:700,cursor:"pointer",margin:"0 0 12px",fontFamily:"inherit",fontSize:13}}>↺ {t("backToLeagues")}</button>}
     {rows===null?<Spinner/>:<LeagueBoard rows={rows} me={me}/>}
+    {editing&&<EditGroup group={group} onClose={()=>setEditing(false)} onSaved={(g)=>{ setEditing(false); onGroupSaved&&onGroupSaved(g); }}/>}
   </div>;
 }
 
@@ -1821,10 +1952,14 @@ function EditProfile({me,onClose,onUpdated}){
     if(/\b(admin|eyevos|moderator|support|official|staff|system)\b/i.test(nm)){ setLerr(t("nameBlocked")); return; }
     setBusy(true); setLerr(null);
     const photo=validUrl||(avatar||null);
-    const res=await SB.rpc("update_profile",{p_name:name.trim(),p_photo:photo});   // always via the validated RPC (no unguarded direct-write fallback)
+    let res=null; try{ res=await SB.rpc("update_profile",{p_name:nm,p_photo:photo}); }catch(e){ res={error:e}; }
     setBusy(false);
-    if(res.error){ setLerr(/policy|row-level|permission/i.test(res.error.message)?t("saveBlocked"):res.error.message); return; }
-    SND.win(); onUpdated({...me,display_name:name.trim(),photo_url:photo}); onClose();
+    const emsg=(res&&res.error&&res.error.message)||"";
+    // respect ONLY a real server CONTENT rejection (banned/profanity) — NOT auth/JWT/network/no-backend errors, which must fall through to the local-first save
+    if(res&&res.error && /banned|profanit|inappropriate|harass/i.test(emsg)){ setLerr(t("saveBlocked")); return; }
+    // LOCAL-FIRST: success OR no-backend/network/auth error → persist locally so editing always works (the RPC is primary once the backend is live; client already checked length + banned names above)
+    try{ DEMO.setProfile(nm,photo); }catch(e){}
+    SND.win(); onUpdated({...me,display_name:nm,photo_url:photo}); onClose();
   };
   return <div className="sheet" onClick={onClose}><div className="sheetcard" onClick={e=>e.stopPropagation()}><div className="grab"/>
     <h3 className="disp" style={{textAlign:"center",fontSize:20,fontWeight:800,margin:"0 0 14px"}}>{t("editProfile")}</h3>
@@ -1843,7 +1978,6 @@ function EditProfile({me,onClose,onUpdated}){
     <button className="btn btn-ghost" style={{marginTop:10}} onClick={onClose}>{t("back")}</button>
   </div></div>;
 }
-
 /* ---------- rules (football) ---------- */
 function Rules(){
   const row=(k,v)=><div style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:"1px solid var(--line)",gap:10}}><span style={{fontSize:13.5,color:"var(--muted)"}}>{k}</span><span className="tnum" dir="ltr" style={{fontWeight:800,color:"var(--gold)",flexShrink:0}}>{v}</span></div>;
@@ -1993,7 +2127,10 @@ function App(){
     const pull=()=>SB.from("profiles").select("id,display_name,photo_url").eq("id",session.user.id).single().then(({data,error})=>{
       if(!live)return;
       if(error&&!data&&/fetch|network|timeout|load failed/i.test(error.message||"")){ setTimeout(()=>{ if(live)pull(); },3000); return; }
-      setMe(data||{id:session.user.id,display_name:(session.user.email||"Player").split("@")[0]});
+      // base ← local profile override ← server row (server wins when present; local fills when there's no backend yet so edits persist across reload)
+      let localProf=null; try{ const s=localStorage.getItem("eyevos_fb_"+session.user.id+"_profile"); if(s) localProf=JSON.parse(s); }catch(e){}
+      const base={id:session.user.id,display_name:(session.user.email||"Player").split("@")[0]};
+      setMe(Object.assign(base, localProf||{}, data||{}));
     });
     pull(); return ()=>{live=false;};
   },[session]);
@@ -2078,7 +2215,7 @@ function App(){
       :groups.length===0?
         <div style={{textAlign:"center",padding:"30px 0"}}><div style={{fontSize:44,marginBottom:10}}>🎯</div><p style={{fontWeight:800,fontSize:17}}>{t("noGroupT")}</p><p style={{color:"var(--muted)",fontSize:13.5,marginBottom:8}}>{t("noGroupB")}</p><div style={{display:"inline-flex",alignItems:"center",gap:6,fontSize:12,fontWeight:700,color:"var(--brand-2)",marginBottom:16}}><span aria-hidden="true">⏱️</span>{t("sixtySec")}</div><br/><button className="btn btn-pri" onClick={()=>setTab("groups")} style={{maxWidth:260,margin:"0 auto"}}>{t("createOrJoin")}</button></div>
         :tab==="feed"?(group?<FixturesFeed group={group} me={me} onOpenSeason={()=>setSeasonGroup(group)} onScored={onScored} onErr={onErr} bump={bump}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
-        :tab==="board"?(group?<LeagueBoardScreen group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)} bump={bump}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
+        :tab==="board"?(group?<LeagueBoardScreen group={group} me={me} onErr={onErr} onChange={()=>setGroup(null)} bump={bump} onGroupSaved={(g)=>{ setGroup(g); loadGroups(); setBump(b=>b+1); }}/>:<PickGroup groups={groups} onPick={(g)=>enterGroup(g)}/>)
         :tab==="rules"?<Rules/>
         :<Profile group={group} groups={groups} me={me} total={total} scores={scores} onSignOut={signOut} onUpdated={setMe} onLang={()=>setLangOpen(true)} snd={snd} onSound={()=>setSnd(SND.toggle())} onRules={()=>setTab("rules")} langName={(LANGS.find(l=>l.c===lang)||{}).n}/>}
       </ScreenBoundary>
